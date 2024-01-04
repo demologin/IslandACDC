@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
 @Getter
@@ -21,13 +22,13 @@ public class Square extends Thread{
     private final int y;
 
     private Map<String, Integer> organismCount = new HashMap<>();
-    private List<Organism> organismList = new ArrayList<>();
+    private CopyOnWriteArrayList<Organism> organismList = new CopyOnWriteArrayList<>();
 
     private Semaphore semaphore = new Semaphore(1);
 
     public Square(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.x = y;
+        this.y = x;
         fill();
         start();
     }
@@ -36,9 +37,9 @@ public class Square extends Thread{
         try {
             semaphore.acquire();
             organismList.add(o);
-            organismCount = listToMap(organismList);
+            //organismCount = listToMap(organismList);
             semaphore.release();
-        } catch(InterruptedException e){
+        } catch(Exception e){
             throw new AppException(e);
         }
     }
@@ -47,20 +48,21 @@ public class Square extends Thread{
         try {
             semaphore.acquire();
             organismList.remove(o);
-            organismCount = listToMap(organismList);
+            //organismCount = listToMap(organismList);
             semaphore.release();
-        } catch (InterruptedException e){
+        } catch (Exception e){
             throw new AppException(e);
         }
     }
 
     @Override
     public String toString() {
+        organismCount = listToMap(organismList);
         StringBuilder builder = new StringBuilder();
         builder.append("""
                         Square at (%d, %d) - Entities: %d {
                          
-                        """.formatted(this.getX(), this.getY(), this.getOrganismCount().size()));
+                        """.formatted(this.getX(), this.getY(), this.getOrganismList().size()));
         for(Map.Entry<String, Integer> entry : organismCount.entrySet()){
             builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue()));
         }
@@ -69,10 +71,9 @@ public class Square extends Thread{
     }
 
     private void fill(){
-        addOrganism(OrganismFactory.newOrganism("Caterpillar"));
-        addOrganism(OrganismFactory.newOrganism("Bear"));
-        addOrganism(OrganismFactory.newOrganism("Bear"));
-        addOrganism(OrganismFactory.newOrganism("Bear"));
+        for(int i = 0; i < 1000; i++){
+            addOrganism(OrganismFactory.newOrganism("Caterpillar"));
+        }
     }
 
     private Map<String, Integer> listToMap(List<Organism> organisms){

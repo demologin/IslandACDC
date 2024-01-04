@@ -1,5 +1,7 @@
 package com.javarush.island.kotovych.organisms;
 
+import com.javarush.island.kotovych.exceptions.AppException;
+import com.javarush.island.kotovych.organisms.animals.Animal;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 import lombok.EqualsAndHashCode;
@@ -23,13 +25,6 @@ public abstract class Organism implements Cloneable{
     private int maxOnOneSquare;
     private int maxStepSize;
     private double kilogramsOfFoodNeeded;
-    private int x;
-    private int y;
-
-    public void move(){
-        int steps = ThreadLocalRandom.current().nextInt(0, maxStepSize + 1);
-
-    }
 
     @Override
     public Organism clone() throws CloneNotSupportedException {

@@ -1,18 +1,18 @@
 package com.javarush.island.kotovych.scene;
 
-import com.javarush.island.kotovych.organisms.Organism;
+import com.javarush.island.kotovych.organisms.animals.Animal;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.Arrays;
 
+
+@Getter
+@Setter
 public class GameScene {
-    @Getter
-    @Setter
     private Square[][] field;
 
-    private Map<Integer[], Square> squareMap;
-    public GameScene(int height, int width){
+    public GameScene(int width, int height){
         field = new Square[width][height];
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
@@ -21,11 +21,8 @@ public class GameScene {
         }
     }
 
-    public void moveAnimals(Square source){
 
-    }
-
-    private Square getCurrentSquare(Organism source){
-        return squareMap.get(new Integer[]{source.getX(), source.getY()});
+    public Square getSquareByCoordinates(int x, int y){
+        return field[x][y];
     }
 }

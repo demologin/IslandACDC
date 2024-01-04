@@ -11,10 +11,10 @@ import java.net.URL;
 import java.util.Map;
 
 public class OrganismDataTable {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     private OrganismDataTable(){}
 
-    private static Map<String, Map<String, Double>> dataTable;
+    private static final Map<String, Map<String, Double>> dataTable;
 
     static {
         Class<OrganismDataTable> organismDataTableClass = OrganismDataTable.class;

@@ -11,10 +11,10 @@ import java.net.URL;
 import java.util.Map;
 
 public class ProbabilityTable {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
     private ProbabilityTable(){}
 
-    private static Map<String, Map<String, Integer>> probabilityTable;
+    private static final Map<String, Map<String, Integer>> probabilityTable;
 
     static {
         Class<ProbabilityTable> probabilityTableClass = ProbabilityTable.class;

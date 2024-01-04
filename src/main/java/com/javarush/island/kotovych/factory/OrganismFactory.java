@@ -12,7 +12,7 @@ import java.util.Map;
 public class OrganismFactory {
     private OrganismFactory(){}
 
-    private static Map<String, Organism> organismPrototypes = new HashMap<>(){{
+    private static final Map<String, Organism> organismPrototypes = new HashMap<>(){{
         put("Bear", new Bear());
         put("Boa", new Boa());
         put("Eagle", new Eagle());

@@ -11,11 +11,11 @@ import java.net.URL;
 import java.util.Map;
 
 public class EmojiTable {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     private EmojiTable(){}
 
-    private static Map<String, String> emojiTable;
+    private static final Map<String, String> emojiTable;
 
     static {
         Class<EmojiTable> emojiTableClass = EmojiTable.class;
