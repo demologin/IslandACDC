@@ -34,13 +34,14 @@ public class MapOfIsland {
         } finally {
             reentrantLock.unlock();
         }
-        System.out.println("Animal map at the start");
+        System.out.println("Animals map at the start");
         while (true) {
-            Print.print(mapOfIsland);
-            System.out.println("=================================");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
+                Print.print(mapOfIsland);
+                System.out.println("=================================");
+                try {
+                    Thread.sleep(5000);
+                }
+            catch(InterruptedException e){
                 throw new RuntimeException(e);
             }
         }

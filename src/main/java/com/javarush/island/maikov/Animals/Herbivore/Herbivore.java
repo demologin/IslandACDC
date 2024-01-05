@@ -3,6 +3,7 @@ package com.javarush.island.maikov.Animals.Herbivore;
 import com.javarush.island.maikov.Abstraction.Animals;
 
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 
 public abstract class Herbivore extends Animals {
     private int weight;
@@ -12,6 +13,7 @@ public abstract class Herbivore extends Animals {
     private Enum anEnum;
     private int x;
     private int y;
+    private Thread thread;
     private volatile double live;
 
 
@@ -24,6 +26,8 @@ public abstract class Herbivore extends Animals {
         this.x = x;
         this.y = y;
         live = maxFood;
+        thread = new Thread(this);
+        thread.start();
     }
 
     public int getWeight() {
@@ -82,6 +86,14 @@ public abstract class Herbivore extends Animals {
         this.y = y;
     }
 
+    public Thread getThread() {
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
+    }
+
     public double getLive() {
         return live;
     }
@@ -104,7 +116,8 @@ public abstract class Herbivore extends Animals {
         if (x != herbivore.x) return false;
         if (y != herbivore.y) return false;
         if (Double.compare(live, herbivore.live) != 0) return false;
-        return Objects.equals(anEnum, herbivore.anEnum);
+        if (!Objects.equals(anEnum, herbivore.anEnum)) return false;
+        return Objects.equals(thread, herbivore.thread);
     }
 
     @Override
@@ -119,6 +132,7 @@ public abstract class Herbivore extends Animals {
         result = 31 * result + (anEnum != null ? anEnum.hashCode() : 0);
         result = 31 * result + x;
         result = 31 * result + y;
+        result = 31 * result + (thread != null ? thread.hashCode() : 0);
         temp = Double.doubleToLongBits(live);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

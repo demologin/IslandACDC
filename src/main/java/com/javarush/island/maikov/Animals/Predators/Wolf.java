@@ -7,9 +7,6 @@ public class Wolf extends Predator {
 
     public Wolf(int x, int y) {
         super(50, 30, 3, 8, ListOfPredators.WOLF, x, y);
-        Thread thread = new Thread(this);
-        thread.start();
-
     }
     @Override
     public String toString() {
