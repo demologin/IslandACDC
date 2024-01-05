@@ -5,6 +5,7 @@ import com.javarush.island.kotovych.organisms.Organism;
 import com.javarush.island.kotovych.organisms.animals.carnivores.*;
 import com.javarush.island.kotovych.organisms.animals.herbivores.*;
 import com.javarush.island.kotovych.organisms.plants.Plant;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 public class OrganismFactory {
     private OrganismFactory(){}
 
+    @Getter
     private static final Map<String, Organism> organismPrototypes = new HashMap<>(){{
         put("Bear", new Bear());
         put("Boa", new Boa());

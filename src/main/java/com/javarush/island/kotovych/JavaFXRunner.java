@@ -1,15 +1,18 @@
 // JavaFXRunner.java
-package com.javarush.island.kotovych.runner;
+package com.javarush.island.kotovych;
 
+import com.javarush.island.kotovych.visual.MatrixPane;
 import com.javarush.island.kotovych.scene.GameScene;
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class JavaFXRunner extends Application {
-    GameScene gameScene = new GameScene(50, 50);
+    GameScene gameScene = new GameScene(5, 5);
 
     public static void main(String[] args) throws InterruptedException {
         launch(args);

@@ -1,8 +1,9 @@
 // MatrixPane.java
-package com.javarush.island.kotovych.runner;
+package com.javarush.island.kotovych.visual;
 
 import com.javarush.island.kotovych.scene.GameScene;
 import com.javarush.island.kotovych.scene.Square;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.ScrollEvent;
@@ -11,9 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class MatrixPane {
-
-    private static final int ROWS = 50;
-    private static final int COLS = 50;
     private static final int SQUARE_SIZE = 60;
     private static final double MIN_SCALE = 0.2;
     private static final double MAX_SCALE = 2.0;
@@ -22,6 +20,8 @@ public class MatrixPane {
     private double scaleFactor = 1.0;
 
     public Pane createMatrixPane(GameScene gameScene) {
+        int ROWS = gameScene.getHeight();
+        int COLS = gameScene.getWidth();
         matrixPane = new Pane();
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
