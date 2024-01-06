@@ -1,8 +1,6 @@
 package com.javarush.island.kotovych.organisms;
 
-import com.javarush.island.kotovych.exceptions.AppException;
-import com.javarush.island.kotovych.organisms.animals.Animal;
-import com.javarush.island.kotovych.scene.Square;
+import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 import lombok.EqualsAndHashCode;

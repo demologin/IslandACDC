@@ -1,4 +1,4 @@
-package com.javarush.island.kotovych.scene;
+package com.javarush.island.kotovych.game;
 
 import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.factory.OrganismFactory;
@@ -32,9 +32,9 @@ public class Square {
     public void addOrganism(Organism organism) {
         try {
             semaphore.acquire();
-            if (this.getOrganismList().size() < Settings.getMaxAnimalsOnOneSquare()
-                    && getOrganismCount().get(organism.getName()) == null
-                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare()){
+            if (this.getOrganismList().size() < Settings.get("maxAnimalsOnSquare")
+                    && (getOrganismCount().get(organism.getName()) == null
+                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare())){
                 organismList.add(organism);
                 organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 0) + 1);
             } else{
@@ -52,6 +52,9 @@ public class Square {
             semaphore.acquire();
             organismList.remove(organism);
             organismCount.put(organism.getName(), organismCount.get(organism.getName()) - 1);
+            if(organismCount.get(organism.getName()) == 0){
+                organismCount.remove(organism.getName());
+            }
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
@@ -74,7 +77,8 @@ public class Square {
 
     private void fill() {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
-        while (organismList.size() != Settings.getAnimalsOnSquareAtTheBeginning()){
+        while (organismList.size() != Settings.get("animalsOnSquareAtTheBeginning")
+                && organismList.size() != Settings.get("maxAnimalsOnSquare")){
             try {
                 Organism organism = OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]);
                 addOrganism(organism);

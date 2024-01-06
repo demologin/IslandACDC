@@ -2,10 +2,9 @@ package com.javarush.island.kotovych.organisms.animals;
 
 import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.factory.OrganismFactory;
-import com.javarush.island.kotovych.scene.GameScene;
+import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.organisms.Organism;
-import com.javarush.island.kotovych.scene.Square;
-import com.javarush.island.kotovych.settings.Settings;
+import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.Direction;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 import com.javarush.island.kotovych.util.ProbabilityTable;

@@ -1,7 +1,7 @@
 package com.javarush.island.kotovych.controllers;
 
-import com.javarush.island.kotovych.scene.GameScene;
-import com.javarush.island.kotovych.scene.Square;
+import com.javarush.island.kotovych.game.GameScene;
+import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 
 import java.util.Arrays;

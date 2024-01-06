@@ -1,4 +1,4 @@
-package com.javarush.island.kotovych.scene;
+package com.javarush.island.kotovych.game;
 
 import com.javarush.island.kotovych.controllers.*;
 import com.javarush.island.kotovych.exceptions.AppException;
@@ -52,7 +52,7 @@ public class GameScene{
 
     public void startAllRequiredControllers(){
         stopControllers();
-        long delay = Settings.getDelay();
+        long delay = Settings.get("delay");
         controllers = Executors.newScheduledThreadPool(5);
         controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(movingController, 0, delay, TimeUnit.MILLISECONDS);

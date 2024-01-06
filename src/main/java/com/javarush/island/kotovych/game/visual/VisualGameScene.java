@@ -1,12 +1,11 @@
-package com.javarush.island.kotovych.scene.visual;
+package com.javarush.island.kotovych.game.visual;
 
-import com.javarush.island.kotovych.scene.GameScene;
-import com.javarush.island.kotovych.scene.Square;
+import com.javarush.island.kotovych.game.GameScene;
+import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.settings.Settings;
-import com.sun.javafx.stage.EmbeddedWindow;
+import com.javarush.island.kotovych.util.ShowAlert;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
@@ -120,12 +119,12 @@ public class VisualGameScene {
 
         if (startStopButton.getText().equals("Start")) {
             try {
-                Settings.setDelay(Long.parseLong(input));
+                Settings.set("delay", (Long.parseLong(input)));
             } catch (NumberFormatException e) {
                 if (input.isEmpty()) {
-                    Settings.setDelay(Settings.getDefaultDelay());
+                    Settings.set("delay", Settings.get("delay"));
                 } else {
-                    showErrorAlert("Number cannot be string");
+                    ShowAlert.showErrorAlert("Number cannot be string");
                     return;
                 }
             }
@@ -135,14 +134,6 @@ public class VisualGameScene {
             startStopButton.setText("Start");
             gameScene.stopControllers();
         }
-    }
-
-    private void showErrorAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void showSquareInfo(Square square, Tooltip tooltip) {

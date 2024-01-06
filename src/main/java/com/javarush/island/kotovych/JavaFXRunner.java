@@ -1,7 +1,7 @@
 package com.javarush.island.kotovych;
 
-import com.javarush.island.kotovych.scene.visual.VisualGameScene;
-import com.javarush.island.kotovych.scene.GameScene;
+import com.javarush.island.kotovych.game.visual.VisualGameScene;
+import com.javarush.island.kotovych.game.GameScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
