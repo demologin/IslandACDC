@@ -3,18 +3,17 @@ package com.javarush.island.kotovych.scene;
 import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.factory.OrganismFactory;
 import com.javarush.island.kotovych.organisms.Organism;
+import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.EmojiTable;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.*;
 
 @Getter
 @Setter
-public class Square extends Thread{
+public class Square {
     private final int x;
 
     private final int y;
@@ -24,38 +23,36 @@ public class Square extends Thread{
 
     private Semaphore semaphore = new Semaphore(1);
 
-    public Map<String, Integer> getOrganismCount(){
-        organismCount = listToMap(organismList);
-        return organismCount;
-    }
-
     public Square(int x, int y) {
         this.x = x;
         this.y = y;
         fill();
     }
 
-    @Override
-    public void run() {
-
-    }
-
-    public void addOrganism(Organism o){
+    public void addOrganism(Organism organism) {
         try {
             semaphore.acquire();
-            organismList.add(o);
-        } catch(Exception e){
+            if (this.getOrganismList().size() < Settings.getMaxAnimalsOnOneSquare()
+                    && getOrganismCount().get(organism.getName()) == null
+                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare()){
+                organismList.add(organism);
+                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 0) + 1);
+            } else{
+                throw new AppException("Too many animals");
+            }
+        } catch (Exception e) {
             throw new AppException(e);
         } finally {
             semaphore.release();
         }
     }
 
-    public void removeOrganism(Organism o) {
+    public void removeOrganism(Organism organism) {
         try {
             semaphore.acquire();
-            organismList.remove(o);
-        } catch (Exception e){
+            organismList.remove(organism);
+            organismCount.put(organism.getName(), organismCount.get(organism.getName()) - 1);
+        } catch (Exception e) {
             throw new AppException(e);
         } finally {
             semaphore.release();
@@ -64,39 +61,26 @@ public class Square extends Thread{
 
     @Override
     public String toString() {
-        organismCount = listToMap(organismList);
         StringBuilder builder = new StringBuilder();
         builder.append("""
-                        Square at (%d, %d) - Entities: %d {
-                        """.formatted(this.getX(), this.getY(), this.getOrganismList().size()));
-        for(Map.Entry<String, Integer> entry : organismCount.entrySet()){
+                Square at (%d, %d) - Entities: %d {
+                """.formatted(this.getX(), this.getY(), this.getOrganismList().size()));
+        for (Map.Entry<String, Integer> entry : organismCount.entrySet()) {
             builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue()));
         }
         builder.append("}");
         return builder.toString();
     }
 
-    private void fill(){
+    private void fill() {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
-        for(int i = 0; i < 10; i++){
-            addOrganism(OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]));
-        }
-    }
+        while (organismList.size() != Settings.getAnimalsOnSquareAtTheBeginning()){
+            try {
+                Organism organism = OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]);
+                addOrganism(organism);
+            } catch (AppException e){
 
-    private Map<String, Integer> listToMap(List<Organism> organisms){
-        Map<String, Integer> organismMap = new HashMap<>();
-        try {
-            semaphore.acquire();
-            for (Organism organism : organisms) {
-                String name = organism.getName();
-                organismMap.put(name, organismMap.getOrDefault(name, 0) + 1);
             }
-        } catch (InterruptedException e){
-            throw new AppException();
-        } finally {
-            semaphore.release();
         }
-
-        return organismMap;
     }
 }

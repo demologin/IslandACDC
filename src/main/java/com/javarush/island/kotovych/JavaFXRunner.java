@@ -1,14 +1,10 @@
-// JavaFXRunner.java
 package com.javarush.island.kotovych;
 
-import com.javarush.island.kotovych.visual.MatrixPane;
+import com.javarush.island.kotovych.scene.visual.VisualGameScene;
 import com.javarush.island.kotovych.scene.GameScene;
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Screen;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class JavaFXRunner extends Application {
@@ -20,11 +16,12 @@ public class JavaFXRunner extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        MatrixPane matrixPane = new MatrixPane();
-        Pane pane = matrixPane.createMatrixPane(gameScene);
-        ScrollPane scrollPane = matrixPane.createScrollPane(pane);
+        VisualGameScene matrixPane = new VisualGameScene(gameScene);
+        BorderPane root = new BorderPane();
+        root.setCenter(matrixPane.createScrollPane(matrixPane.createMatrixPane()));
+        root.setBottom(matrixPane.createControlPanel());
 
-        Scene scene = new Scene(scrollPane, 400, 400);
+        Scene scene = new Scene(root, 400, 400);
 
         primaryStage.setTitle("Island simulation");
         primaryStage.setScene(scene);

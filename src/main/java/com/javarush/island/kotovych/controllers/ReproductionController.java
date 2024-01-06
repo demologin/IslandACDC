@@ -3,16 +3,13 @@ package com.javarush.island.kotovych.controllers;
 import com.javarush.island.kotovych.organisms.animals.Animal;
 import com.javarush.island.kotovych.scene.GameScene;
 import com.javarush.island.kotovych.scene.Square;
-import lombok.Getter;
 
 import java.util.Arrays;
 
-public class ReproductionController implements Controller, Runnable{
+public class ReproductionController implements Controller{
 
     GameScene gameScene;
 
-    @Getter
-    private int delay;
     public ReproductionController(GameScene gameScene){
         this.gameScene = gameScene;
     }

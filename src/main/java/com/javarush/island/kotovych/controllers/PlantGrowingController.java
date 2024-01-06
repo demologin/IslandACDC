@@ -1,16 +1,16 @@
 package com.javarush.island.kotovych.controllers;
 
-import com.javarush.island.kotovych.organisms.animals.Animal;
+import com.javarush.island.kotovych.factory.OrganismFactory;
 import com.javarush.island.kotovych.scene.GameScene;
 import com.javarush.island.kotovych.scene.Square;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
-public class MovingController implements Controller{
-
+public class PlantGrowingController implements Controller{
     GameScene gameScene;
 
-    public MovingController(GameScene gameScene){
+    public PlantGrowingController(GameScene gameScene){
         this.gameScene = gameScene;
     }
     @Override
@@ -20,12 +20,12 @@ public class MovingController implements Controller{
             Arrays.stream(col)
                     .parallel()
                     .forEach(square -> {
-                        square.getOrganismList().parallelStream()
-                                .forEach(i -> {
-                                    if(i instanceof Animal) {
-                                        ((Animal) i).move(square, gameScene);
-                                    }
-                                });
+                        int randomNumber = ThreadLocalRandom.current().nextInt(2);
+                        if(randomNumber == 1){
+                            for(int i = 0; i < 10; i++){
+                                square.addOrganism(OrganismFactory.newOrganism("Plant"));
+                            }
+                        }
                     });
         }
     }

@@ -1,16 +1,15 @@
 package com.javarush.island.kotovych.controllers;
 
-import com.javarush.island.kotovych.organisms.animals.Animal;
 import com.javarush.island.kotovych.scene.GameScene;
 import com.javarush.island.kotovych.scene.Square;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 
 import java.util.Arrays;
 
-public class EatingController implements Controller{
+public class DyingController implements Controller{
     GameScene gameScene;
 
-    public EatingController(GameScene gameScene){
+    public DyingController(GameScene gameScene){
         this.gameScene = gameScene;
     }
 
@@ -22,10 +21,8 @@ public class EatingController implements Controller{
                     .parallel()
                     .forEach(square -> square.getOrganismList().parallelStream()
                             .forEach(i -> {
-                                if(i.getWeight() < OrganismDataTable.getData(i).get("weight") * 0.6) {
-                                    if (i instanceof Animal) {
-                                        ((Animal) i).eat(square);
-                                    }
+                                if(i.getHealth() <= 5 || i.getWeight() <= OrganismDataTable.getData(i).get("weight") * 0.3){
+                                    i.die(square);
                                 }
                             }));
         }
