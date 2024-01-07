@@ -1,8 +1,36 @@
 package com.javarush.island.alimova.entity.alive.animals.herbivores;
 
+import com.javarush.island.alimova.entity.alive.Organism;
+import com.javarush.island.alimova.entity.map.Cell;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = false)
 public class Horse extends Herbivore{
-    static public final double limitWeight = 400;
-    static public final int maxAmount = 20;
-    static public final int maxSpeed = 4;
-    static public final double maxFoodWeight = 60;
+
+    public Horse(double weight, int maxAmount, int maxSpeed, double maxFoodWeight) {
+        super(weight, maxAmount, maxSpeed, maxFoodWeight);
+    }
+
+    @Override
+    public Organism clone() throws CloneNotSupportedException {
+        return new Horse(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
+    }
+
+    @Override
+    public void multiply(Cell currentCell) {
+
+    }
+
+    @Override
+    public String toString() {
+        return "Horse{" +
+                "maxSpeed=" + maxSpeed +
+                ", maxFoodWeight=" + maxFoodWeight +
+                ", eatenMass=" + eatenMass +
+                ", satiety=" + satiety +
+                ", identification=" + identification +
+                ", weight=" + weight +
+                ", maxAmount=" + maxAmount +
+                '}';
+    }
 }

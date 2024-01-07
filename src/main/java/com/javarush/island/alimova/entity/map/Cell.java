@@ -10,6 +10,7 @@ public class Cell {
     private final Set<Organism> manyCreatures = new HashSet<>();
     //либо разбить организмы и растения?
     //отдавать сет для поиска нужного организма?
+    //нужен безопасный для потока сет, плюс на нём надо синхронизироваться
 
     public void addOrganism(Organism organism) {
         this.manyCreatures.add(organism);
