@@ -1,4 +1,4 @@
-package com.javarush.island.berezovskiy.Entities.Plants;
+package com.javarush.island.berezovskiy.Entities.Organism.Plants;
 
 public class Grass extends Plant{
     @Override
