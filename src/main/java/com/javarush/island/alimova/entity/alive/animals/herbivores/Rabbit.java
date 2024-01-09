@@ -23,14 +23,6 @@ public class Rabbit extends Herbivore{
 
     @Override
     public String toString() {
-        return "Rabbit{" +
-                "maxSpeed=" + maxSpeed +
-                ", maxFoodWeight=" + maxFoodWeight +
-                ", eatenMass=" + eatenMass +
-                ", satiety=" + satiety +
-                ", identification=" + identification +
-                ", weight=" + weight +
-                ", maxAmount=" + maxAmount +
-                '}';
+        return "Rabbit{";
     }
 }

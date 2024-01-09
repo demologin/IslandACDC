@@ -23,14 +23,6 @@ public class Deer extends Herbivore{
 
     @Override
     public String toString() {
-        return "Deer{" +
-                "maxSpeed=" + maxSpeed +
-                ", maxFoodWeight=" + maxFoodWeight +
-                ", eatenMass=" + eatenMass +
-                ", satiety=" + satiety +
-                ", identification=" + identification +
-                ", weight=" + weight +
-                ", maxAmount=" + maxAmount +
-                '}';
+        return "Deer{";
     }
 }

@@ -5,6 +5,8 @@ import com.javarush.island.alimova.api.entity.Moving;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.map.Cell;
 
+import java.util.Objects;
+
 public abstract class Animal extends Organism implements Eating, Moving {
 
     protected int maxSpeed;
@@ -19,6 +21,20 @@ public abstract class Animal extends Organism implements Eating, Moving {
         this.maxFoodWeight = maxFoodWeight;
         this.eatenMass = 0;
         this.satiety = false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Animal animal = (Animal) o;
+        return maxSpeed == animal.maxSpeed && Double.compare(maxFoodWeight, animal.maxFoodWeight) == 0 && Double.compare(eatenMass, animal.eatenMass) == 0 && satiety == animal.satiety;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), maxSpeed, maxFoodWeight, eatenMass, satiety);
     }
 
     @Override

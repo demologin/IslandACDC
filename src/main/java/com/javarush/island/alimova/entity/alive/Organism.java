@@ -2,6 +2,7 @@ package com.javarush.island.alimova.entity.alive;
 
 import com.javarush.island.alimova.api.entity.Multiplying;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class Organism implements Multiplying, Cloneable {
@@ -21,4 +22,17 @@ public abstract class Organism implements Multiplying, Cloneable {
 
     @Override
     public abstract Organism clone() throws CloneNotSupportedException;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organism organism = (Organism) o;
+        return identification == organism.identification && Double.compare(weight, organism.weight) == 0 && maxAmount == organism.maxAmount;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identification, weight, maxAmount);
+    }
 }

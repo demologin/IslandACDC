@@ -1,6 +1,6 @@
-package com.javarush.island.alimova.services;
+package com.javarush.island.alimova.entity.map;
 
-import com.javarush.island.alimova.configure.SettingsEntity;
+import com.javarush.island.alimova.configure.DefaultSettings;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,12 +10,12 @@ public class StatisticOrganism {
     private final CopyOnWriteArrayList<Long> numberOfOrganism = new CopyOnWriteArrayList<>();
 
     {
-        for (int i = 0; i < SettingsEntity.nameOrganism.length; i++) {
+        for (int i = 0; i < DefaultSettings.nameOrganism.length; i++) {
             numberOfOrganism.add(0L);
         }
     }
 
-    public void addNewOrganism(int index) {
+    public synchronized void addNewOrganism(int index) {    //правильно ли здесь ставить?
         Long number = numberOfOrganism.get(index);
         numberOfOrganism.set(index, ++number);
     }
@@ -26,8 +26,8 @@ public class StatisticOrganism {
 
     public void printStatistic() {
         System.out.print("Statistic: {");
-        for (int i = 0; i < SettingsEntity.nameOrganism.length; i++) {
-            System.out.print(" " + SettingsEntity.nameOrganism[i] + " " + numberOfOrganism.get(i));
+        for (int i = 0; i < DefaultSettings.nameOrganism.length; i++) {
+            System.out.print(" " + DefaultSettings.nameOrganism[i] + " " + numberOfOrganism.get(i));
         }
         System.out.println(" }");
     }

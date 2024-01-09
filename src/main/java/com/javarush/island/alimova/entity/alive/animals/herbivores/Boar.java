@@ -24,14 +24,6 @@ public class Boar extends Herbivore{
 
     @Override
     public String toString() {
-        return "Boar{" +
-                "maxSpeed=" + maxSpeed +
-                ", maxFoodWeight=" + maxFoodWeight +
-                ", eatenMass=" + eatenMass +
-                ", satiety=" + satiety +
-                ", identification=" + identification +
-                ", weight=" + weight +
-                ", maxAmount=" + maxAmount +
-                '}';
+        return "Boar{";
     }
 }

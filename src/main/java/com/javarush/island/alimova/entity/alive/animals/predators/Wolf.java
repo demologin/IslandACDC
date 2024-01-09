@@ -23,14 +23,6 @@ public class Wolf extends Predator{
 
     @Override
     public String toString() {
-        return "Wolf{" +
-                "maxSpeed=" + maxSpeed +
-                ", maxFoodWeight=" + maxFoodWeight +
-                ", eatenMass=" + eatenMass +
-                ", satiety=" + satiety +
-                ", identification=" + identification +
-                ", weight=" + weight +
-                ", maxAmount=" + maxAmount +
-                '}';
+        return "Wolf{";
     }
 }
