@@ -1,6 +1,7 @@
 package com.javarush.island.alimova.services;
 
 import com.javarush.island.alimova.configure.DefaultSettings;
+import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.animals.Animal;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
@@ -15,34 +16,34 @@ public class FabricOrganism {
     private final CopyOnWriteArrayList<Organism> cloneBase = new CopyOnWriteArrayList<>();
     private final StatisticOrganism statisticOrganism;
 
-    {
-        createCopyBase();
-    }
+    private final SettingsEntity settings;
 
-    public FabricOrganism(StatisticOrganism statisticOrganism) {
+
+    public FabricOrganism(StatisticOrganism statisticOrganism, SettingsEntity settings) {
         this.statisticOrganism = statisticOrganism;
+        this.settings = settings;
     }
 
     private Organism createNewExampleOrganism(String name){
 
         //может, создавать по индексу
 
-        int indexOrganism = DefaultSettings.getIndexOrganism(name);
-        Class<?> classOrganism = DefaultSettings.classNameOrganism[indexOrganism];
+        int indexOrganism = settings.getIndexOrganism(name);
+        Class<?> classOrganism = settings.classNameOrganism[indexOrganism];
         Organism result = null;
         try {
             if (Plant.class.isAssignableFrom(classOrganism)) {
                 Constructor<?> constructor = classOrganism.getDeclaredConstructor(double.class, int.class);
-                double weight = DefaultSettings.limitWeightOrganism[indexOrganism];
-                int maxAmount = DefaultSettings.maxAmountOrganism[indexOrganism];
+                double weight = settings.limitWeightOrganism[indexOrganism];
+                int maxAmount = settings.maxAmountOrganism[indexOrganism];
                 result = (Organism) constructor.newInstance(weight, maxAmount);
             } else if (Animal.class.isAssignableFrom(classOrganism)) {
                 Constructor<?> constructor = classOrganism.getDeclaredConstructor(double.class, int.class, int.class,
                         double.class);
-                double weight = DefaultSettings.limitWeightOrganism[indexOrganism];
-                int maxAmount = DefaultSettings.maxAmountOrganism[indexOrganism];
-                int maxSpeed = DefaultSettings.maxSpeedOrganism[indexOrganism];
-                double maxFoodWeight = DefaultSettings.maxFoodWeightOrganism[indexOrganism];
+                double weight = settings.limitWeightOrganism[indexOrganism];
+                int maxAmount = settings.maxAmountOrganism[indexOrganism];
+                int maxSpeed = settings.maxSpeedOrganism[indexOrganism];
+                double maxFoodWeight = settings.maxFoodWeightOrganism[indexOrganism];
                 result = (Organism) constructor.newInstance(weight, maxAmount, maxSpeed, maxFoodWeight);
             }
             else {
@@ -59,14 +60,14 @@ public class FabricOrganism {
 
     public void createCopyBase() {
         for (String name :
-                DefaultSettings.nameOrganism) {
+                settings.nameOrganism) {
             Organism organism = this.createNewExampleOrganism(name);
             cloneBase.add(organism);
         }
     }
 
     public Organism createNewInstanceOrganism(String name) {
-        int indexOrganism = DefaultSettings.getIndexOrganism(name);
+        int indexOrganism = settings.getIndexOrganism(name);
         Organism organism = null;
         try {
             organism = cloneBase.get(indexOrganism).clone();

@@ -62,8 +62,6 @@ public class DefaultSettings {
     public static double[] maxFoodWeightOrganism = {
             8, 3, 2, 80, 1, 60, 50, 0.45, 0.01, 10, 15, 50, 0.15, 0, 0
     };
-    private static void SettingsEntity() {
-    }
 
     public static int getIndexOrganism(String name) {
         return organismMap.get(name);

@@ -1,5 +1,6 @@
 package com.javarush.island.alimova.entity.alive.animals.herbivores;
 
+import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.animals.Animal;
 import com.javarush.island.alimova.entity.alive.animals.predators.Predator;
@@ -13,8 +14,8 @@ public abstract class Herbivore extends Animal {
 
 
     @Override
-    public void eat(Cell currentCell) {
-
+    public void eat(Cell currentCell, SettingsEntity settings) {
+        super.eat(currentCell, settings);
     }
 
     @Override

@@ -1,0 +1,343 @@
+---
+nameOrganism:
+- "Wolf"
+- "Anaconda"
+- "Fox"
+- "Bear"
+- "Eagle"
+- "Horse"
+- "Deer"
+- "Rabbit"
+- "Mouse"
+- "Goat"
+- "Sheep"
+- "Boar"
+- "Buffalo"
+- "Duck"
+- "Caterpillar"
+- "Grass"
+classNameOrganism:
+- "com.javarush.island.alimova.entity.alive.animals.predators.Wolf"
+- "com.javarush.island.alimova.entity.alive.animals.predators.Anaconda"
+- "com.javarush.island.alimova.entity.alive.animals.predators.Fox"
+- "com.javarush.island.alimova.entity.alive.animals.predators.Bear"
+- "com.javarush.island.alimova.entity.alive.animals.predators.Eagle"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Horse"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Deer"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Rabbit"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Mouse"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Goat"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Sheep"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Boar"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Buffalo"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Duck"
+- "com.javarush.island.alimova.entity.alive.animals.herbivores.Caterpillar"
+- "com.javarush.island.alimova.entity.alive.plants.Grass"
+eatingTable:
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 10
+  - 15
+  - 60
+  - 80
+  - 60
+  - 70
+  - 15
+  - 10
+  - 40
+  - 0
+  - 0
+- - 0
+  - 0
+  - 15
+  - 0
+  - 0
+  - 0
+  - 0
+  - 20
+  - 40
+  - 0
+  - 0
+  - 0
+  - 0
+  - 10
+  - 0
+  - 0
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 70
+  - 90
+  - 0
+  - 0
+  - 0
+  - 0
+  - 60
+  - 40
+  - 0
+- - 0
+  - 80
+  - 0
+  - 0
+  - 0
+  - 40
+  - 80
+  - 80
+  - 90
+  - 70
+  - 70
+  - 50
+  - 20
+  - 10
+  - 0
+  - 0
+- - 0
+  - 0
+  - 10
+  - 0
+  - 0
+  - 0
+  - 0
+  - 90
+  - 90
+  - 0
+  - 0
+  - 0
+  - 0
+  - 80
+  - 0
+  - 0
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 90
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 50
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 90
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 90
+  - 100
+- - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 100
+limitWeightOrganism:
+- 50.0
+- 15.0
+- 8.0
+- 500.0
+- 6.0
+- 400.0
+- 300.0
+- 2.0
+- 0.05
+- 60.0
+- 70.0
+- 400.0
+- 700.0
+- 1.0
+- 0.01
+- 1.0
+maxAmountOrganism:
+- 30
+- 30
+- 30
+- 5
+- 20
+- 20
+- 20
+- 150
+- 500
+- 140
+- 140
+- 50
+- 10
+- 200
+- 1000
+- 200
+maxSpeedOrganism:
+- 3
+- 1
+- 2
+- 2
+- 3
+- 4
+- 4
+- 2
+- 1
+- 3
+- 3
+- 2
+- 3
+- 4
+- 0
+- 0
+maxFoodWeightOrganism:
+- 8.0
+- 3.0
+- 2.0
+- 80.0
+- 1.0
+- 60.0
+- 50.0
+- 0.45
+- 0.01
+- 10.0
+- 15.0
+- 50.0
+- 0.15
+- 0.0
+- 0.0

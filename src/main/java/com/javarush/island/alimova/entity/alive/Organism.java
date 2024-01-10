@@ -1,6 +1,7 @@
 package com.javarush.island.alimova.entity.alive;
 
 import com.javarush.island.alimova.api.entity.Multiplying;
+import lombok.Getter;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -11,6 +12,7 @@ public abstract class Organism implements Multiplying, Cloneable {
 
     protected final long identification;
 
+    @Getter
     protected double weight;
     protected int maxAmount;
 
