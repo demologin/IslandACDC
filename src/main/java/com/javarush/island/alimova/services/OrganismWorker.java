@@ -25,21 +25,59 @@ public class OrganismWorker implements Runnable{
         Set<Class<?>> organismSet = cell.getSetKind();
         //размножение видов
         for (Class<?> classOrganism : organismSet) {
+            boolean checkSatiety = false;
             if (Plant.class.isAssignableFrom(classOrganism)) {
-                List<Organism> listOrganism = cell.getListOrganism(classOrganism);
-                for (Organism plant : listOrganism) {
-                    ((Plant)plant).multiply(cell);
-                }
+                multiplyPlant(classOrganism);
             }
 
             if (Animal.class.isAssignableFrom(classOrganism)) {
-                List<Organism> listOrganism = cell.getListOrganism(classOrganism);
-                for (Organism animal : listOrganism) {
-                    (((Animal)animal)).eat(cell, settings);
-                    //todo пока не работает
-                }
+                eatAnimal(classOrganism);
+                multiplyAnimal(classOrganism, checkSatiety);
+                moveAnimal(classOrganism);
             }
+
         }
         cell.addOrganismsFromQueue();
+    }
+
+    private void moveAnimal(Class<?> classOrganism) {
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
+        for (Organism organism : listOrganism) {
+            Animal animal = (Animal)organism;
+            animal.move(cell);
+
+
+        }
+    }
+
+    private void multiplyAnimal(Class<?> classOrganism, boolean checkSatiety) {
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
+        for (Organism organism : listOrganism) {
+            Animal animal = (Animal)organism;
+            if(animal.isSatiety()) {
+                if (checkSatiety) {
+                    animal.multiply(cell);
+                    checkSatiety = false;
+                } else {
+                    checkSatiety = true;
+                }
+            }
+
+
+        }
+    }
+
+    private void eatAnimal(Class<?> classOrganism) {
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
+        for (Organism animal : listOrganism) {
+            (((Animal)animal)).eat(cell, settings);
+        }
+    }
+
+    private void multiplyPlant(Class<?> classOrganism) {
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
+        for (Organism plant : listOrganism) {
+            plant.multiply(cell);
+        }
     }
 }

@@ -17,12 +17,7 @@ public class Mouse extends Herbivore{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Mouse{";
+        return "Mouse";
     }
 }

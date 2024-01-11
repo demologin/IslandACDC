@@ -16,13 +16,9 @@ public class Caterpillar extends Herbivore{
         return new Caterpillar(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
     }
 
-    @Override
-    public void multiply(Cell currentCell) {
-
-    }
 
     @Override
     public String toString() {
-        return "Caterpillar{";
+        return "Caterpillar";
     }
 }

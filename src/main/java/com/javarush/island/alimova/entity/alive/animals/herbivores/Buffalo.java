@@ -17,13 +17,9 @@ public class Buffalo extends Herbivore{
         return new Buffalo(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
     }
 
-    @Override
-    public void multiply(Cell currentCell) {
-
-    }
 
     @Override
     public String toString() {
-        return "Buffalo{";
+        return "Buffalo";
     }
 }

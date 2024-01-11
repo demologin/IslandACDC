@@ -17,12 +17,7 @@ public class Deer extends Herbivore{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Deer{";
+        return "Deer";
     }
 }

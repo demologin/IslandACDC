@@ -5,6 +5,8 @@ import com.javarush.island.alimova.api.entity.Moving;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.map.Cell;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.Objects;
@@ -16,6 +18,9 @@ public abstract class Animal extends Organism implements Eating, Moving {
     protected int maxSpeed;
     protected double maxFoodWeight;
     protected double eatenMass;
+
+    @Getter
+    @Setter
     protected boolean satiety;
 
     public Animal(double weight, int maxAmount,
@@ -37,6 +42,22 @@ public abstract class Animal extends Organism implements Eating, Moving {
     }
 
     @Override
+    public void multiply(Cell currentCell) {
+        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());  //может быть хранить где-то имя
+        if (amountGrass < this.maxAmount) {
+            try {
+                Organism newOrganism = this.clone();
+                currentCell.addOrganismToQueue(newOrganism);
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            //todo //кинуть какое-то исключение? либо возвращать булеан
+        }
+
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), maxSpeed, maxFoodWeight, eatenMass, satiety);
     }
@@ -53,10 +74,13 @@ public abstract class Animal extends Organism implements Eating, Moving {
                     //ещё делать что-то при ситуации, что животных нет
                     if (!organismList.isEmpty()) {
                         Organism organism = organismList.removeFirst();
+                        currentCell.deleteOrganismFromStatistics(organismName);
+                        System.out.print(this + " kill " + organism.toString() + "; ");
                         this.eatenMass += organism.getWeight();
                         if (this.eatenMass >= this.maxFoodWeight) {
                             this.eatenMass = this.maxFoodWeight;
                             this.satiety = true;
+                            //System.out.println(this + "SATIETY");
                         }
                         break;
                     }
@@ -83,6 +107,6 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     @Override
     public void move(Cell terminalCell) {
-
+        terminalCell.addAnimalToMove(this);
     }
 }

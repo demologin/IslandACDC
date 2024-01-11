@@ -1,5 +1,6 @@
 package com.javarush.island.alimova.entity.alive.animals.predators;
 
+import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.map.Cell;
 import lombok.EqualsAndHashCode;
@@ -16,13 +17,10 @@ public class Wolf extends Predator{
         return new Wolf(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
     }
 
-    @Override
-    public void multiply(Cell currentCell) {
 
-    }
 
     @Override
     public String toString() {
-        return "Wolf{";
+        return "Wolf";
     }
 }

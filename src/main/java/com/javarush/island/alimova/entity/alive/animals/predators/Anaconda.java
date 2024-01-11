@@ -18,12 +18,7 @@ public class Anaconda extends Predator {
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Anaconda{";
+        return "Anaconda";
     }
 }

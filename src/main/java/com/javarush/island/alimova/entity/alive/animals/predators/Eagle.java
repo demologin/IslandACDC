@@ -17,12 +17,7 @@ public class Eagle extends Predator{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Eagle{";
+        return "Eagle";
     }
 }

@@ -15,12 +15,7 @@ public class Bear extends Predator{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Bear{";
+        return "Bear";
     }
 }

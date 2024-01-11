@@ -17,12 +17,7 @@ public class Sheep extends Herbivore{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Sheep{";
+        return "Sheep";
     }
 }

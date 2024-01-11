@@ -16,22 +16,6 @@ public class Grass extends Plant{
 
 
 
-    @Override
-    public void multiply(Cell currentCell) {
-        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());  //может быть хранить где-то имя
-        if (amountGrass < this.maxAmount) {
-            try {
-                Organism newGrass = this.clone();
-                currentCell.addOrganismToQueue(newGrass);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            //todo //кинуть какое-то исключение? либо возвращать булеан
-        }
-    }
-
-
 
     @Override
     public String toString() {

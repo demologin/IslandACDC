@@ -17,12 +17,7 @@ public class Fox extends Predator{
     }
 
     @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
-    @Override
     public String toString() {
-        return "Fox{";
+        return "Fox";
     }
 }

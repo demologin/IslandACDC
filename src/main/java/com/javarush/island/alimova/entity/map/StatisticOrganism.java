@@ -1,11 +1,18 @@
 package com.javarush.island.alimova.entity.map;
 
 import com.javarush.island.alimova.configure.DefaultSettings;
+import com.javarush.island.alimova.configure.SettingsEntity;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StatisticOrganism {
+
+    private final SettingsEntity settings;
+
+    public StatisticOrganism(SettingsEntity settings) {
+        this.settings = settings;
+    }
 
     private final CopyOnWriteArrayList<Long> numberOfOrganism = new CopyOnWriteArrayList<>();
 
@@ -20,14 +27,19 @@ public class StatisticOrganism {
         numberOfOrganism.set(index, ++number);
     }
 
+    public synchronized void deleteOrganism(int index) {
+        Long number = numberOfOrganism.get(index);
+        numberOfOrganism.set(index, --number);
+    }
+
     public List<Long> getStatistic() {
         return numberOfOrganism.subList(0, numberOfOrganism.size());
     }
 
     public void printStatistic() {
         System.out.print("Statistic: {");
-        for (int i = 0; i < DefaultSettings.nameOrganism.length; i++) {
-            System.out.print(" " + DefaultSettings.nameOrganism[i] + " " + numberOfOrganism.get(i));
+        for (int i = 0; i < settings.nameOrganism.length; i++) {
+            System.out.print(" " + settings.nameOrganism[i] + " " + numberOfOrganism.get(i));
         }
         System.out.println(" }");
     }

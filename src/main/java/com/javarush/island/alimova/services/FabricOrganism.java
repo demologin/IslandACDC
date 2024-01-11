@@ -1,6 +1,6 @@
 package com.javarush.island.alimova.services;
 
-import com.javarush.island.alimova.configure.DefaultSettings;
+
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.animals.Animal;
@@ -66,8 +66,8 @@ public class FabricOrganism {
         }
     }
 
-    public Organism createNewInstanceOrganism(String name) {
-        int indexOrganism = settings.getIndexOrganism(name);
+    public Organism createNewInstanceOrganism(Class<?> classOrganism) {
+        int indexOrganism = settings.getIndexOrganism(classOrganism);
         Organism organism = null;
         try {
             organism = cloneBase.get(indexOrganism).clone();

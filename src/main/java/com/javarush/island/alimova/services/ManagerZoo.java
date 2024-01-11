@@ -1,6 +1,5 @@
 package com.javarush.island.alimova.services;
 
-import com.javarush.island.alimova.configure.DefaultSettings;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
@@ -23,13 +22,16 @@ public class ManagerZoo {
     public void bootstrap() {
 
         setStartupSettings();
-        for (String name :
-                DefaultSettings.nameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(300, 1000);
+        for (Class<?> nameClass :
+                settings.classNameOrganism) {
+            int randomCounter = ThreadLocalRandom.current().nextInt(2, 10);
+            if (Plant.class.isAssignableFrom(nameClass)) {
+                randomCounter += settings.initialNumberOfPlants;     //чтобы хватило травоядным или тут задавать сдвиг минимума по траве
+            }
             for (int i = 0; i < randomCounter; i++) {
-                Organism organism = fabric.createNewInstanceOrganism(name);
-                int indexX = ThreadLocalRandom.current().nextInt(0, 200);
-                int indexY = ThreadLocalRandom.current().nextInt(0, 10);
+                Organism organism = fabric.createNewInstanceOrganism(nameClass);
+                int indexX = ThreadLocalRandom.current().nextInt(0, table.height);
+                int indexY = ThreadLocalRandom.current().nextInt(0, table.width);
                 table.addNewOrganism(indexX, indexY, organism);     //тут игнорируем возвращаемое значение, здесь это не важно
             }
         }
@@ -39,8 +41,8 @@ public class ManagerZoo {
     }
 
     public void setStartupSettings() {
-        statisticOrganism = new StatisticOrganism();
         getSetting();
+        statisticOrganism = new StatisticOrganism(settings);
         getTableZoo();
         getFabric();
     }
@@ -63,8 +65,9 @@ public class ManagerZoo {
     }
 
 
+    //Для многопоточки
     public void startLive() {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(100);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
             for (int i = 0; i < table.height; i++) {
                 for (int j = 0; j < table.width; j++) {
                     executorService.scheduleAtFixedRate(new OrganismWorker(table.getCurrentCell(i, j), settings), 0, 1, TimeUnit.SECONDS);
@@ -75,14 +78,56 @@ public class ManagerZoo {
         while(true) {
             try {
                 Thread.sleep(2000);
-                fabric.printStatisticOrganism();
+
+                System.out.println("\n");
                 table.printTable();
                 System.out.println();
+                fabric.printStatisticOrganism();
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
+        }
+    }
+
+    //ДЛЯ ТЕСТИРОВАНИЯ БЕЗ МНОГОПОТОЧКИ
+    public void startTest() {
+
+        OrganismWorker[][] workerTable = new OrganismWorker[table.getHeight()][table.getWidth()];
+        //TransferWorker[] transferTable = new TransferWorker[10];
+        for (int i = 0; i < table.height; i++) {
+            for (int j = 0; j < table.width; j++) {
+                workerTable[i][j] = new OrganismWorker(table.getCurrentCell(i, j), settings);
+            }
+        }
+
+        while(true) {
+            table.printQueueTransfer();
+            for (int i = 0; i < table.height; i++) {
+                for (int j = 0; j < table.width; j++) {
+                    System.out.print("[" + i + "," + j + "] ");
+                    workerTable[i][j].run();
+                }
+            }
+
+            for (int i = 0; i < 10; i++) {
+                TransferWorker transfer = new TransferWorker(table.getTableGame());
+                transfer.run();
+            }
+
+            System.out.println("\n");
+            table.printTable();
+            System.out.println();
+
+            System.out.println();
+            statisticOrganism.printStatistic();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

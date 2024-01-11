@@ -34,6 +34,10 @@ public class SettingsEntity implements Serializable {
 
     public Map<String, Integer> organismMap = new HashMap<>();
 
+    public Map<Class<?>, Integer> organismMapClass = new HashMap<>();     //нужно определиться, как хранить
+
+    public int initialNumberOfPlants;
+
     public int[][] eatingTable;
 
     public double[] limitWeightOrganism;
@@ -68,10 +72,18 @@ public class SettingsEntity implements Serializable {
         for (int i = 0; i < nameOrganism.length; i++) {
             organismMap.put(nameOrganism[i], i);
         }
+
+        for (int i = 0; i < classNameOrganism.length; i++) {
+            organismMapClass.put(classNameOrganism[i], i);
+        }
     }
 
     public int getIndexOrganism(String name) {
         return organismMap.get(name);
+    }
+
+    public int getIndexOrganism(Class<?> classOrganism) {
+        return organismMapClass.get(classOrganism);
     }
 
     @Override

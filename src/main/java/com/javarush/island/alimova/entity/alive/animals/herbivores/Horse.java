@@ -16,13 +16,9 @@ public class Horse extends Herbivore{
         return new Horse(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
     }
 
-    @Override
-    public void multiply(Cell currentCell) {
-
-    }
 
     @Override
     public String toString() {
-        return "Horse{";
+        return "Horse";
     }
 }

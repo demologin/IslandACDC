@@ -15,14 +15,8 @@ public class Duck extends Herbivore{
     public Organism clone() throws CloneNotSupportedException {
         return new Duck(this.weight, this.maxAmount, this.maxSpeed, this.maxFoodWeight);
     }
-
-    @Override
-    public void multiply(Cell currentCell) {
-
-    }
-
     @Override
     public String toString() {
-        return "Duck{";
+        return "Duck";
     }
 }
