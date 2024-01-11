@@ -1,38 +1,49 @@
 package com.javarush.island.maikov.Abstraction;
 
 import com.javarush.island.maikov.Actions.Eat;
+import com.javarush.island.maikov.Actions.Move;
 import com.javarush.island.maikov.Actions.Reproduce;
 import com.javarush.island.maikov.Animals.Herbivore.Herbivore;
 import com.javarush.island.maikov.Animals.Herbivore.Rabbit;
 import com.javarush.island.maikov.MapOfIsland;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public abstract class Animals extends Organism implements Runnable {
-
-    public void move() {
-        System.out.println("move");
-    }
-
+public abstract class Animals extends Organism {
     @Override
-
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            try {
-                synchronized (MapOfIsland.mapOfIsland) {
-                    int randomAction = ThreadLocalRandom.current().nextInt(1, 3);
-                    switch (randomAction) {
-                        case 1 -> Eat.eat(this);
-                        case 2 -> Reproduce.reproduce(this);
+            synchronized (MapOfIsland.mapOfIsland) {
+                int randomAction = ThreadLocalRandom.current().nextInt(0, 3);
+                if (randomAction == 0) {
+                    Eat.eat(this);
+                }
+                if (randomAction == 1) {
+                    try {
+                        Reproduce.reproduce(this);
+                    } catch (InterruptedException e) {
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        try {
+                            Reproduce.reproduce(this); // I decided to run this method again, after it
+                                                                    // get an exception, but I don't know if this is
+                                                                    // the right solution.
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
-                } catch(InterruptedException e){
-                    throw new RuntimeException(e);
+                if(randomAction == 2){
+                    Move.move(this);
                 }
             }
+
         }
+    }
 
 
     private static boolean isHungryHerbivore(Organism anyOrganism) {

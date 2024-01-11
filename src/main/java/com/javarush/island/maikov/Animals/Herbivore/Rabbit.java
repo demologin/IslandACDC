@@ -5,8 +5,7 @@ import com.javarush.island.maikov.Enum.ListOfHerbivore;
 
 public class Rabbit extends Herbivore {
 
-    public Rabbit(int x, int y) {
-        super(2,150,2,0.45, ListOfHerbivore.RABBIT, x, y);
+    public Rabbit(int x, int y) {super(2,150,2,0.45, ListOfHerbivore.RABBIT, x, y);
     }
 
 

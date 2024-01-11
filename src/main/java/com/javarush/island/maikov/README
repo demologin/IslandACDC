@@ -1,1 +1,3 @@
 1. Any Animal can reproduce only it is not hungry. Hungry for any animal: if it has less 70% from max food.
+2. When an animal moves and is at the top or bottom of the card, it jumps to the other side of the card,
+   just like in the Snake game.

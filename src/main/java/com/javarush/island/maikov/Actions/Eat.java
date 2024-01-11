@@ -2,27 +2,24 @@ package com.javarush.island.maikov.Actions;
 
 import com.javarush.island.maikov.Abstraction.Organism;
 import com.javarush.island.maikov.Animals.Herbivore.Herbivore;
-import com.javarush.island.maikov.Animals.Herbivore.Rabbit;
 import com.javarush.island.maikov.Animals.Predators.Predator;
-import com.javarush.island.maikov.Constants;
 import com.javarush.island.maikov.MapOfIsland;
+import com.javarush.island.maikov.methods.Statistics;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Eat {
-    public static void eat(Organism someOrganism) throws InterruptedException {
-        synchronized (MapOfIsland.mapOfIsland){
+    public static void eat(Organism someOrganism) {
+        synchronized (MapOfIsland.mapOfIsland) {
 //            if (someOrganism instanceof Herbivore) {
 //                int x = ((Herbivore) someOrganism).getX();
 //                int y = ((Herbivore) someOrganism).getY();
 //                ArrayList<Organism> oneSpaceOfIsland = MapOfIsland.mapOfIsland[x][y];
 //                for (Organism organism : oneSpaceOfIsland) {
-//                    if (organism.getClass().equals(someOrganism.getClass())) {
-//                        Rabbit newRabbit = new Rabbit(x, y);
-//                        MapOfIsland.mapOfIsland[x][y].add(newRabbit);
-//                        Thread.sleep(1000);
-//                        return;
+//                    if (organism instanceof AbstractionGrass) {
+//                        ((AbstractionGrass) organism).getThread().interrupt();
+//                        MapOfIsland.mapOfIsland[x][y].remove(organism);
+//                        Statistics.removeFromStatistics(organism);
 //                    }
 //                }
 //            }
@@ -34,6 +31,7 @@ public class Eat {
                     if (organism instanceof Herbivore) {
                         ((Herbivore) organism).getThread().interrupt();
                         MapOfIsland.mapOfIsland[x][y].remove(organism);
+                        Statistics.removeFromStatistics(organism);
                         return;
                     }
                 }
@@ -41,3 +39,4 @@ public class Eat {
         }
     }
 }
+

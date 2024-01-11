@@ -16,7 +16,7 @@ public class Default {
     static final String[] names = {
             "Wolf", "Boa", "Fox", "Bear", "Eagle",
             "Horse", "Deer", "Rabbit", "Mouse", "Goat", "Sheep", "Boar", "Buffalo", "Duck", "Caterpillar",
-            "Grass",
+            "Clover",
     };
     @JsonIgnore
     static final int[][] setProbablyTable = {

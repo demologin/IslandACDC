@@ -21,6 +21,7 @@ public class Print {
                 }
                 System.out.println();
             }
-
+        System.out.printf("Wolf = %d, Rabbit = %d, Clover = %d%n", Statistics.countWolf, Statistics.countRabbit,
+                Statistics.countClover);
     }
 }
