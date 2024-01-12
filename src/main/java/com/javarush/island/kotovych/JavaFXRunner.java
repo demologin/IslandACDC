@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class JavaFXRunner extends Application {
-    GameScene gameScene = new GameScene(5, 5);
+    GameScene gameScene = new GameScene();
 
     public static void main(String[] args) throws InterruptedException {
         launch(args);

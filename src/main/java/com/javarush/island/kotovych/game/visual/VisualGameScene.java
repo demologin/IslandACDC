@@ -119,10 +119,10 @@ public class VisualGameScene {
 
         if (startStopButton.getText().equals("Start")) {
             try {
-                Settings.set("delay", (Long.parseLong(input)));
+                Settings.setDelay(Integer.parseInt(input));
             } catch (NumberFormatException e) {
                 if (input.isEmpty()) {
-                    Settings.set("delay", Settings.get("delay"));
+                    Settings.setDelay(Settings.getDelay());
                 } else {
                     ShowAlert.showErrorAlert("Number cannot be string");
                     return;

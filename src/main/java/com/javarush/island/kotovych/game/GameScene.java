@@ -21,17 +21,15 @@ public class GameScene{
     private int width;
     private int height;
 
-    private Controller eatingController = new EatingController(this);
-    private Controller movingController = new MovingController(this);
-    private Controller reproductionController = new ReproductionController(this);
-    private Controller dyingController = new DyingController(this);
-    private Controller diseaseSpreadingController = new DiseaseSpreadingController(this);
-    private Controller plantGrowingController = new PlantGrowingController(this);
+    private Controller eatingController;
+    private Controller movingController;
+    private Controller reproductionController;
+    private Controller dyingController;
+    private Controller plantGrowingController;
 
-
-    public GameScene(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public GameScene() {
+        this.width = Settings.getGameWidth();
+        this.height = Settings.getGameHeight();
         squarePool = Executors.newFixedThreadPool(width * height);
         field = new Square[width][height];
         for (int x = 0; x < width; x++) {
@@ -40,19 +38,22 @@ public class GameScene{
                 squares.add(field[x][y]);
             }
         }
+
+        eatingController = new EatingController(this);
+        movingController = new MovingController(this);
+        reproductionController = new ReproductionController(this);
+        dyingController = new DeathController(this);
+        plantGrowingController = new PlantGrowingController(this);
+
     }
 
     public Square getSquareByCoordinates(int x, int y) {
         return field[x][y];
     }
 
-    public void addController(Controller controller, int initialDelay, int delay, TimeUnit timeUnit){
-        controllers.scheduleWithFixedDelay(controller, initialDelay, delay, timeUnit);
-    }
 
     public void startAllRequiredControllers(){
-        stopControllers();
-        long delay = Settings.get("delay");
+        int delay = Settings.getDelay();
         controllers = Executors.newScheduledThreadPool(5);
         controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(movingController, 0, delay, TimeUnit.MILLISECONDS);

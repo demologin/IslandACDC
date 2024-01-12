@@ -1,38 +1,41 @@
 package com.javarush.island.kotovych.controllers;
 
-import com.javarush.island.kotovych.organisms.animals.Animal;
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
+import com.javarush.island.kotovych.organisms.animals.Animal;
 
 import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.IntStream;
 
-public class MovingController implements Controller{
+public class MovingController implements Controller {
+    private static CopyOnWriteArrayList<Animal> movedAnimals = new CopyOnWriteArrayList<>();
 
-    GameScene gameScene;
+    private final GameScene gameScene;
 
     public MovingController(GameScene gameScene){
         this.gameScene = gameScene;
     }
-    @Override
-    public void execute() {
-        for(int x = 0; x < gameScene.getField().length; x++){
-            Square[] col = gameScene.getField()[x];
-            Arrays.stream(col)
-                    .parallel()
-                    .forEach(square -> {
-                        square.getOrganismList().parallelStream()
-                                .forEach(i -> {
-                                    if(i instanceof Animal) {
-                                        ((Animal) i).move(square, gameScene);
-                                    }
-                                });
-                    });
-        }
-    }
 
     @Override
     public void run() {
-        Thread.currentThread().setName(this.getClass().getSimpleName());
-        execute();
+        movedAnimals = new CopyOnWriteArrayList<>();
+        IntStream.range(0, gameScene.getField().length)
+                .parallel()
+                .forEach(x -> {
+                    Square[] column = gameScene.getField()[x];
+                    Arrays.stream(column)
+                            .parallel()
+                            .forEach(square -> {
+                                square.getOrganismList().parallelStream()
+                                        .filter(organism -> organism instanceof Animal)
+                                        .map(organism -> (Animal) organism)
+                                        .filter(animal -> !movedAnimals.contains(animal))
+                                        .forEach(animal -> {
+                                            animal.move(square, gameScene);
+                                            movedAnimals.add(animal);
+                                        });
+                            });
+                });
     }
 }

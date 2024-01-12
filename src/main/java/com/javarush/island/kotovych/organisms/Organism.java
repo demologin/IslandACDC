@@ -1,5 +1,6 @@
 package com.javarush.island.kotovych.organisms;
 
+import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -24,13 +26,13 @@ public abstract class Organism implements Cloneable{
     private int maxOnOneSquare;
     private int maxStepSize;
     private double kilogramsOfFoodNeeded;
-    private double health;
+
+    private Semaphore semaphore = new Semaphore(1);
 
     @Override
     public Organism clone() throws CloneNotSupportedException {
         Organism clone = (Organism) super.clone();
         clone.id = idCounter.incrementAndGet();
-        clone.health = 100;
         double maxWeight = OrganismDataTable.getData(this).get("weight");
         clone.setWeight(ThreadLocalRandom.current().nextDouble(maxWeight / 2, maxWeight));
         return clone;
@@ -44,10 +46,23 @@ public abstract class Organism implements Cloneable{
         setMaxStepSize(data.get("maxStepSize").intValue());
         setKilogramsOfFoodNeeded(data.get("kilogramsOfFoodNeeded"));
         setEmoji(EmojiTable.getEmoji(this.getName()));
-        setHealth(100);
     }
 
     public void die(Square currentSquare){
         currentSquare.removeOrganism(this);
+    }
+
+    protected void blockOtherThreads() {
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new AppException(e);
+        }
+    }
+
+    protected void unblockOtherThreads(){
+        if(semaphore.availablePermits() == 0){
+            semaphore.release();
+        }
     }
 }

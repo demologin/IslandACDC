@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
@@ -18,10 +19,10 @@ public class Square {
 
     private final int y;
 
-    private Map<String, Integer> organismCount = new HashMap<>();
-    private CopyOnWriteArrayList<Organism> organismList = new CopyOnWriteArrayList<>();
-
     private Semaphore semaphore = new Semaphore(1);
+
+    private Map<String, Integer> organismCount = new ConcurrentHashMap<>();
+    private List<Organism> organismList = new CopyOnWriteArrayList<>();
 
     public Square(int x, int y) {
         this.x = x;
@@ -29,36 +30,39 @@ public class Square {
         fill();
     }
 
-    public void addOrganism(Organism organism) {
+    public boolean addOrganism(Organism organism) {
         try {
-            semaphore.acquire();
-            if (this.getOrganismList().size() < Settings.get("maxAnimalsOnSquare")
+            blockOtherThreads();
+            if (this.getOrganismList().size() < Settings.getMaxAnimalsOnSquare()
                     && (getOrganismCount().get(organism.getName()) == null
-                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare())){
+                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare())) {
                 organismList.add(organism);
-                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 0) + 1);
-            } else{
-                throw new AppException("Too many animals");
+                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 1) - 1);
+                return true;
+            } else {
+                return false;
             }
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
-            semaphore.release();
+            unblockOtherThreads();
         }
     }
 
     public void removeOrganism(Organism organism) {
         try {
-            semaphore.acquire();
-            organismList.remove(organism);
-            organismCount.put(organism.getName(), organismCount.get(organism.getName()) - 1);
-            if(organismCount.get(organism.getName()) == 0){
-                organismCount.remove(organism.getName());
+            blockOtherThreads();
+            if(organismList.remove(organism)) {
+                if (organismCount.get(organism.getName()) > 1) {
+                    organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 0));
+                } else {
+                    organismCount.remove(organism.getName());
+                }
             }
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
-            semaphore.release();
+            unblockOtherThreads();
         }
     }
 
@@ -77,14 +81,24 @@ public class Square {
 
     private void fill() {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
-        while (organismList.size() != Settings.get("animalsOnSquareAtTheBeginning")
-                && organismList.size() != Settings.get("maxAnimalsOnSquare")){
-            try {
-                Organism organism = OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]);
-                addOrganism(organism);
-            } catch (AppException e){
+        while (organismList.size() != Settings.getAnimalsOnSquareAtTheBeginning()
+                && organismList.size() != Settings.getMaxAnimalsOnSquare()) {
+            Organism organism = OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]);
+            addOrganism(organism);
+        }
+    }
 
-            }
+    private void blockOtherThreads(){
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new AppException(e);
+        }
+    }
+
+    private void unblockOtherThreads(){
+        if(semaphore.availablePermits() == 0){
+            semaphore.release();
         }
     }
 }
