@@ -91,10 +91,10 @@ public abstract class Animal extends Organism {
             String organismName = this.getName();
             int maxOnOneSquare = this.getMaxOnOneSquare();
 
-            if (currentSquare.getOrganismCount().get(organismName) >= 2) {
+            if (currentSquare.getOrganismCount().get(organismName).get() >= 2) {
                 for (Organism organism : currentSquare.getOrganismList()) {
                     if (organism.getName().equals(organismName)
-                            && currentSquare.getOrganismCount().get(organismName) < maxOnOneSquare) {
+                            && currentSquare.getOrganismCount().get(organismName).get() < maxOnOneSquare) {
 
                         int numberOfChildren = ThreadLocalRandom.current().nextInt(1, 3 + 1);
                         for (int i = 0; i < numberOfChildren; i++) {

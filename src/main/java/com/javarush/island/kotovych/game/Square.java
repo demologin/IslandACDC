@@ -21,7 +21,7 @@ public class Square {
 
     private Semaphore semaphore = new Semaphore(1);
 
-    private Map<String, Integer> organismCount = new ConcurrentHashMap<>();
+    private Map<String, AtomicInteger> organismCount = new ConcurrentHashMap<>();
     private List<Organism> organismList = new CopyOnWriteArrayList<>();
 
     public Square(int x, int y) {
@@ -35,9 +35,9 @@ public class Square {
             blockOtherThreads();
             if (this.getOrganismList().size() < Settings.getMaxAnimalsOnSquare()
                     && (getOrganismCount().get(organism.getName()) == null
-                    || getOrganismCount().get(organism.getName()) < organism.getMaxOnOneSquare())) {
+                    || getOrganismCount().get(organism.getName()).get() < organism.getMaxOnOneSquare())) {
                 organismList.add(organism);
-                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 1) - 1);
+                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), new AtomicInteger(new AtomicInteger(1).getAndDecrement())));
                 return true;
             } else {
                 return false;
@@ -53,8 +53,8 @@ public class Square {
         try {
             blockOtherThreads();
             if(organismList.remove(organism)) {
-                if (organismCount.get(organism.getName()) > 1) {
-                    organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), 0));
+                if (organismCount.get(organism.getName()).get() > 1) {
+                    organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), new AtomicInteger(0)));
                 } else {
                     organismCount.remove(organism.getName());
                 }
@@ -72,8 +72,8 @@ public class Square {
         builder.append("""
                 Square at (%d, %d) - Entities: %d {
                 """.formatted(this.getX(), this.getY(), this.getOrganismList().size()));
-        for (Map.Entry<String, Integer> entry : organismCount.entrySet()) {
-            builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue()));
+        for (Map.Entry<String, AtomicInteger> entry : organismCount.entrySet()) {
+            builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue().get()));
         }
         builder.append("}");
         return builder.toString();
