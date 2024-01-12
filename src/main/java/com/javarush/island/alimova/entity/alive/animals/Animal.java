@@ -23,6 +23,8 @@ public abstract class Animal extends Organism implements Eating, Moving {
     @Setter
     protected boolean satiety;
 
+    protected boolean hungry;
+
     public Animal(double weight, int maxAmount,
                   int maxSpeed, double maxFoodWeight) {
         super(weight, maxAmount);
@@ -30,6 +32,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
         this.maxFoodWeight = maxFoodWeight;
         this.eatenMass = 0;
         this.satiety = false;
+        this.hungry = false;
     }
 
     @Override
@@ -46,8 +49,10 @@ public abstract class Animal extends Organism implements Eating, Moving {
         long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());  //может быть хранить где-то имя
         if (amountGrass < this.maxAmount) {
             try {
+                this.eatenMass = 0;
+                this.satiety = false;
                 Organism newOrganism = this.clone();
-                currentCell.addOrganismToQueue(newOrganism);
+                currentCell.addOrganismToQueueWithStatistic(newOrganism);
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
@@ -65,30 +70,51 @@ public abstract class Animal extends Organism implements Eating, Moving {
     @Override
     public void eat(Cell currentCell, SettingsEntity settings) {
         Set<Class<?>> setAnimal = currentCell.getSetKind();
-        //эту дорожку надо как-то убрать
         if (!this.satiety) {
-            for (Class<?> classOrganism : setAnimal) {
-                String organismName = classOrganism.getSimpleName();
-                if(willBeEaten(organismName, settings)) {
-                    LinkedList<Organism> organismList = (LinkedList<Organism>) currentCell.getListOrganism(classOrganism);
-                    //ещё делать что-то при ситуации, что животных нет
-                    if (!organismList.isEmpty()) {
-                        Organism organism = organismList.removeFirst();
-                        currentCell.deleteOrganismFromStatistics(organismName);
-                        System.out.print(this + " kill " + organism.toString() + "; ");
-                        this.eatenMass += organism.getWeight();
-                        if (this.eatenMass >= this.maxFoodWeight) {
-                            this.eatenMass = this.maxFoodWeight;
-                            this.satiety = true;
-                            //System.out.println(this + "SATIETY");
-                        }
-                        break;
-                    }
-
-                }
-            }
+            double initialEatenMass = this.eatenMass;
+            eatInCell(currentCell, settings, setAnimal);
+            checkHungry(initialEatenMass);
         }
 
+    }
+
+    private void checkHungry(double currentEatenMass) {
+        if (currentEatenMass == eatenMass) {
+            this.eatenMass -= maxFoodWeight * 0.5;
+        }
+        if (eatenMass < 0) {
+            eatenMass = 0;
+            hungry = true;      //надо убирать этот флаг
+        }
+    }
+
+    private void eatInCell(Cell currentCell, SettingsEntity settings, Set<Class<?>> setAnimal) {
+        for (Class<?> classOrganism : setAnimal) {
+            String organismName = classOrganism.getSimpleName();
+            if(willBeEaten(organismName, settings)) {
+                LinkedList<Organism> organismList = (LinkedList<Organism>) currentCell.getListOrganism(classOrganism);
+                //ещё делать что-то при ситуации, что животных нет
+                if (!organismList.isEmpty()) {
+                    eatingOrganism(currentCell, organismList, organismName);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    private void eatingOrganism(Cell currentCell, LinkedList<Organism> organismList, String organismName) {
+        Organism organism;
+        organism = organismList.removeFirst();      //тут наверное нужно синхронизовать
+        currentCell.deleteOrganismFromStatistics(organismName);
+        //System.out.print(this + " kill " + organism.toString() + "; ");
+        this.eatenMass += organism.getWeight();
+        hungry = false;
+        if (eatenMass >= maxFoodWeight) {
+            eatenMass = maxFoodWeight;
+            satiety = true;
+            //System.out.println(this + "SATIETY");
+        }
     }
 
     public boolean willBeEaten(String targetName, SettingsEntity settings) {
@@ -107,6 +133,8 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     @Override
     public void move(Cell terminalCell) {
-        terminalCell.addAnimalToMove(this);
+        if (this.hungry) {
+            terminalCell.addAnimalToMove(this);
+        }
     }
 }

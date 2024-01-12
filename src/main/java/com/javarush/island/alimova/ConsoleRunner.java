@@ -9,8 +9,8 @@ public class ConsoleRunner {
     public static void main(String[] args) {
         ManagerZoo managerZoo = new ManagerZoo();
         managerZoo.bootstrap();
-        //managerZoo.startLive();
-        managerZoo.startTest();
+        managerZoo.startLive();
+        //managerZoo.startTest();
 
     }
 }

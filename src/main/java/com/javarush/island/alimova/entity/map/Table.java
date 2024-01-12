@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class Table {
 
     @Getter
-    public final int height = 5;
+    public final int height = 3;
     @Getter
     public final int width = 2;
 
@@ -71,7 +71,11 @@ public class Table {
                 System.out.print("[");
                 Set<Map.Entry<Class<?>, List<Organism>>> set = tableGame[i][j].getEntry();
                 for (Map.Entry<Class<?>, List<Organism>> value : set) {
-                    System.out.print(value.getKey().getSimpleName() + " - " + value.getValue().size() + " ");
+                    int sizeList = value.getValue().size();
+                    if (sizeList != 0) {
+                        System.out.print(value.getKey().getSimpleName() + " - " + sizeList + " ");
+                    }
+
                 }
 
                 System.out.print("]");
@@ -89,7 +93,7 @@ public class Table {
     public boolean addNewOrganism(int x, int y, Organism organism) {
         Class<?> classOrganism = organism.getClass();
         if (tableGame[x][y].checkLimitOrganism(classOrganism.getSimpleName())) {
-            tableGame[x][y].addOrganismToQueue(organism);
+            tableGame[x][y].addOrganismToQueueWithStatistic(organism);
             tableGame[x][y].addOrganismsFromQueue();
             return true;
         } else {

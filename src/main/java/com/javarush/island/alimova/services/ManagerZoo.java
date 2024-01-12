@@ -6,10 +6,7 @@ import com.javarush.island.alimova.entity.alive.plants.Plant;
 import com.javarush.island.alimova.entity.map.StatisticOrganism;
 import com.javarush.island.alimova.entity.map.Table;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ManagerZoo {
 
@@ -24,7 +21,7 @@ public class ManagerZoo {
         setStartupSettings();
         for (Class<?> nameClass :
                 settings.classNameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(2, 10);
+            int randomCounter = ThreadLocalRandom.current().nextInt(2, 5);
             if (Plant.class.isAssignableFrom(nameClass)) {
                 randomCounter += settings.initialNumberOfPlants;     //чтобы хватило травоядным или тут задавать сдвиг минимума по траве
             }
@@ -67,18 +64,24 @@ public class ManagerZoo {
 
     //Для многопоточки
     public void startLive() {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(table.height * table.width);
             for (int i = 0; i < table.height; i++) {
                 for (int j = 0; j < table.width; j++) {
-                    executorService.scheduleAtFixedRate(new OrganismWorker(table.getCurrentCell(i, j), settings), 0, 1, TimeUnit.SECONDS);
+                    scheduledExecutorService.scheduleAtFixedRate(new OrganismWorker(table.getCurrentCell(i, j), settings), 0, 1, TimeUnit.SECONDS);
                 }
             }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);     //какая форма executer
+        for (int i = 0; i < 10; i++) {
+            executorService.execute(new TransferWorker(table.getTableGame()));
+        }
 
 
         while(true) {
             try {
                 Thread.sleep(2000);
 
+                table.printQueueTransfer();
                 System.out.println("\n");
                 table.printTable();
                 System.out.println();
@@ -103,15 +106,16 @@ public class ManagerZoo {
         }
 
         while(true) {
-            table.printQueueTransfer();
+
             for (int i = 0; i < table.height; i++) {
                 for (int j = 0; j < table.width; j++) {
                     System.out.print("[" + i + "," + j + "] ");
                     workerTable[i][j].run();
                 }
             }
+            table.printQueueTransfer();
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 100; i++) {
                 TransferWorker transfer = new TransferWorker(table.getTableGame());
                 transfer.run();
             }

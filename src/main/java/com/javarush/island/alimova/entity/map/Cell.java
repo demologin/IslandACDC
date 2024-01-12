@@ -31,6 +31,7 @@ public class Cell {
     //либо разбить организмы и растения?
     //отдавать сет для поиска нужного организма?
     //нужен безопасный для потока сет, плюс на нём надо синхронизироваться
+    //скорее всего есть проблема с удалением и добавлением в list (нужно что-то потокобезопасное)
     private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<Organism>();
 
     @Getter
@@ -54,12 +55,23 @@ public class Cell {
         return amountOrganism < settings.maxAmountOrganism[settings.getIndexOrganism(name)];
     }
 
-    public void addOrganismToQueue(Organism organism) {
+    public void addOrganismToQueueWithStatistic(Organism organism) {
 
         //тут нужна какая-то страховка по поводу количества организмов
         //сделать булевым?
         this.additionQueue.add(organism);
         String name = organism.getClass().getSimpleName();
+        int indexOrganism = settings.getIndexOrganism(name);
+        listAmountOrganism[indexOrganism] += 1;
+        statisticOrganism.addNewOrganism(indexOrganism);
+    }
+
+    public void addOrganismToQueueWithoutStatistic(Organism organism) {
+        System.out.println("add to queue " + heightCoordinate + " " + widthCoordinate + " "+ organism.getClass().getSimpleName());
+        this.additionQueue.add(organism);
+    }
+
+    public void reservedPlaceForOrganism(String name) {
         int indexOrganism = settings.getIndexOrganism(name);
         listAmountOrganism[indexOrganism] += 1;
         statisticOrganism.addNewOrganism(indexOrganism);
@@ -76,20 +88,25 @@ public class Cell {
 
     public boolean deleteOrganism(Organism organism) {
         List<Organism> organismList = manyCreatures.get(organism.getClass());
-        return organismList.remove(organism);
+        boolean deleteResult = organismList.remove(organism);   //вот тут надо бы синхронизироваться (наверное), ведь в этот момент могут перебирать животных
+        if(deleteResult) {
+            deleteOrganismFromStatistics(organism.getClass().getSimpleName());
+        }
+        return deleteResult;
     }
 
 
     public void addOrganismsFromQueue() {
         //в этом месте возможно нужна синхронизация
         //тут оставим так, мало ли добавятся во времяперемещения
-        for (Organism organism : additionQueue) {
+        //тут можно доставать животных, ане проходится по ним
+        Organism organism;
+        while ((organism = additionQueue.poll()) != null) {
             Class<?> classOrganism = organism.getClass();
-            var listOrganism = manyCreatures.computeIfAbsent(classOrganism, k -> new LinkedList<>());
+            List<Organism> listOrganism;
+            listOrganism = manyCreatures.computeIfAbsent(classOrganism, k -> new LinkedList<>());
             listOrganism.add(organism);
-
         }
-        additionQueue.clear();
     }
 
     public Set<Class<?>> getSetKind() {

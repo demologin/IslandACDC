@@ -41,13 +41,12 @@ public class OrganismWorker implements Runnable{
     }
 
     private void moveAnimal(Class<?> classOrganism) {
-        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);//не уверена, что верно тут синхронизировать
         for (Organism organism : listOrganism) {
             Animal animal = (Animal)organism;
             animal.move(cell);
-
-
         }
+
     }
 
     private void multiplyAnimal(Class<?> classOrganism, boolean checkSatiety) {
@@ -62,9 +61,8 @@ public class OrganismWorker implements Runnable{
                     checkSatiety = true;
                 }
             }
-
-
         }
+
     }
 
     private void eatAnimal(Class<?> classOrganism) {
@@ -72,6 +70,7 @@ public class OrganismWorker implements Runnable{
         for (Organism animal : listOrganism) {
             (((Animal)animal)).eat(cell, settings);
         }
+
     }
 
     private void multiplyPlant(Class<?> classOrganism) {
@@ -79,5 +78,6 @@ public class OrganismWorker implements Runnable{
         for (Organism plant : listOrganism) {
             plant.multiply(cell);
         }
+
     }
 }

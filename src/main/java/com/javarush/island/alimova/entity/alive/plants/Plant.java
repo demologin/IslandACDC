@@ -17,7 +17,7 @@ public abstract class Plant extends Organism {
         if (amountGrass < this.maxAmount) {
             try {
                 Organism newGrass = this.clone();
-                currentCell.addOrganismToQueue(newGrass);
+                currentCell.addOrganismToQueueWithStatistic(newGrass);
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }

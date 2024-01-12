@@ -18,9 +18,5 @@ public abstract class Herbivore extends Animal {
         super.eat(currentCell, settings);
     }
 
-    @Override
-    public void move(Cell terminalCell) {
-
-    }
 
 }

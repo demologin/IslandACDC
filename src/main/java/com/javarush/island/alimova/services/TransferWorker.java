@@ -17,29 +17,44 @@ public class TransferWorker implements Runnable{
     @Override
     public void run() {
         //тут зациклить? (добавить проверку по поводу прекращения работы)
-        //while(true) {
+        Thread currentThread = Thread.currentThread();
+        while(!currentThread.isInterrupted()) {
             TransferOrganism transferOrganism = Table.getAnimalFromTransferQueue();
             if (Objects.nonNull(transferOrganism)) {
-                int heightEnd = transferOrganism.heightEnd;
-                int widthEnd = transferOrganism.widthEnd;
-                int heightStart = transferOrganism.heightStart;;
-                int widthStart = transferOrganism.widthStart;
-                String nameOrganism = transferOrganism.organism.getClass().getSimpleName();
-                if(heightEnd < table.length && widthEnd < table[0].length) {
-                    if(table[heightEnd][widthEnd].checkLimitOrganism(nameOrganism)) {
-                        table[heightEnd][widthEnd].addOrganismToQueue(transferOrganism.organism);
-                        table[heightStart][widthStart].deleteOrganism(transferOrganism.organism);       //тут дополнительную проверку
-                        System.out.print("\nMOVE " + nameOrganism + " [" + heightEnd + " " + widthEnd + "]");
-                    }
+                moveOrganism(transferOrganism);
+            } else {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    currentThread.interrupt();
+                    throw new RuntimeException(e);
                 }
             }
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-        //}
 
+        }
+    }
 
+    private void moveOrganism(TransferOrganism transferOrganism) {
+        int heightEnd = transferOrganism.heightEnd;
+        int widthEnd = transferOrganism.widthEnd;
+        int heightStart = transferOrganism.heightStart;
+        int widthStart = transferOrganism.widthStart;
+
+        String nameOrganism = transferOrganism.organism.getClass().getSimpleName();
+        if(heightEnd < table.length && widthEnd < table[0].length) {
+            Cell cellStart = table[heightStart][widthStart];
+            Cell cellEnd = table[heightEnd][widthEnd];
+            if(cellEnd.checkLimitOrganism(nameOrganism)) {
+                cellEnd.reservedPlaceForOrganism(nameOrganism);                  //возможно, сделать больше проверку
+                boolean delete = cellStart.deleteOrganism(transferOrganism.organism);       //тут дополнительную проверку
+                if (delete) {
+                System.out.print("\nMOVE " + nameOrganism + " [" + heightStart + " " + widthStart + "] -> " + " [" + heightEnd + " " + widthEnd + "]");
+                    cellEnd.addOrganismToQueueWithoutStatistic(transferOrganism.organism);
+                } else {
+                    cellEnd.deleteOrganismFromStatistics(nameOrganism);
+                }
+
+            }
+        }
     }
 }
