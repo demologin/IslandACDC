@@ -23,18 +23,7 @@ public abstract class Animals extends Organism {
                     try {
                         Reproduce.reproduce(this);
                     } catch (InterruptedException e) {
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        try {
-                            Reproduce.reproduce(this); // I decided to run this method again, after it
-                                                                    // get an exception, but I don't know if this is
-                                                                    // the right solution.
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
+                        Thread.currentThread().interrupt();
                     }
                 }
                 if(randomAction == 2){

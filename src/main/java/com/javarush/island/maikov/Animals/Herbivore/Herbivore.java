@@ -6,23 +6,21 @@ import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 public abstract class Herbivore extends Animals {
-    private int weight;
+    private double weight;
     private int maxAnimalOnSpace;
     private int maxSpeed;
     private double maxFood;
-    private Enum anEnum;
     private int x;
     private int y;
     private Thread thread;
     private volatile double live;
 
 
-    protected Herbivore(int weight, int maxAnimalOnSpace, int maxSpeed, double maxFood, Enum anEnum, int x, int y) {
+    protected Herbivore(double weight, int maxAnimalOnSpace, int maxSpeed, double maxFood, int x, int y) {
         this.weight = weight;
         this.maxAnimalOnSpace = maxAnimalOnSpace;
         this.maxSpeed = maxSpeed;
         this.maxFood = maxFood;
-        this.anEnum = anEnum;
         this.x = x;
         this.y = y;
         live = maxFood;
@@ -30,7 +28,7 @@ public abstract class Herbivore extends Animals {
         thread.start();
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -60,14 +58,6 @@ public abstract class Herbivore extends Animals {
 
     public void setMaxFood(double maxFood) {
         this.maxFood = maxFood;
-    }
-
-    public Enum getAnEnum() {
-        return anEnum;
-    }
-
-    public void setAnEnum(Enum anEnum) {
-        this.anEnum = anEnum;
     }
 
     public int getX() {
@@ -109,14 +99,13 @@ public abstract class Herbivore extends Animals {
 
         Herbivore herbivore = (Herbivore) o;
 
-        if (weight != herbivore.weight) return false;
+        if (Double.compare(weight, herbivore.weight) != 0) return false;
         if (maxAnimalOnSpace != herbivore.maxAnimalOnSpace) return false;
         if (maxSpeed != herbivore.maxSpeed) return false;
         if (Double.compare(maxFood, herbivore.maxFood) != 0) return false;
         if (x != herbivore.x) return false;
         if (y != herbivore.y) return false;
         if (Double.compare(live, herbivore.live) != 0) return false;
-        if (!Objects.equals(anEnum, herbivore.anEnum)) return false;
         return Objects.equals(thread, herbivore.thread);
     }
 
@@ -124,12 +113,12 @@ public abstract class Herbivore extends Animals {
     public int hashCode() {
         int result;
         long temp;
-        result = weight;
+        temp = Double.doubleToLongBits(weight);
+        result = (int) (temp ^ (temp >>> 32));
         result = 31 * result + maxAnimalOnSpace;
         result = 31 * result + maxSpeed;
         temp = Double.doubleToLongBits(maxFood);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (anEnum != null ? anEnum.hashCode() : 0);
         result = 31 * result + x;
         result = 31 * result + y;
         result = 31 * result + (thread != null ? thread.hashCode() : 0);

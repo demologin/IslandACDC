@@ -22,9 +22,15 @@ public class MapOfIsland {
         } finally {
             reentrantLock.unlock();
         }
-        System.out.println("Animals map at the start");
+        System.out.println("Loading animals map at the start.Please wait.");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            System.out.println("Возникла проблема при загрузке");
+        }
+        Print print = new Print();
         while (true) {
-                Print.print(mapOfIsland);
+                print.printToConsole(mapOfIsland);
                 System.out.println("=================================");
                 try {
                     Thread.sleep(5000);
@@ -35,8 +41,8 @@ public class MapOfIsland {
         }
 
     }
-
     private void createOrganismsAtStart() {
+        Statistics statistics = new Statistics();
         for (int i = 0; i < mapOfIsland.length; i++) {
             for (int j = 0; j < mapOfIsland[i].length; j++) {
                 int countOfPredators = ThreadLocalRandom.current().nextInt(2, 10);
@@ -46,18 +52,18 @@ public class MapOfIsland {
                 for (int herb = 0; herb < countOfHerbivores; herb++) {
                     Rabbit newRabbit = new Rabbit(i, j);
                     mapOfIsland[i][j].add(newRabbit);
-                    Statistics.addToStatistics(newRabbit);
+                    statistics.addToStatistics(newRabbit);
 
                 }
                 for (int pred = 0; pred < countOfPredators; pred++) {
                     Wolf newWolf = new Wolf(i, j);
                     mapOfIsland[i][j].add(newWolf);
-                    Statistics.addToStatistics(newWolf);
+                    statistics.addToStatistics(newWolf);
                 }
                 for (int grass = 0; grass < countOfClover; grass++) {
                     Clover newClover = new Clover(i, j);
                     mapOfIsland[i][j].add(newClover);
-                    Statistics.addToStatistics(newClover);
+                    statistics.addToStatistics(newClover);
                 }
             }
         }

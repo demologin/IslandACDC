@@ -1,15 +1,14 @@
 package com.javarush.island.maikov.Animals.Herbivore;
 
-
 import com.javarush.island.maikov.Constants;
 
-public class Duck extends Herbivore {
-    public Duck(int x, int y) {
-        super(1,200,4,0.15, x, y);
+public class Horse extends Herbivore{
+    public Horse(int x, int y) {
+        super(400,20,4,60, x, y);
     }
 
     @Override
     public String toString() {
-        return Constants.DUCK;
+        return Constants.HORSE;
     }
 }

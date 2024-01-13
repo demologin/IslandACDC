@@ -10,7 +10,7 @@ public abstract class Grass extends Organism {
             try {
                 Reproduce.reproduce(this);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
             }
         }
     }

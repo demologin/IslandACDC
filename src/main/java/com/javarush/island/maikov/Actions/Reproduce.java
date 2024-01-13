@@ -14,45 +14,36 @@ import com.javarush.island.maikov.methods.Statistics;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-// of course, I can use Reflection, but when I started making, it looks more deal for JVM, so I decided share to methods,
-// a lot of codes, but this code easier for JVM.
 public class Reproduce {
     public static void reproduce(Organism someOrganism) throws InterruptedException {
         synchronized (MapOfIsland.mapOfIsland) {
+            Statistics statistics = new Statistics();
             if (someOrganism instanceof Herbivore) {
-                try {
-                    int x = ((Herbivore) someOrganism).getX();
-                    int y = ((Herbivore) someOrganism).getY();
-                    ArrayList<Organism> oneSpaceOfIsland = MapOfIsland.mapOfIsland[x][y];
-                    for (Organism organism : oneSpaceOfIsland) {
-                        if (organism.getClass().equals(someOrganism.getClass())) {
-                            Rabbit newRabbit = new Rabbit(x, y);
-                            MapOfIsland.mapOfIsland[x][y].add(newRabbit);
-                            Statistics.addToStatistics(newRabbit);
-                            Thread.sleep(1000);
-                            return;
-                        }
+                int x = ((Herbivore) someOrganism).getX();
+                int y = ((Herbivore) someOrganism).getY();
+                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
+                for (Organism organism : oneSpaceOfIsland) {
+                    if (organism.getClass().equals(someOrganism.getClass())) {
+                        Rabbit newRabbit = new Rabbit(x, y);
+                        Thread.sleep(1000);
+                        MapOfIsland.mapOfIsland[x][y].add(newRabbit);
+                        statistics.addToStatistics(newRabbit);
+                        return;
                     }
-                } catch (InterruptedException e) {
-                    ((Herbivore) someOrganism).getThread().join();
                 }
             }
             if (someOrganism instanceof Predator) {
-                try {
-                    int x = ((Predator) someOrganism).getX();
-                    int y = ((Predator) someOrganism).getY();
-                    ArrayList<Organism> oneSpaceOfIsland = MapOfIsland.mapOfIsland[x][y];
-                    for (Organism organism : oneSpaceOfIsland) {
-                        if (organism.getClass().equals(someOrganism.getClass())) {
-                            Wolf newWolf = new Wolf(x, y);
-                            MapOfIsland.mapOfIsland[x][y].add(newWolf);
-                            Statistics.addToStatistics(newWolf);
-                            Thread.sleep(1000);
-                            return;
-                        }
+                int x = ((Predator) someOrganism).getX();
+                int y = ((Predator) someOrganism).getY();
+                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
+                for (Organism organism : oneSpaceOfIsland) {
+                    if (organism.getClass().equals(someOrganism.getClass())) {
+                        Wolf newWolf = new Wolf(x, y);
+                        Thread.sleep(1000);
+                        MapOfIsland.mapOfIsland[x][y].add(newWolf);
+                        statistics.addToStatistics(newWolf);
+                        return;
                     }
-                } catch (InterruptedException e) {
-                    ((Predator) someOrganism).getThread().join();
                 }
             }
             if (someOrganism instanceof AbstractionGrass) {
@@ -61,9 +52,10 @@ public class Reproduce {
                 int randomMoveOrStaySection = ThreadLocalRandom.current().nextInt(0, 2);
                 if (randomMoveOrStaySection == 0) { // if staying in this section
                     Clover newClover = new Clover(x, y);
-                    MapOfIsland.mapOfIsland[x][y].add(newClover);
-                    Statistics.addToStatistics(newClover);
                     Thread.sleep(1000);
+                    MapOfIsland.mapOfIsland[x][y].add(newClover);
+                    statistics.addToStatistics(newClover);
+
                 }
                 if (randomMoveOrStaySection == 1) { // moving X or Y
                     int randomMoveXOrY = ThreadLocalRandom.current().nextInt(0, 2);
@@ -84,12 +76,12 @@ public class Reproduce {
                         }
                     }
                     Clover newClover = new Clover(x, y);
-                    MapOfIsland.mapOfIsland[x][y].add(newClover);
-                    Statistics.addToStatistics(newClover);
                     Thread.sleep(1000);
+                    MapOfIsland.mapOfIsland[x][y].add(newClover);
+                    statistics.addToStatistics(newClover);
+
                 }
             }
         }
     }
 }
-

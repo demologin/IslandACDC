@@ -11,7 +11,7 @@ public class Statistics {
     public static volatile int countClover = 0;
 
 
-    public static void removeFromStatistics(Organism someOrganism) {
+    public void removeFromStatistics(Organism someOrganism) {
         if (someOrganism instanceof Rabbit) {
             countRabbit--;
         }
@@ -23,7 +23,7 @@ public class Statistics {
         }
     }
 
-    public static void addToStatistics(Organism someOrganism) {
+    public void addToStatistics(Organism someOrganism) {
         if (someOrganism instanceof Rabbit) {
             countRabbit++;
         }

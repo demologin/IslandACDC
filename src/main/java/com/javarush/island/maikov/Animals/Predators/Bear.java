@@ -2,13 +2,13 @@ package com.javarush.island.maikov.Animals.Predators;
 
 import com.javarush.island.maikov.Constants;
 
-public class Wolf extends Predator {
-
-    public Wolf(int x, int y) {
-        super(50, 30, 3, 8, x, y);
+public class Bear extends Predator{
+    public Bear(int x, int y) {
+        super(500, 5, 2, 80, x, y);
     }
+
     @Override
     public String toString() {
-        return Constants.WOLF;
+        return Constants.BEAR;
     }
 }
