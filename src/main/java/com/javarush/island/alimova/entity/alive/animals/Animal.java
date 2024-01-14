@@ -24,6 +24,8 @@ public abstract class Animal extends Organism implements Eating, Moving {
     protected boolean satiety;
 
     protected boolean hungry;
+    protected int counterHunger;
+    protected final int MAX_COUNTER_HUNGER = 10;
 
     public Animal(double weight, int maxAmount,
                   int maxSpeed, double maxFoodWeight) {
@@ -70,20 +72,24 @@ public abstract class Animal extends Organism implements Eating, Moving {
     @Override
     public void eat(Cell currentCell, SettingsEntity settings) {
         Set<Class<?>> setAnimal = currentCell.getSetKind();
+        double initialEatenMass = this.eatenMass;
         if (!this.satiety) {
-            double initialEatenMass = this.eatenMass;
             eatInCell(currentCell, settings, setAnimal);
-            checkHungry(initialEatenMass);
         }
+        checkHungry(initialEatenMass, currentCell);
 
     }
 
-    private void checkHungry(double currentEatenMass) {
+    private void checkHungry(double currentEatenMass, Cell currentCell) {
         if (currentEatenMass == eatenMass) {
-            this.eatenMass -= maxFoodWeight * 0.5;
+            this.eatenMass -= maxFoodWeight * 0.05;
         }
         if (eatenMass < 0) {
             eatenMass = 0;
+            counterHunger++;
+            if (counterHunger >= MAX_COUNTER_HUNGER) {
+                currentCell.killOrganism(this);
+            }
             hungry = true;      //надо убирать этот флаг
         }
     }
@@ -110,6 +116,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
         //System.out.print(this + " kill " + organism.toString() + "; ");
         this.eatenMass += organism.getWeight();
         hungry = false;
+        counterHunger = 0;
         if (eatenMass >= maxFoodWeight) {
             eatenMass = maxFoodWeight;
             satiety = true;
@@ -133,8 +140,12 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     @Override
     public void move(Cell terminalCell) {
-        if (this.hungry) {
+        if (this.hungry && !checkAlive()) {
             terminalCell.addAnimalToMove(this);
         }
+    }
+
+    public boolean checkAlive() {
+        return counterHunger >= MAX_COUNTER_HUNGER;
     }
 }

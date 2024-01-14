@@ -36,10 +36,12 @@ public class Cell {
     //отдавать сет для поиска нужного организма?
     //нужен безопасный для потока сет, плюс на нём надо синхронизироваться
     //скорее всего есть проблема с удалением и добавлением в list (нужно что-то потокобезопасное)
-    private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<Organism>();
+    private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<>();
+
+    private final Queue<Organism> murderQueue = new ArrayDeque<>();
 
     @Getter
-    private volatile long[] listAmountOrganism;    // возможно, больше не нужен
+    private final long[] listAmountOrganism;
 
     public long checkAmountOrganism(String name) {
         return listAmountOrganism[settings.getIndexOrganism(name)];
@@ -50,11 +52,6 @@ public class Cell {
     }
 
     public boolean checkLimitOrganism(String name) {
-        long amountOrganism = listAmountOrganism[settings.getIndexOrganism(name)];
-        return amountOrganism < settings.maxAmountOrganism[settings.getIndexOrganism(name)];
-    }
-
-    public boolean checkLimitOrganismStatistic(String name) {
         long amountOrganism = listAmountOrganism[settings.getIndexOrganism(name)];
         return amountOrganism < settings.maxAmountOrganism[settings.getIndexOrganism(name)];
     }
@@ -103,6 +100,10 @@ public class Cell {
         return deleteResult;
     }
 
+    public void killOrganism(Organism organism) {
+        this.murderQueue.add(organism);
+    }
+
 
     public void addOrganismsFromQueue() {
         //в этом месте возможно нужна синхронизация
@@ -114,6 +115,20 @@ public class Cell {
             List<Organism> listOrganism;
             listOrganism = manyCreatures.computeIfAbsent(classOrganism, k -> new LinkedList<>());
             listOrganism.add(organism);
+        }
+    }
+
+    public void killOrganismFromQueue() {
+        Organism organism;
+        while((organism = murderQueue.poll()) != null) {
+            List<Organism> listOrganism = manyCreatures.get(organism.getClass());
+            if (Objects.nonNull(listOrganism)) {
+                if (listOrganism.remove(organism)) {
+                    deleteOrganismFromStatistics(organism.getClass().getSimpleName());
+                    //System.out.println("delete " + organism.getClass().getSimpleName());
+                }
+
+            }
         }
     }
 

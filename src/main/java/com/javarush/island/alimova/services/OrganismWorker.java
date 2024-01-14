@@ -39,6 +39,7 @@ public class OrganismWorker implements Runnable{
                 }
 
             }
+            cell.killOrganismFromQueue();
             cell.addOrganismsFromQueue();
         } finally {
             cell.getLocker().unlock();

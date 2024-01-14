@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class Table {
 
     @Getter
-    public final int height = 100;
+    public final int height = 10;
     @Getter
-    public final int width = 20;
+    public final int width = 10;
 
     public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<TransferOrganism>();
 
@@ -46,26 +46,6 @@ public class Table {
 
     //этот метод необходимо убрать, за вывод будет отвечать другой класс
     public void printTable() {
-        //через статистику
-//        for (int i = 0; i < height; i++) {
-//            for (int j = 0; j < width; j++) {
-//                System.out.print("[");
-//                long[] list = tableGame[i][j].getListAmountOrganism();
-////                for (int k = 0; k < list.length; k++) {
-////                    if (list[k] != 0) {
-////                        System.out.print(" " + settings.nameOrganism[k] + " - " + list[k]);
-////                    }
-////                }
-//                //пока для тестирования обрабатываем траву
-//                if (list[15] != 0) {
-//                    System.out.print(" " + settings.nameOrganism[15] + " - " + list[15]);
-//                }
-//                System.out.print("]");
-//            }
-//            System.out.println();
-//        }
-        //через клетки и списки животных
-        //ПЕЧАТАЕМ НЕ ПОЛНОСТЬЮ
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 System.out.print("[");

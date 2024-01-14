@@ -61,8 +61,6 @@ public class ManagerZoo {
         fabric.createCopyBase();
     }
 
-
-    //Для многопоточки
     public void startLive() {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(table.height * table.width);
             for (int i = 0; i < table.height; i++) {
@@ -75,63 +73,22 @@ public class ManagerZoo {
         for (int i = 0; i < 10; i++) {
             executorService.execute(new TransferWorker(table.getTableGame()));
         }
+        executorService.shutdown();
 
 
+        //тут нужен выход из игры
         while(true) {
             try {
                 Thread.sleep(2000);
-
-                table.printQueueTransfer();
-                System.out.println("\n");
                 table.printTable();
                 System.out.println();
-                fabric.printStatisticOrganism();
+                statisticOrganism.printStatistic();
+                //из статистики кидается исключение для завершения игры?
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
-        }
-    }
-
-    //ДЛЯ ТЕСТИРОВАНИЯ БЕЗ МНОГОПОТОЧКИ
-    public void startTest() {
-
-        OrganismWorker[][] workerTable = new OrganismWorker[table.getHeight()][table.getWidth()];
-        //TransferWorker[] transferTable = new TransferWorker[10];
-        for (int i = 0; i < table.height; i++) {
-            for (int j = 0; j < table.width; j++) {
-                workerTable[i][j] = new OrganismWorker(table.getCurrentCell(i, j), settings);
-            }
-        }
-
-        while(true) {
-
-            for (int i = 0; i < table.height; i++) {
-                for (int j = 0; j < table.width; j++) {
-                    System.out.print("[" + i + "," + j + "] ");
-                    workerTable[i][j].run();
-                }
-            }
-            table.printQueueTransfer();
-
-            for (int i = 0; i < 100; i++) {
-                TransferWorker transfer = new TransferWorker(table.getTableGame());
-                transfer.run();
-            }
-
-            System.out.println("\n");
-            table.printTable();
-            System.out.println();
-
-            System.out.println();
-            statisticOrganism.printStatistic();
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }

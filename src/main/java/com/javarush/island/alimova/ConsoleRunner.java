@@ -10,7 +10,6 @@ public class ConsoleRunner {
         ManagerZoo managerZoo = new ManagerZoo();
         managerZoo.bootstrap();
         managerZoo.startLive();
-        //managerZoo.startTest();
 
     }
 }
