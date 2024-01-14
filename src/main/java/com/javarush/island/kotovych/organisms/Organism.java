@@ -56,7 +56,7 @@ public abstract class Organism implements Cloneable{
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            throw new AppException(e);
+            e.printStackTrace();
         }
     }
 

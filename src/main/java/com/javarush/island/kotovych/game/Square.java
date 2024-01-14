@@ -33,17 +33,21 @@ public class Square {
     public boolean addOrganism(Organism organism) {
         try {
             blockOtherThreads();
+            String name = organism.getName();
+            organismCount.putIfAbsent(name, new AtomicInteger(0));
             if (this.getOrganismList().size() < Settings.getMaxAnimalsOnSquare()
-                    && (getOrganismCount().get(organism.getName()) == null
-                    || getOrganismCount().get(organism.getName()).get() < organism.getMaxOnOneSquare())) {
+                    && (getOrganismCount().get(name) == null || getOrganismCount().get(name).get() < organism.getMaxOnOneSquare()
+            )
+            ) {
                 organismList.add(organism);
-                organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), new AtomicInteger(new AtomicInteger(1).getAndDecrement())));
+                organismCount.get(name).getAndIncrement();
                 return true;
             } else {
                 return false;
             }
         } catch (Exception e) {
-            throw new AppException(e);
+            e.printStackTrace();
+            return false;
         } finally {
             unblockOtherThreads();
         }
@@ -52,12 +56,9 @@ public class Square {
     public void removeOrganism(Organism organism) {
         try {
             blockOtherThreads();
-            if(organismList.remove(organism)) {
-                if (organismCount.get(organism.getName()).get() > 1) {
-                    organismCount.put(organism.getName(), organismCount.getOrDefault(organism.getName(), new AtomicInteger(0)));
-                } else {
-                    organismCount.remove(organism.getName());
-                }
+            if (organismList.remove(organism)) {
+                String name = organism.getName();
+                organismCount.get(name).decrementAndGet();
             }
         } catch (Exception e) {
             throw new AppException(e);
@@ -88,16 +89,16 @@ public class Square {
         }
     }
 
-    private void blockOtherThreads(){
+    private void blockOtherThreads() {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            throw new AppException(e);
+            e.printStackTrace();
         }
     }
 
-    private void unblockOtherThreads(){
-        if(semaphore.availablePermits() == 0){
+    private void unblockOtherThreads() {
+        if (semaphore.availablePermits() == 0) {
             semaphore.release();
         }
     }
