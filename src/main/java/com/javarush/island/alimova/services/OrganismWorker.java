@@ -22,22 +22,28 @@ public class OrganismWorker implements Runnable{
     @Override
     public void run() {
 
-        Set<Class<?>> organismSet = cell.getSetKind();
-        //размножение видов
-        for (Class<?> classOrganism : organismSet) {
-            boolean checkSatiety = false;
-            if (Plant.class.isAssignableFrom(classOrganism)) {
-                multiplyPlant(classOrganism);
-            }
+        cell.getLocker().lock();
+        try {
+            Set<Class<?>> organismSet = cell.getSetKind();
+            //размножение видов
+            for (Class<?> classOrganism : organismSet) {
+                boolean checkSatiety = false;
+                if (Plant.class.isAssignableFrom(classOrganism)) {
+                    multiplyPlant(classOrganism);
+                }
 
-            if (Animal.class.isAssignableFrom(classOrganism)) {
-                eatAnimal(classOrganism);
-                multiplyAnimal(classOrganism, checkSatiety);
-                moveAnimal(classOrganism);
-            }
+                if (Animal.class.isAssignableFrom(classOrganism)) {
+                    eatAnimal(classOrganism);
+                    multiplyAnimal(classOrganism, checkSatiety);
+                    moveAnimal(classOrganism);
+                }
 
+            }
+            cell.addOrganismsFromQueue();
+        } finally {
+            cell.getLocker().unlock();
         }
-        cell.addOrganismsFromQueue();
+
     }
 
     private void moveAnimal(Class<?> classOrganism) {

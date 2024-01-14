@@ -21,7 +21,7 @@ public class ManagerZoo {
         setStartupSettings();
         for (Class<?> nameClass :
                 settings.classNameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(2, 5);
+            int randomCounter = ThreadLocalRandom.current().nextInt(20, 500);
             if (Plant.class.isAssignableFrom(nameClass)) {
                 randomCounter += settings.initialNumberOfPlants;     //чтобы хватило травоядным или тут задавать сдвиг минимума по траве
             }

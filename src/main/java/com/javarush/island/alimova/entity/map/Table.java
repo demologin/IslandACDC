@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class Table {
 
     @Getter
-    public final int height = 3;
+    public final int height = 100;
     @Getter
-    public final int width = 2;
+    public final int width = 20;
 
     public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<TransferOrganism>();
 
@@ -66,17 +66,26 @@ public class Table {
 //        }
         //через клетки и списки животных
         //ПЕЧАТАЕМ НЕ ПОЛНОСТЬЮ
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
                 System.out.print("[");
-                Set<Map.Entry<Class<?>, List<Organism>>> set = tableGame[i][j].getEntry();
-                for (Map.Entry<Class<?>, List<Organism>> value : set) {
-                    int sizeList = value.getValue().size();
-                    if (sizeList != 0) {
-                        System.out.print(value.getKey().getSimpleName() + " - " + sizeList + " ");
-                    }
-
+                Set<Map.Entry<Class<?>, List<Organism>>> set;
+                tableGame[i][j].getLocker().lock();
+                try {
+                    set = tableGame[i][j].getEntry();
+                } finally {
+                    tableGame[i][j].getLocker().unlock();
                 }
+                if (Objects.nonNull(set)) {
+                    for (Map.Entry<Class<?>, List<Organism>> value : set) {
+                        int sizeList = value.getValue().size();
+                        if (sizeList != 0) {
+                            System.out.print(value.getKey().getSimpleName() + " - " + sizeList + " ");
+                        }
+
+                    }
+                }
+
 
                 System.out.print("]");
             }

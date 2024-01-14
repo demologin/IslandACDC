@@ -24,7 +24,7 @@ public class TransferWorker implements Runnable{
                 moveOrganism(transferOrganism);
             } else {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     currentThread.interrupt();
                     throw new RuntimeException(e);
@@ -44,16 +44,42 @@ public class TransferWorker implements Runnable{
         if(heightEnd < table.length && widthEnd < table[0].length) {
             Cell cellStart = table[heightStart][widthStart];
             Cell cellEnd = table[heightEnd][widthEnd];
-            if(cellEnd.checkLimitOrganism(nameOrganism)) {
-                cellEnd.reservedPlaceForOrganism(nameOrganism);                  //возможно, сделать больше проверку
-                boolean delete = cellStart.deleteOrganism(transferOrganism.organism);       //тут дополнительную проверку
-                if (delete) {
-                System.out.print("\nMOVE " + nameOrganism + " [" + heightStart + " " + widthStart + "] -> " + " [" + heightEnd + " " + widthEnd + "]");
-                    cellEnd.addOrganismToQueueWithoutStatistic(transferOrganism.organism);
-                } else {
-                    cellEnd.deleteOrganismFromStatistics(nameOrganism);
-                }
+            changeCells(transferOrganism, cellEnd, nameOrganism, cellStart, heightStart, widthStart, heightEnd, widthEnd);
+        }
+    }
 
+    private static void changeCells(TransferOrganism transferOrganism, Cell cellEnd, String nameOrganism, Cell cellStart, int heightStart, int widthStart, int heightEnd, int widthEnd) {
+        boolean checkLimit = false;
+        cellEnd.getLocker().lock();
+        try {
+            checkLimit = cellEnd.reservedPlaceForOrganism(nameOrganism);
+        } finally {
+            cellEnd.getLocker().unlock();
+        }
+
+        if (checkLimit) {
+            boolean deleteOrganism = false;
+            cellStart.getLocker().lock();
+            try {
+                deleteOrganism = cellStart.deleteOrganism(transferOrganism.organism);
+            } finally {
+                cellStart.getLocker().unlock();
+            }
+
+            cellEnd.getLocker().lock();
+            if (deleteOrganism) {
+                try {
+                    cellEnd.addOrganismToQueueWithoutStatistic(transferOrganism.organism);
+                    //System.out.println("Move " + nameOrganism + "[" + heightStart + " " + widthStart + "] [" + heightEnd + " " + widthEnd + "] ");
+                } finally {
+                    cellEnd.getLocker().unlock();
+                }
+            } else {
+                try {
+                    cellEnd.deleteOrganismFromStatistics(nameOrganism);
+                } finally {
+                    cellEnd.getLocker().unlock();
+                }
             }
         }
     }

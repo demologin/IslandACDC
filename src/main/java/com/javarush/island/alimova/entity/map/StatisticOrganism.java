@@ -32,10 +32,6 @@ public class StatisticOrganism {
         numberOfOrganism.set(index, --number);
     }
 
-    public List<Long> getStatistic() {
-        return numberOfOrganism.subList(0, numberOfOrganism.size());
-    }
-
     public void printStatistic() {
         System.out.print("Statistic: {");
         for (int i = 0; i < settings.nameOrganism.length; i++) {

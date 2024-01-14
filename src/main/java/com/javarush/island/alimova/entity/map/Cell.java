@@ -7,6 +7,7 @@ import lombok.Getter;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell {
 
@@ -15,6 +16,9 @@ public class Cell {
     
     private final int heightCoordinate;
     private final int widthCoordinate;
+
+    @Getter
+    private final ReentrantLock locker = new ReentrantLock();
 
     public Cell(int height, int width, StatisticOrganism statisticOrganism, SettingsEntity settings) {
 
@@ -67,14 +71,18 @@ public class Cell {
     }
 
     public void addOrganismToQueueWithoutStatistic(Organism organism) {
-        System.out.println("add to queue " + heightCoordinate + " " + widthCoordinate + " "+ organism.getClass().getSimpleName());
+        //System.out.println("add to queue " + heightCoordinate + " " + widthCoordinate + " "+ organism.getClass().getSimpleName());
         this.additionQueue.add(organism);
     }
 
-    public void reservedPlaceForOrganism(String name) {
-        int indexOrganism = settings.getIndexOrganism(name);
-        listAmountOrganism[indexOrganism] += 1;
-        statisticOrganism.addNewOrganism(indexOrganism);
+    public boolean reservedPlaceForOrganism(String name) {
+        boolean checkLimit = checkLimitOrganism(name);
+        if (checkLimit) {
+            int indexOrganism = settings.getIndexOrganism(name);
+            listAmountOrganism[indexOrganism] += 1;
+            statisticOrganism.addNewOrganism(indexOrganism);
+        }
+        return checkLimit;
     }
 
     public void deleteOrganismFromStatistics(String name) {
