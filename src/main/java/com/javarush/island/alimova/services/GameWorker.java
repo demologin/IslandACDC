@@ -3,6 +3,7 @@ package com.javarush.island.alimova.services;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.map.StatisticOrganism;
 import com.javarush.island.alimova.entity.map.Table;
+import com.javarush.island.alimova.exception.GameException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,14 +34,25 @@ public class GameWorker implements Runnable{
         executorService.shutdown();
 
         try {
-            if(executorService.awaitTermination(1, TimeUnit.SECONDS)) {
+            if(executorService.awaitTermination(settings.periodGame, TimeUnit.SECONDS)) {
                 tableGame.printTable();
                 System.out.println();
                 statisticOrganism.printStatistic();
+                if (!statisticOrganism.checkAliveAnimals()) {
+                    throw new GameException("FINISH GAME");       //тут нужно своё
+                    //либо прекращать поток изнутри не исключением, а остановкой
+                }
             } else {
-                System.out.println("NO TIME!!!!!!");        //может, здесь кинуть exception
+                System.out.println("time");
+                throw new GameException("There is not enough time for processing.\n Please change your settings.");        //может, здесь кинуть exception
+
             }
         } catch (InterruptedException e) {
+            throw new RuntimeException("Application error", e);
+        } catch (GameException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

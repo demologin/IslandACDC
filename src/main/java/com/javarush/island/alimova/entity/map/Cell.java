@@ -26,17 +26,11 @@ public class Cell {
         this.settings = settings;
         this.heightCoordinate = height;
         this.widthCoordinate = width;
-        listAmountOrganism = new long[settings.nameOrganism.length];    //не очень хорошо это делать в конструкторе
+        listAmountOrganism = new long[settings.nameOrganism.length];
     }
 
     private final Map<Class<?>, List<Organism>> manyCreatures = new HashMap<>();
-    //если требуется только вставка и удаление, то лучше взять LinkedList
-    //будем использовать связку из хэш-мапа и линкед-листа (так поедание и размножение должно быть проще)
-    //либо разбить организмы и растения?
-    //отдавать сет для поиска нужного организма?
-    //нужен безопасный для потока сет, плюс на нём надо синхронизироваться
-    //скорее всего есть проблема с удалением и добавлением в list (нужно что-то потокобезопасное)
-    private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<>();
+    private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<>();        //обычная очередь?
 
     private final Queue<Organism> murderQueue = new ArrayDeque<>();
 
@@ -56,10 +50,8 @@ public class Cell {
         return amountOrganism < settings.maxAmountOrganism[settings.getIndexOrganism(name)];
     }
 
+    //возможно, стоит пересмотреть методы и их названия
     public void addOrganismToQueueWithStatistic(Organism organism) {
-
-        //тут нужна какая-то страховка по поводу количества организмов
-        //сделать булевым?
         this.additionQueue.add(organism);
         String name = organism.getClass().getSimpleName();
         int indexOrganism = settings.getIndexOrganism(name);
@@ -68,7 +60,6 @@ public class Cell {
     }
 
     public void addOrganismToQueueWithoutStatistic(Organism organism) {
-        //System.out.println("add to queue " + heightCoordinate + " " + widthCoordinate + " "+ organism.getClass().getSimpleName());
         this.additionQueue.add(organism);
     }
 
@@ -83,7 +74,6 @@ public class Cell {
     }
 
     public void deleteOrganismFromStatistics(String name) {
-        //нужно ли удалять через клетку? или просто на месте удалять
         int index = settings.getIndexOrganism(name);
         if (listAmountOrganism[index] != 0) {
             listAmountOrganism[index]--;
@@ -93,7 +83,7 @@ public class Cell {
 
     public boolean deleteOrganism(Organism organism) {
         List<Organism> organismList = manyCreatures.get(organism.getClass());
-        boolean deleteResult = organismList.remove(organism);   //вот тут надо бы синхронизироваться (наверное), ведь в этот момент могут перебирать животных
+        boolean deleteResult = organismList.remove(organism);
         if(deleteResult) {
             deleteOrganismFromStatistics(organism.getClass().getSimpleName());
         }
@@ -104,11 +94,13 @@ public class Cell {
         this.murderQueue.add(organism);
     }
 
+    public void recordDeath(String name) {
+        int indexOrganism = settings.getIndexOrganism(name);
+        statisticOrganism.recordDeathOrganism(indexOrganism);
+    }
+
 
     public void addOrganismsFromQueue() {
-        //в этом месте возможно нужна синхронизация
-        //тут оставим так, мало ли добавятся во времяперемещения
-        //тут можно доставать животных, ане проходится по ним
         Organism organism;
         while ((organism = additionQueue.poll()) != null) {
             Class<?> classOrganism = organism.getClass();
@@ -124,8 +116,9 @@ public class Cell {
             List<Organism> listOrganism = manyCreatures.get(organism.getClass());
             if (Objects.nonNull(listOrganism)) {
                 if (listOrganism.remove(organism)) {
-                    deleteOrganismFromStatistics(organism.getClass().getSimpleName());
-                    //System.out.println("delete " + organism.getClass().getSimpleName());
+                    String name = organism.getClass().getSimpleName();
+                    deleteOrganismFromStatistics(name);
+                    recordDeath(name);
                 }
 
             }

@@ -5,7 +5,6 @@ import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
 import com.javarush.island.alimova.entity.map.StatisticOrganism;
 import com.javarush.island.alimova.entity.map.Table;
-import com.javarush.island.khmelov.entity.Game;
 
 import java.util.concurrent.*;
 
@@ -15,6 +14,10 @@ public class ManagerZoo {
     private SettingsEntity settings;
     private Table table;
 
+    private final int AMOUNT_THREAD_GAME = 1;
+
+    private final int AMOUNT_THREAD_TRANSFER = 10;
+
     private FabricOrganism fabric;
 
     public void bootstrap() {
@@ -22,9 +25,9 @@ public class ManagerZoo {
         setStartupSettings();
         for (Class<?> nameClass :
                 settings.classNameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(20, 2000);
+            int randomCounter = ThreadLocalRandom.current().nextInt(settings.minRandomOrganism, settings.maxRandomOrganism);
             if (Plant.class.isAssignableFrom(nameClass)) {
-                randomCounter += settings.initialNumberOfPlants;     //чтобы хватило травоядным или тут задавать сдвиг минимума по траве
+                randomCounter += settings.initialNumberOfPlants;
             }
             for (int i = 0; i < randomCounter; i++) {
                 Organism organism = fabric.createNewInstanceOrganism(nameClass);
@@ -41,6 +44,7 @@ public class ManagerZoo {
     public void setStartupSettings() {
         getSetting();
         statisticOrganism = new StatisticOrganism(settings);
+        statisticOrganism.initStatistic();
         getTableZoo();
         getFabric();
     }
@@ -64,16 +68,17 @@ public class ManagerZoo {
 
     public void startLive() {
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.scheduleAtFixedRate(new GameWorker(table, settings, statisticOrganism), 0, 1, TimeUnit.SECONDS);
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(AMOUNT_THREAD_GAME);
+        scheduledExecutorService.scheduleAtFixedRate(new GameWorker(table, settings, statisticOrganism), 0, settings.periodGame, TimeUnit.SECONDS);
         startTransferCell();
     }
 
     private void startTransferCell() {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        for (int i = 0; i < 10; i++) {
+        ExecutorService executorService = Executors.newFixedThreadPool(AMOUNT_THREAD_TRANSFER);
+        for (int i = 0; i < AMOUNT_THREAD_TRANSFER; i++) {
             executorService.execute(new TransferWorker(table.getTableGame()));
         }
         executorService.shutdown();
+
     }
 }

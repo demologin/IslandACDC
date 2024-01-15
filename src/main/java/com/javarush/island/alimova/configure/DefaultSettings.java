@@ -38,6 +38,12 @@ public class DefaultSettings {
 
     public static int initialNumberOfPlants = 200;
 
+    public static int minRandomOrganism = 2;
+
+    public static int maxRandomOrganism = 15;
+
+    public static int periodGame = 1;
+
     public static int[][] eatingTable = {
             {0, 0, 0, 0, 0, 10, 15, 60, 80, 60, 70, 15, 10, 40, 0, 0},
             {0, 0, 15, 0, 0, 0, 0, 20, 40, 0, 0, 0, 0, 10, 0, 0},
@@ -75,4 +81,12 @@ public class DefaultSettings {
     public static int getIndexOrganism(String name) {
         return organismMap.get(name);
     }
+
+    public static int heightTable = 10;
+    public static int widthTable = 10;
+
+    public static int viewHeightTable = 5;
+
+    public static int viewWidthTable = 5;
+
 }

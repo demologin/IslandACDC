@@ -47,6 +47,21 @@ public class SettingsEntity implements Serializable {
     public int[] maxSpeedOrganism;
 
     public double[] maxFoodWeightOrganism;
+
+    public int heightTable;
+    public int widthTable;
+
+    public int viewHeightTable;
+
+    public int viewWidthTable;
+
+    public int minRandomOrganism;
+
+    public int maxRandomOrganism;
+
+    public int periodGame;
+
+
     public void setDefaultSettings() {
         nameOrganism = DefaultSettings.nameOrganism;
         iconOrganism = DefaultSettings.iconOrganism;
@@ -56,6 +71,13 @@ public class SettingsEntity implements Serializable {
         maxAmountOrganism = DefaultSettings.maxAmountOrganism;
         maxSpeedOrganism = DefaultSettings.maxSpeedOrganism;
         maxFoodWeightOrganism = DefaultSettings.maxFoodWeightOrganism;
+        heightTable = DefaultSettings.heightTable;
+        widthTable = DefaultSettings.widthTable;
+        viewHeightTable = DefaultSettings.viewHeightTable;
+        viewWidthTable = DefaultSettings.viewWidthTable;
+        initialNumberOfPlants = DefaultSettings.initialNumberOfPlants;
+        minRandomOrganism = DefaultSettings.minRandomOrganism;
+        maxRandomOrganism = DefaultSettings.maxRandomOrganism;
     }
 
     @SneakyThrows

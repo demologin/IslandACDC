@@ -13,6 +13,7 @@ public class StatisticOrganism {
     private final ReentrantLock locker = new ReentrantLock();
 
     public StatisticOrganism(SettingsEntity settings) {
+
         this.settings = settings;
     }
 
@@ -20,12 +21,13 @@ public class StatisticOrganism {
 
     private final CopyOnWriteArrayList<Long> amountOfDeathOrganism = new CopyOnWriteArrayList<>();
 
-    {
-        for (int i = 0; i < DefaultSettings.nameOrganism.length; i++) {
+    public void initStatistic() {
+        for (int i = 0; i < settings.nameOrganism.length; i++) {
             amountOfAliveOrganism.add(0L);
             amountOfDeathOrganism.add(0L);
         }
     }
+
 
     public void addNewOrganism(int index) {    //правильно ли здесь ставить?
         locker.lock();
@@ -43,17 +45,43 @@ public class StatisticOrganism {
         try {
             Long number = amountOfAliveOrganism.get(index);
             amountOfAliveOrganism.set(index, --number);
-
-            number = amountOfDeathOrganism.get(index);
-            amountOfDeathOrganism.set(index, ++number);
         } finally {
             locker.unlock();
         }
 
     }
 
+    public void recordDeathOrganism(int index) {
+        locker.lock();
+        try {
+            Long number = amountOfDeathOrganism.get(index);
+            amountOfDeathOrganism.set(index, ++number);
+        } finally {
+            locker.unlock();
+        }
+    }
+
+    public boolean checkAliveAnimals() {
+        boolean result = false;
+        locker.lock();
+        long amountAnimal = 0L;
+        try {
+            for (int i = 0; i < settings.nameOrganism.length - 1; i++) {
+                amountAnimal += amountOfDeathOrganism.get(i);
+            }
+            //тут нужен catch
+        } finally {
+            locker.unlock();
+        }
+
+        if (amountAnimal != 0) {
+            result = true;
+        }
+        return result;
+    }
+
     public void printStatistic() {
-        System.out.println("Statistic: {");
+        System.out.println("Number of alive: {");
         for (int i = 0; i < settings.nameOrganism.length / 2; i++) {
             System.out.print(settings.nameOrganism[i] + " - " + amountOfAliveOrganism.get(i) + " ");
         }

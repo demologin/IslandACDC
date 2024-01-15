@@ -10,15 +10,15 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class Table {
 
     @Getter
-    public final int height = 100;
+    public final int height;
     @Getter
-    public final int width = 20;
+    public final int width;
 
     public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<TransferOrganism>();
 
     private final SettingsEntity settings;
     @Getter
-    Cell[][] tableGame = new Cell[height][width];
+    Cell[][] tableGame;
 
     private final StatisticOrganism statisticOrganism;
 
@@ -33,10 +33,13 @@ public class Table {
     public Table(StatisticOrganism statisticOrganism, SettingsEntity settings) {
         this.statisticOrganism = statisticOrganism;
         this.settings = settings;
+        height = settings.heightTable;
+        width = settings.widthTable;
     }
     //тут может храниться класс для статистики
 
     public void createCell() {
+        tableGame = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 tableGame[i][j] = new Cell(i, j, statisticOrganism, settings);
@@ -46,8 +49,8 @@ public class Table {
 
     //этот метод необходимо убрать, за вывод будет отвечать другой класс
     public void printTable() {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
+        for (int i = 0; i < settings.viewHeightTable; i++) {
+            for (int j = 0; j < settings.viewWidthTable; j++) {
                 System.out.print("[");
                 Set<Map.Entry<Class<?>, List<Organism>>> set;
                 tableGame[i][j].getLocker().lock();

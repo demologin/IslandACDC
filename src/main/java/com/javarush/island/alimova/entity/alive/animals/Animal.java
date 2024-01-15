@@ -55,6 +55,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
                 this.satiety = false;
                 Organism newOrganism = this.clone();
                 currentCell.addOrganismToQueueWithStatistic(newOrganism);
+                //System.out.println("multiply " + this.toString() + "; ");
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException(e);
             }
@@ -114,6 +115,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
         organism = organismList.removeFirst();      //тут наверное нужно синхронизовать
         currentCell.deleteOrganismFromStatistics(organismName);
         //System.out.print(this + " kill " + organism.toString() + "; ");
+        currentCell.recordDeath(organismName);
         this.eatenMass += organism.getWeight();
         hungry = false;
         counterHunger = 0;
