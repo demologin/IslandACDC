@@ -1,14 +1,14 @@
 package com.javarush.island.maikov.Actions;
 
 import com.javarush.island.maikov.Abstraction.Organism;
-import com.javarush.island.maikov.Animals.Herbivore.Herbivore;
-import com.javarush.island.maikov.Animals.Predators.Predator;
+import com.javarush.island.maikov.Abstraction.Herbivore;
+import com.javarush.island.maikov.Abstraction.Predator;
 import com.javarush.island.maikov.MapOfIsland;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Move {
-    public static void move(Organism someOrganism) {
+    public static void startMove(Organism someOrganism) {
         synchronized (MapOfIsland.mapOfIsland) {
             int[] coordinates = getCoordinates(someOrganism);
             int randomSpeed = getRandomSpeed(someOrganism);

@@ -1,5 +1,6 @@
 package com.javarush.island.maikov.Animals.Herbivore;
 
+import com.javarush.island.maikov.Abstraction.Herbivore;
 import com.javarush.island.maikov.Constants;
 
 public class Rabbit extends Herbivore {

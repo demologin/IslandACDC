@@ -1,6 +1,6 @@
 package com.javarush.island.maikov.Animals.Predators;
 
-import com.javarush.island.maikov.Animals.Predators.Predator;
+import com.javarush.island.maikov.Abstraction.Predator;
 import com.javarush.island.maikov.Constants;
 
 public class Boa extends Predator {

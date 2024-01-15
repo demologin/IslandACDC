@@ -1,8 +1,8 @@
 package com.javarush.island.maikov.Actions;
 
 import com.javarush.island.maikov.Abstraction.Organism;
-import com.javarush.island.maikov.Animals.Herbivore.Herbivore;
-import com.javarush.island.maikov.Animals.Predators.Predator;
+import com.javarush.island.maikov.Abstraction.Herbivore;
+import com.javarush.island.maikov.Abstraction.Predator;
 import com.javarush.island.maikov.Grass.AbstractionGrass;
 import com.javarush.island.maikov.MapOfIsland;
 import com.javarush.island.maikov.methods.Statistics;
@@ -10,7 +10,7 @@ import com.javarush.island.maikov.methods.Statistics;
 import java.util.ArrayList;
 
 public class Eat {
-    public static void eat(Organism someOrganism) {
+    public static void startEat(Organism someOrganism) {
         Statistics statistics = new Statistics();
         synchronized (MapOfIsland.mapOfIsland) {
             if (someOrganism instanceof Herbivore) {

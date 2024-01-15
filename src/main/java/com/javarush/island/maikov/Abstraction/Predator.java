@@ -1,12 +1,9 @@
-package com.javarush.island.maikov.Animals.Herbivore;
-
-import com.javarush.island.maikov.Abstraction.Animals;
+package com.javarush.island.maikov.Abstraction;
 
 import java.util.Objects;
-import java.util.concurrent.Semaphore;
 
-public abstract class Herbivore extends Animals {
-    private double weight;
+public abstract class Predator extends Animals {
+    private int weight;
     private int maxAnimalOnSpace;
     private int maxSpeed;
     private double maxFood;
@@ -16,7 +13,8 @@ public abstract class Herbivore extends Animals {
     private volatile double live;
 
 
-    protected Herbivore(double weight, int maxAnimalOnSpace, int maxSpeed, double maxFood, int x, int y) {
+
+    protected Predator(int weight, int maxAnimalOnSpace, int maxSpeed, double maxFood, int x, int y) {
         this.weight = weight;
         this.maxAnimalOnSpace = maxAnimalOnSpace;
         this.maxSpeed = maxSpeed;
@@ -28,7 +26,7 @@ public abstract class Herbivore extends Animals {
         thread.start();
     }
 
-    public double getWeight() {
+    public int getWeight() {
         return weight;
     }
 
@@ -97,24 +95,23 @@ public abstract class Herbivore extends Animals {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Herbivore herbivore = (Herbivore) o;
+        Predator predator = (Predator) o;
 
-        if (Double.compare(weight, herbivore.weight) != 0) return false;
-        if (maxAnimalOnSpace != herbivore.maxAnimalOnSpace) return false;
-        if (maxSpeed != herbivore.maxSpeed) return false;
-        if (Double.compare(maxFood, herbivore.maxFood) != 0) return false;
-        if (x != herbivore.x) return false;
-        if (y != herbivore.y) return false;
-        if (Double.compare(live, herbivore.live) != 0) return false;
-        return Objects.equals(thread, herbivore.thread);
+        if (weight != predator.weight) return false;
+        if (maxAnimalOnSpace != predator.maxAnimalOnSpace) return false;
+        if (maxSpeed != predator.maxSpeed) return false;
+        if (Double.compare(maxFood, predator.maxFood) != 0) return false;
+        if (x != predator.x) return false;
+        if (y != predator.y) return false;
+        if (Double.compare(live, predator.live) != 0) return false;
+        return Objects.equals(thread, predator.thread);
     }
 
     @Override
     public int hashCode() {
         int result;
         long temp;
-        temp = Double.doubleToLongBits(weight);
-        result = (int) (temp ^ (temp >>> 32));
+        result = weight;
         result = 31 * result + maxAnimalOnSpace;
         result = 31 * result + maxSpeed;
         temp = Double.doubleToLongBits(maxFood);

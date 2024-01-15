@@ -1,50 +1,46 @@
 package com.javarush.island.maikov.Actions;
 
-import com.javarush.island.maikov.Abstraction.Animals;
 import com.javarush.island.maikov.Abstraction.Organism;
-import com.javarush.island.maikov.Animals.Herbivore.Herbivore;
+import com.javarush.island.maikov.Abstraction.Herbivore;
 import com.javarush.island.maikov.Animals.Herbivore.Rabbit;
-import com.javarush.island.maikov.Animals.Predators.Predator;
+import com.javarush.island.maikov.Abstraction.Predator;
 import com.javarush.island.maikov.Animals.Predators.Wolf;
 import com.javarush.island.maikov.Grass.AbstractionGrass;
 import com.javarush.island.maikov.Grass.Clover;
 import com.javarush.island.maikov.MapOfIsland;
 import com.javarush.island.maikov.methods.Statistics;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Reproduce {
-    public static void reproduce(Organism someOrganism) throws InterruptedException {
+    private final Statistics statistics = new Statistics();
+
+    public void startReproduce(Organism someOrganism) throws InterruptedException {
         synchronized (MapOfIsland.mapOfIsland) {
-            Statistics statistics = new Statistics();
             if (someOrganism instanceof Herbivore) {
                 int x = ((Herbivore) someOrganism).getX();
                 int y = ((Herbivore) someOrganism).getY();
-                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
-                for (Organism organism : oneSpaceOfIsland) {
-                    if (organism.getClass().equals(someOrganism.getClass())) {
-                        Rabbit newRabbit = new Rabbit(x, y);
-                        Thread.sleep(1000);
-                        MapOfIsland.mapOfIsland[x][y].add(newRabbit);
-                        statistics.addToStatistics(newRabbit);
-                        return;
-                    }
-                }
+                reproduceHerbivore(someOrganism, x, y);
+                return;
             }
             if (someOrganism instanceof Predator) {
                 int x = ((Predator) someOrganism).getX();
                 int y = ((Predator) someOrganism).getY();
-                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
-                for (Organism organism : oneSpaceOfIsland) {
-                    if (organism.getClass().equals(someOrganism.getClass())) {
-                        Wolf newWolf = new Wolf(x, y);
-                        Thread.sleep(1000);
-                        MapOfIsland.mapOfIsland[x][y].add(newWolf);
-                        statistics.addToStatistics(newWolf);
-                        return;
-                    }
-                }
+                reproduceHerbivore(someOrganism, x, y);
+                return;
+//                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
+//                for (Organism organism : oneSpaceOfIsland) {
+//                    if (organism.getClass().equals(someOrganism.getClass())) {
+//                        Wolf newWolf = new Wolf(x, y);
+//                        Thread.sleep(1000);
+//                        MapOfIsland.mapOfIsland[x][y].add(newWolf);
+//                        statistics.addToStatistics(newWolf);
+//                        return;
+//                    }
+//                }
             }
             if (someOrganism instanceof AbstractionGrass) {
                 int x = ((AbstractionGrass) someOrganism).getX();
@@ -81,6 +77,41 @@ public class Reproduce {
                     statistics.addToStatistics(newClover);
 
                 }
+            }
+        }
+    }
+
+    private void reproduceHerbivore(Organism someOrganism, int x, int y) throws InterruptedException {
+        ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
+        for (Organism organism : oneSpaceOfIsland) {
+            if (organism.getClass().equals(someOrganism.getClass())) { // I don't know, why I can't use instanceof, maybe you know?)
+                Class<?> aClass = organism.getClass();
+                Object newAnimal;
+                try {
+                    Constructor<?> constructor = aClass.getConstructor(int.class, int.class);
+                    try {
+                        newAnimal = constructor.newInstance(x, y);
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+                if (someOrganism instanceof Herbivore) {
+                    Thread.sleep(1000);
+                    MapOfIsland.mapOfIsland[x][y].add((Herbivore) newAnimal);
+                    statistics.addToStatistics((Herbivore) newAnimal);
+                }
+                if (someOrganism instanceof Predator) {
+                    Thread.sleep(1000);
+                    MapOfIsland.mapOfIsland[x][y].add((Predator) newAnimal);
+                    statistics.addToStatistics((Predator) newAnimal);
+                }
+
+//                Rabbit newRabbit = new Rabbit(x, y);
+//                Thread.sleep(1000);
+//                MapOfIsland.mapOfIsland[x][y].add(newRabbit);
+//                statistics.addToStatistics(newRabbit);
             }
         }
     }

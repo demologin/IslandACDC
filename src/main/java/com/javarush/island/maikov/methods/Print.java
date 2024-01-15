@@ -16,7 +16,13 @@ public class Print {
                 }
                 System.out.println();
             }
-        System.out.printf("Wolf = %d, Rabbit = %d, Clover = %d%n", Statistics.countWolf, Statistics.countRabbit,
-                Statistics.countClover);
+        System.out.println("Boar = "+ Statistics.countBoar + " Buffalo = " + Statistics.countBuffalo +
+                " Caterpillar = " + Statistics.countCaterpillar + " Deer = " + Statistics.countDeer +
+                " Duck = " + Statistics.countDuck + " Goat = " + Statistics.countGoat
+                + " Horse = " + Statistics.countHorse + " Mouse = " + Statistics.countMouse +
+                " Rabbit = " + Statistics.countRabbit + " Sheep = " + Statistics.countSheep +
+                " Bear = " + Statistics.countBear + " Boa = " + Statistics.countBoa +
+                " Eagle = " + Statistics.countEagle + " Fox = " + Statistics.countFox +
+                " Wolf = " + Statistics.countWolf + " Clover = " + Statistics.countClover);
     }
 }
