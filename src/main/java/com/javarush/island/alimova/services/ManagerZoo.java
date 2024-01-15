@@ -5,6 +5,7 @@ import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
 import com.javarush.island.alimova.entity.map.StatisticOrganism;
 import com.javarush.island.alimova.entity.map.Table;
+import com.javarush.island.khmelov.entity.Game;
 
 import java.util.concurrent.*;
 
@@ -21,7 +22,7 @@ public class ManagerZoo {
         setStartupSettings();
         for (Class<?> nameClass :
                 settings.classNameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(20, 500);
+            int randomCounter = ThreadLocalRandom.current().nextInt(20, 2000);
             if (Plant.class.isAssignableFrom(nameClass)) {
                 randomCounter += settings.initialNumberOfPlants;     //чтобы хватило травоядным или тут задавать сдвиг минимума по траве
             }
@@ -62,33 +63,17 @@ public class ManagerZoo {
     }
 
     public void startLive() {
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(table.height * table.width);
-            for (int i = 0; i < table.height; i++) {
-                for (int j = 0; j < table.width; j++) {
-                    scheduledExecutorService.scheduleAtFixedRate(new OrganismWorker(table.getCurrentCell(i, j), settings), 0, 1, TimeUnit.SECONDS);
-                }
-            }
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);     //какая форма executer
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.scheduleAtFixedRate(new GameWorker(table, settings, statisticOrganism), 0, 1, TimeUnit.SECONDS);
+        startTransferCell();
+    }
+
+    private void startTransferCell() {
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++) {
             executorService.execute(new TransferWorker(table.getTableGame()));
         }
         executorService.shutdown();
-
-
-        //тут нужен выход из игры
-        while(true) {
-            try {
-                Thread.sleep(2000);
-                table.printTable();
-                System.out.println();
-                statisticOrganism.printStatistic();
-                //из статистики кидается исключение для завершения игры?
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
     }
 }

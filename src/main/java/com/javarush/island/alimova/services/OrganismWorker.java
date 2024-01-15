@@ -34,7 +34,7 @@ public class OrganismWorker implements Runnable{
 
                 if (Animal.class.isAssignableFrom(classOrganism)) {
                     eatAnimal(classOrganism);
-                    multiplyAnimal(classOrganism, checkSatiety);
+                    multiplyAnimal(classOrganism, checkSatiety);      //--для тестирования статистики
                     moveAnimal(classOrganism);
                 }
 

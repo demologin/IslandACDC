@@ -15,6 +15,13 @@ public class DefaultSettings {
             "Sheep", "Boar", "Buffalo", "Duck", "Caterpillar", "Grass"};
     //может, сделать всё капсом, чтобы быть уверенным?
 
+    public static String[] iconOrganism = {
+            "\uD83D\uDC3A", "\uD83D\uDC0D", "\uD83E\uDD8A", "\uD83D\uDC3B",
+            "\uD83E\uDD85", "\uD83D\uDC0E", "\uD83E\uDD8C", "\uD83D\uDC07",
+            "\uD83D\uDC01", "\uD83D\uDC10", "\uD83D\uDC11", "\uD83D\uDC17",
+            "\uD83D\uDC03", "\uD83E\uDD86", "\uD83D\uDC1B", "\uD83C\uDF31"};
+
+
     public static Class<?>[] classNameOrganism = new Class[]{
             Wolf.class, Anaconda.class, Fox.class, Bear.class, Eagle.class,
             Horse.class, Deer.class, Rabbit.class, Mouse.class, Goat.class,

@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class Table {
 
     @Getter
-    public final int height = 10;
+    public final int height = 100;
     @Getter
-    public final int width = 10;
+    public final int width = 20;
 
     public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<TransferOrganism>();
 
@@ -60,7 +60,8 @@ public class Table {
                     for (Map.Entry<Class<?>, List<Organism>> value : set) {
                         int sizeList = value.getValue().size();
                         if (sizeList != 0) {
-                            System.out.print(value.getKey().getSimpleName() + " - " + sizeList + " ");
+                            int indexIcon = settings.getIndexOrganism(value.getKey());
+                            System.out.print(settings.iconOrganism[indexIcon] + " - " + sizeList + " ");
                         }
 
                     }

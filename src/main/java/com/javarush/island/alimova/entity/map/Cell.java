@@ -14,8 +14,8 @@ public class Cell {
     private final StatisticOrganism statisticOrganism;
     private final SettingsEntity settings;
     
-    private final int heightCoordinate;
-    private final int widthCoordinate;
+    public final int heightCoordinate;
+    public final int widthCoordinate;
 
     @Getter
     private final ReentrantLock locker = new ReentrantLock();

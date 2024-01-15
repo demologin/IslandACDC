@@ -27,8 +27,8 @@ public class SettingsEntity implements Serializable {
 
 
     public String[] nameOrganism;
-    //может, сделать всё капсом, чтобы быть уверенным?
-    //может, сделать всё final и передавать в классы...
+
+    public String[] iconOrganism;
 
     public Class<?>[] classNameOrganism;
 
@@ -49,6 +49,7 @@ public class SettingsEntity implements Serializable {
     public double[] maxFoodWeightOrganism;
     public void setDefaultSettings() {
         nameOrganism = DefaultSettings.nameOrganism;
+        iconOrganism = DefaultSettings.iconOrganism;
         classNameOrganism = DefaultSettings.classNameOrganism;
         eatingTable = DefaultSettings.eatingTable;
         limitWeightOrganism = DefaultSettings.limitWeightOrganism;
