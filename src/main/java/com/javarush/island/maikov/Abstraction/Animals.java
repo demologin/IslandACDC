@@ -10,14 +10,17 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public abstract class Animals extends Organism {
+    private final Eat eat = new Eat();
     private final Reproduce reproduce = new Reproduce();
+    private final Move move = new Move();
+
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             synchronized (MapOfIsland.mapOfIsland) {
                 int randomAction = ThreadLocalRandom.current().nextInt(0, 3);
                 if (randomAction == 0) {
-                    Eat.startEat(this);
+                    eat.startEat(this);
                 }
                 if (randomAction == 1) {
                     try {
@@ -26,14 +29,14 @@ public abstract class Animals extends Organism {
                         Thread.currentThread().interrupt();
                     }
                 }
-                if(randomAction == 2){
-                    Move.startMove(this);
+                if (randomAction == 2) {
+                    move.startMove(this);
                 }
             }
-
         }
     }
-    private static boolean isHungryHerbivore(Organism anyOrganism) {
+
+    private boolean isHungryHerbivore(Organism anyOrganism) {
         //check is animal hungry. Look README.
         return ((Herbivore) anyOrganism).getMaxFood() * 0.7 < ((Rabbit) anyOrganism).getLive();
     }

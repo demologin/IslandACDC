@@ -10,7 +10,7 @@ import com.javarush.island.maikov.methods.Statistics;
 import java.util.ArrayList;
 
 public class Eat {
-    public static void startEat(Organism someOrganism) {
+    public void startEat(Organism someOrganism) {
         Statistics statistics = new Statistics();
         synchronized (MapOfIsland.mapOfIsland) {
             if (someOrganism instanceof Herbivore) {

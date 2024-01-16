@@ -2,9 +2,7 @@ package com.javarush.island.maikov.Actions;
 
 import com.javarush.island.maikov.Abstraction.Organism;
 import com.javarush.island.maikov.Abstraction.Herbivore;
-import com.javarush.island.maikov.Animals.Herbivore.Rabbit;
 import com.javarush.island.maikov.Abstraction.Predator;
-import com.javarush.island.maikov.Animals.Predators.Wolf;
 import com.javarush.island.maikov.Grass.AbstractionGrass;
 import com.javarush.island.maikov.Grass.Clover;
 import com.javarush.island.maikov.MapOfIsland;
@@ -31,16 +29,6 @@ public class Reproduce {
                 int y = ((Predator) someOrganism).getY();
                 reproduceHerbivore(someOrganism, x, y);
                 return;
-//                ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
-//                for (Organism organism : oneSpaceOfIsland) {
-//                    if (organism.getClass().equals(someOrganism.getClass())) {
-//                        Wolf newWolf = new Wolf(x, y);
-//                        Thread.sleep(1000);
-//                        MapOfIsland.mapOfIsland[x][y].add(newWolf);
-//                        statistics.addToStatistics(newWolf);
-//                        return;
-//                    }
-//                }
             }
             if (someOrganism instanceof AbstractionGrass) {
                 int x = ((AbstractionGrass) someOrganism).getX();
@@ -84,7 +72,8 @@ public class Reproduce {
     private void reproduceHerbivore(Organism someOrganism, int x, int y) throws InterruptedException {
         ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
         for (Organism organism : oneSpaceOfIsland) {
-            if (organism.getClass().equals(someOrganism.getClass())) { // I don't know, why I can't use instanceof, maybe you know?)
+            // I don't know why I can't use instanceof, maybe you know?
+            if (organism.getClass().equals(someOrganism.getClass())) {
                 Class<?> aClass = organism.getClass();
                 Object newAnimal;
                 try {
@@ -107,11 +96,6 @@ public class Reproduce {
                     MapOfIsland.mapOfIsland[x][y].add((Predator) newAnimal);
                     statistics.addToStatistics((Predator) newAnimal);
                 }
-
-//                Rabbit newRabbit = new Rabbit(x, y);
-//                Thread.sleep(1000);
-//                MapOfIsland.mapOfIsland[x][y].add(newRabbit);
-//                statistics.addToStatistics(newRabbit);
             }
         }
     }
