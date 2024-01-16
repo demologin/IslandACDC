@@ -3,6 +3,8 @@ package com.javarush.island.alimova.configure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.javarush.island.alimova.entity.alive.Organism;
+import com.javarush.island.alimova.exception.GameException;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -16,9 +18,6 @@ import java.util.Objects;
 public class SettingsEntity implements Serializable {
 
     private final String pathSetting = "alimova" + File.separator + "setting.yaml";
-    private final String pathToResources = System.getProperty("user.dir") + File.separator + "src"
-            + File.separator + "main" + File.separator + "resources";
-
 
     public String[] nameOrganism;
 
@@ -28,7 +27,7 @@ public class SettingsEntity implements Serializable {
 
     public Map<String, Integer> organismMap = new HashMap<>();
 
-    public Map<Class<?>, Integer> organismMapClass = new HashMap<>();     //нужно определиться, как хранить
+    public Map<Class<?>, Integer> organismMapClass = new HashMap<>();
 
     public int initialNumberOfPlants;
 
@@ -85,17 +84,33 @@ public class SettingsEntity implements Serializable {
         URL resource = SettingsEntity.class.getClassLoader().getResource(pathSetting);
         if (Objects.nonNull(resource)) {
             objectReader.readValue(resource.openStream());
+        } else {
+            System.err.println(DefaultSettings.MESSAGE_FILE_NOT_FOUND);
         }
 
     }
 
     public void initializationField() {
-        for (int i = 0; i < nameOrganism.length; i++) {
-            organismMap.put(nameOrganism[i], i);
+        checkClassOrganism();
+        try {
+            for (int i = 0; i < nameOrganism.length; i++) {
+                organismMap.put(nameOrganism[i], i);
+            }
+
+            for (int i = 0; i < classNameOrganism.length; i++) {
+                organismMapClass.put(classNameOrganism[i], i);
+            }
+        } catch (ClassCastException | NullPointerException | IllegalArgumentException e) {
+            throw new GameException(DefaultSettings.MESSAGE_ERROR_NAME_ORGANISM, e);
         }
 
-        for (int i = 0; i < classNameOrganism.length; i++) {
-            organismMapClass.put(classNameOrganism[i], i);
+    }
+
+    private void checkClassOrganism() {
+        for(Class<?> className: classNameOrganism) {
+            if (!Organism.class.isAssignableFrom(className)) {
+                throw  new GameException(DefaultSettings.MESSAGE_ERROR_CLASS);
+            }
         }
     }
 

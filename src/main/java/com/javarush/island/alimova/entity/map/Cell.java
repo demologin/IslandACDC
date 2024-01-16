@@ -5,7 +5,6 @@ import com.javarush.island.alimova.entity.alive.Organism;
 import lombok.Getter;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -30,7 +29,7 @@ public class Cell {
     }
 
     private final Map<Class<?>, List<Organism>> manyCreatures = new HashMap<>();
-    private final ConcurrentLinkedDeque<Organism> additionQueue = new ConcurrentLinkedDeque<>();        //обычная очередь?
+    private final Queue<Organism> additionQueue = new ArrayDeque<>();
 
     private final Queue<Organism> murderQueue = new ArrayDeque<>();
 
@@ -50,7 +49,6 @@ public class Cell {
         return amountOrganism < settings.maxAmountOrganism[settings.getIndexOrganism(name)];
     }
 
-    //возможно, стоит пересмотреть методы и их названия
     public void addOrganismToQueueWithStatistic(Organism organism) {
         this.additionQueue.add(organism);
         String name = organism.getClass().getSimpleName();

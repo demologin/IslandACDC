@@ -1,6 +1,5 @@
 package com.javarush.island.alimova.entity.map;
 
-import com.javarush.island.alimova.configure.DefaultSettings;
 import com.javarush.island.alimova.configure.SettingsEntity;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -67,7 +66,7 @@ public class StatisticOrganism {
         long amountAnimal = 0L;
         try {
             for (int i = 0; i < settings.nameOrganism.length - 1; i++) {
-                amountAnimal += amountOfDeathOrganism.get(i);
+                amountAnimal += amountOfAliveOrganism.get(i);
             }
             //тут нужен catch
         } finally {

@@ -2,6 +2,7 @@ package com.javarush.island.alimova.entity.alive.animals;
 
 import com.javarush.island.alimova.api.entity.Eating;
 import com.javarush.island.alimova.api.entity.Moving;
+import com.javarush.island.alimova.configure.DefaultSettings;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.map.Cell;
@@ -50,21 +51,18 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     @Override
     public void multiply(Cell currentCell) {
-        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());  //может быть хранить где-то имя
+        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());
         if (amountGrass < this.maxAmount) {
             try {
                 this.eatenMass = 0;
                 this.satiety = false;
                 Organism newOrganism = this.clone();
                 currentCell.addOrganismToQueueWithStatistic(newOrganism);
-                //System.out.println("multiply " + this.toString() + "; ");
             } catch (CloneNotSupportedException e) {
+                System.err.println(DefaultSettings.MESSAGE_FATAL_ERROR);
                 throw new RuntimeException(e);
             }
-        } else {
-            //todo //кинуть какое-то исключение? либо возвращать булеан
         }
-
     }
 
     @Override
@@ -121,9 +119,8 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     private void eatingOrganism(Cell currentCell, LinkedList<Organism> organismList, String organismName) {
         Organism organism;
-        organism = organismList.removeFirst();      //тут наверное нужно синхронизовать
+        organism = organismList.removeFirst();
         currentCell.deleteOrganismFromStatistics(organismName);
-        //System.out.print(this + " kill " + organism.toString() + "; ");
         currentCell.recordDeath(organismName);
         this.eatenMass += organism.getWeight();
         hungry = false;
@@ -131,7 +128,6 @@ public abstract class Animal extends Organism implements Eating, Moving {
         if (eatenMass >= maxFoodWeight) {
             eatenMass = maxFoodWeight;
             satiety = true;
-            //System.out.println(this + "SATIETY");
         }
     }
 
@@ -141,11 +137,8 @@ public abstract class Animal extends Organism implements Eating, Moving {
         if (currentProbability == 100) {
             return true;
         }
-        int probabilityEating = ThreadLocalRandom.current().nextInt(0, 100);    //как-то не так считаю вероятность
-        if (probabilityEating >= (100 - currentProbability)) {
-            return true;
-        } else {
-            return false;        }
+        int probabilityEating = ThreadLocalRandom.current().nextInt(0, 100);
+        return probabilityEating >= (100 - currentProbability);
 
     }
 

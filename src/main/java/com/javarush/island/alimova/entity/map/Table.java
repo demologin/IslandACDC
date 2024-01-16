@@ -14,7 +14,7 @@ public class Table {
     @Getter
     public final int width;
 
-    public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<TransferOrganism>();
+    public static Queue<TransferOrganism> transferAnimalQueue = new ConcurrentLinkedDeque<>();
 
     private final SettingsEntity settings;
     @Getter
@@ -36,7 +36,6 @@ public class Table {
         height = settings.heightTable;
         width = settings.widthTable;
     }
-    //тут может храниться класс для статистики
 
     public void createCell() {
         tableGame = new Cell[height][width];
@@ -47,7 +46,6 @@ public class Table {
         }
     }
 
-    //этот метод необходимо убрать, за вывод будет отвечать другой класс
     public void printTable() {
         for (int i = 0; i < settings.viewHeightTable; i++) {
             for (int j = 0; j < settings.viewWidthTable; j++) {
@@ -77,20 +75,11 @@ public class Table {
         }
     }
 
-    public void printQueueTransfer() {
-        System.out.println("\n[ ");
-        System.out.println(Arrays.toString(transferAnimalQueue.toArray()));
-        System.out.println("]");
-    }
-
-    public boolean addNewOrganism(int x, int y, Organism organism) {
+    public void addNewOrganism(int x, int y, Organism organism) {
         Class<?> classOrganism = organism.getClass();
         if (tableGame[x][y].checkLimitOrganism(classOrganism.getSimpleName())) {
             tableGame[x][y].addOrganismToQueueWithStatistic(organism);
             tableGame[x][y].addOrganismsFromQueue();
-            return true;
-        } else {
-            return false;
         }
     }
 

@@ -76,8 +76,24 @@ public class DefaultSettings {
 
     public static final int MAX_LIFE_CYCLE = 30;
 
-    public static final String MESSAGE_FINAL_GAME = "Finish game!";
+    public static final String MESSAGE_FINAL_GAME = """
+            -------------------------------
+            Finish game!
+            --------------------------------
+            """;
 
     public static final String MESSAGE_TIME_OUT_GAME = "There is not enough time for processing.\nPlease change your settings.";
+
+    public static final String MESSAGE_FATAL_ERROR = "Fatal error!!!";
+
+    public static final String MESSAGE_INDEX_OUTPUT = "\nThe display index goes beyond the scope of the table. Change the settings.";
+
+    public static final String MESSAGE_ERROR_NAME_ORGANISM = "\nErrors of the type of the name or class of organisms in the settings. Change the settings.";
+
+    public static final String MESSAGE_FILE_NOT_FOUND = "\nFile settings not found";
+
+    public static final String MESSAGE_ERROR_CLASS = "\nIncorrect classes of organisms are specified. Change the settings.";
+
+    public static final String MESSAGE_THREAD_INTERRUPTED = "\nThe thread is interrupted. Possible problem with the size of the card";
 
 }

@@ -6,6 +6,7 @@ import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
 import com.javarush.island.alimova.entity.map.StatisticOrganism;
 import com.javarush.island.alimova.entity.map.Table;
+import com.javarush.island.alimova.exception.GameException;
 
 import java.util.concurrent.*;
 
@@ -26,7 +27,7 @@ public class ManagerZoo {
         setStartupSettings();
         for (Class<?> nameClass :
                 settings.classNameOrganism) {
-            int randomCounter = ThreadLocalRandom.current().nextInt(settings.minRandomOrganism, settings.maxRandomOrganism);
+            int randomCounter = ThreadLocalRandom.current().nextInt(settings.minRandomOrganism, settings.maxRandomOrganism + 1);
             if (Plant.class.isAssignableFrom(nameClass)) {
                 randomCounter += settings.initialNumberOfPlants;
             }
@@ -34,11 +35,15 @@ public class ManagerZoo {
                 Organism organism = fabric.createNewInstanceOrganism(nameClass);
                 int indexX = ThreadLocalRandom.current().nextInt(0, table.height);
                 int indexY = ThreadLocalRandom.current().nextInt(0, table.width);
-                table.addNewOrganism(indexX, indexY, organism);     //тут игнорируем возвращаемое значение, здесь это не важно
+                table.addNewOrganism(indexX, indexY, organism);
             }
         }
-        table.printTable();
-        fabric.printStatisticOrganism();
+        try {
+            table.printTable();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new GameException(DefaultSettings.MESSAGE_INDEX_OUTPUT, e);
+        }
+        statisticOrganism.printStatistic();
 
     }
 
@@ -63,37 +68,38 @@ public class ManagerZoo {
     }
 
     public void getFabric() {
-        fabric = new FabricOrganism(statisticOrganism, settings);
+        fabric = new FabricOrganism(settings);
         fabric.createCopyBase();
     }
 
     public void startLive() {
 
         executorServiceOrganism = Executors.newSingleThreadScheduledExecutor();
-        executorServiceOrganism.scheduleAtFixedRate(() -> testWork(table, settings, statisticOrganism), 0, settings.periodGame, TimeUnit.SECONDS);
+        executorServiceOrganism.scheduleAtFixedRate(this::testWork, 0, settings.periodGame, TimeUnit.SECONDS);
 
         executorServiceTransfer = Executors.newSingleThreadScheduledExecutor();
         executorServiceTransfer.scheduleWithFixedDelay(new TransferWorker(table.getTableGame()), 0, 10, TimeUnit.MILLISECONDS);
 
     }
 
-    private void testWork(Table tableGame, SettingsEntity settings, StatisticOrganism statisticOrganism) {
-        ExecutorService executorService = Executors.newFixedThreadPool(tableGame.height * tableGame.width);
-        for (int i = 0; i < tableGame.height; i++) {
-            for (int j = 0; j < tableGame.width; j++) {
-                executorService.execute((new OrganismWorker(tableGame.getCurrentCell(i, j), settings)));
+    private void testWork() {
+        ExecutorService executorService = Executors.newFixedThreadPool(table.height * table.width);
+        for (int i = 0; i < table.height; i++) {
+            for (int j = 0; j < table.width; j++) {
+                executorService.execute((new OrganismWorker(table.getCurrentCell(i, j), settings)));
             }
         }
         executorService.shutdown();
 
         try {
             if(executorService.awaitTermination(settings.periodGame, TimeUnit.SECONDS)) {
-                tableGame.printTable();
+                table.printTable();
                 System.out.println();
                 statisticOrganism.printStatistic();
                 if (!statisticOrganism.checkAliveAnimals()) {
                     System.out.println(DefaultSettings.MESSAGE_FINAL_GAME);
                     stopGame();
+                    statisticOrganism.printStatistic();
                 }
             } else {
                 System.err.println(DefaultSettings.MESSAGE_TIME_OUT_GAME);
@@ -101,7 +107,7 @@ public class ManagerZoo {
 
             }
         } catch (InterruptedException e) {
-            //throw new RuntimeException("Application error", e);
+            throw new RuntimeException(DefaultSettings.MESSAGE_THREAD_INTERRUPTED, e);
         }
     }
 

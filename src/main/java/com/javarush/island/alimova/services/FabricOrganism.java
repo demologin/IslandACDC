@@ -5,32 +5,27 @@ import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.animals.Animal;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
-import com.javarush.island.alimova.entity.map.StatisticOrganism;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 public class FabricOrganism {
 
-    private final CopyOnWriteArrayList<Organism> cloneBase = new CopyOnWriteArrayList<>();
-    private final StatisticOrganism statisticOrganism;
+    private final ArrayList<Organism> cloneBase = new ArrayList<>();
 
     private final SettingsEntity settings;
 
 
-    public FabricOrganism(StatisticOrganism statisticOrganism, SettingsEntity settings) {
-        this.statisticOrganism = statisticOrganism;
+    public FabricOrganism(SettingsEntity settings) {
         this.settings = settings;
     }
 
     private Organism createNewExampleOrganism(String name){
 
-        //может, создавать по индексу
-
         int indexOrganism = settings.getIndexOrganism(name);
         Class<?> classOrganism = settings.classNameOrganism[indexOrganism];
-        Organism result = null;
+        Organism result;
         try {
             if (Plant.class.isAssignableFrom(classOrganism)) {
                 Constructor<?> constructor = classOrganism.getDeclaredConstructor(double.class, int.class);
@@ -68,7 +63,7 @@ public class FabricOrganism {
 
     public Organism createNewInstanceOrganism(Class<?> classOrganism) {
         int indexOrganism = settings.getIndexOrganism(classOrganism);
-        Organism organism = null;
+        Organism organism;
         try {
             organism = cloneBase.get(indexOrganism).clone();
         } catch (CloneNotSupportedException e) {
@@ -76,11 +71,5 @@ public class FabricOrganism {
         }
         return organism;
     }
-
-    public void printStatisticOrganism() {
-        statisticOrganism.printStatistic();
-    }
-
-
 
 }
