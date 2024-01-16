@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 
 import java.util.stream.Collectors;
 
-//TODO need refactoring (spaghetti-code).
 public class JavaFxView extends Application implements View {
 
     private static GameWorkerService gameWorker;
@@ -25,18 +24,17 @@ public class JavaFxView extends Application implements View {
     private final int rows;
     private final int cols;
     private final Game game;
-    private final StringBuilder mapOut = new StringBuilder();
 
     private final int cellIconCount;
     private final int statWidth;
     private final int width;
     private final int height;
 
-    private Label[][] viewMap;
+    private Label[][] labelCells;
     private Label statistics;
 
     public static void launchFxWindow(GameWorkerService gameWorkerService) {
-        JavaFxView.gameWorker = gameWorkerService; //send to new JavaFxView() and start(...)
+        JavaFxView.gameWorker = gameWorkerService;
         launch();
         gameWorker.getGame().setFinished(true);
     }
@@ -55,15 +53,10 @@ public class JavaFxView extends Application implements View {
 
     @Override
     public void start(Stage primaryStage) {
+        labelCells = new Label[rows][cols];
+        statistics = createStatisticsBox();
 
-        GridPane gameMapPane = getGameMapPane();
-
-        statistics = new Label();
-        statistics.setWrapText(true);
-        statistics.setFont(Font.font(18));
-        statistics.setMaxWidth(statWidth);
-        statistics.setMinWidth(statWidth);
-
+        GridPane gameMapPane = createGameMapPane(labelCells);
         HBox hBox = new HBox(gameMapPane, statistics);
 
         Scene scene = new Scene(hBox, width, height);
@@ -73,12 +66,20 @@ public class JavaFxView extends Application implements View {
         Platform.runLater(gameWorker); //and run game
     }
 
-    private GridPane getGameMapPane() {
+    private Label createStatisticsBox() {
+        Label label = new Label();
+        label.setWrapText(true);
+        label.setFont(Font.font(18));
+        label.setMaxWidth(statWidth);
+        label.setMinWidth(statWidth);
+        return label;
+    }
+
+    private GridPane createGameMapPane(Label[][] viewMap) {
         GridPane gameMapPane = new GridPane();
         gameMapPane.setPrefHeight(height);
         gameMapPane.setPrefWidth(width - statWidth);
 
-        viewMap = new Label[rows][cols];
 
         for (int i = 0; i < cols; i++) {
             ColumnConstraints col = new ColumnConstraints();
@@ -97,7 +98,7 @@ public class JavaFxView extends Application implements View {
         gameMapPane.setGridLinesVisible(true);
         for (int i = 0, mapLength = viewMap.length; i < mapLength; i++) {
             for (int j = 0; j < viewMap[i].length; j++) {
-                Label label = new Label(i + "|" + j);
+                Label label = new Label();
                 label.setFont(Font.font(15));
                 label.setWrapText(true);
                 viewMap[i][j] = label;
@@ -136,15 +137,12 @@ public class JavaFxView extends Application implements View {
     }
 
     private void fillViewMap() {
-        mapOut.setLength(0);
         Cell[][] cells = game.getGameMap().getCells();
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
                 String text = getIcons(cells[i][j]);
-                viewMap[i][j].setText(text);
-                mapOut.append(text+"  ",0,2);
+                labelCells[i][j].setText(text);
             }
-            mapOut.append("\n");
         }
     }
 

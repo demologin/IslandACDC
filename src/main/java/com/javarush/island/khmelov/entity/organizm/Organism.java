@@ -70,7 +70,7 @@ public abstract class Organism implements Reproducible, Cloneable {
 
     }
 
-    protected boolean isSafe(Cell cell) {
+    protected boolean isHere(Cell cell) {
         return cell.getResidents().get(this.getType()).contains(this);
     }
 
@@ -78,7 +78,7 @@ public abstract class Organism implements Reproducible, Cloneable {
     protected boolean safeDie(Cell target) {
         target.getLock().lock();
         try {
-            return isSafe(target)
+            return isHere(target)
                    && target
                            .getResidents()
                            .get(type)
@@ -95,7 +95,7 @@ public abstract class Organism implements Reproducible, Cloneable {
             weight += maxWeight * percent / 100;
             weight = Math.max(0, weight);
             weight = Math.min(weight, maxWeight);
-            return isSafe(currentCell) && currentCell
+            return isHere(currentCell) && currentCell
                     .getResidents()
                     .get(type)
                     .contains(this);
@@ -135,7 +135,7 @@ public abstract class Organism implements Reproducible, Cloneable {
         try {
             Residents residents = cell.getResidents();
             Organisms organisms = residents.get(getType());
-            return isSafe(cell) && organisms.remove(this);
+            return isHere(cell) && organisms.remove(this);
         } finally {
             cell.getLock().unlock();
         }
@@ -145,7 +145,7 @@ public abstract class Organism implements Reproducible, Cloneable {
         currentCell.getLock().lock();
         boolean foodFound = false;
         try {
-            if (isSafe(currentCell)) {
+            if (isHere(currentCell)) {
                 double needFood = getNeedFood();
                 if (!(needFood <= 0)) {
                     var foodIterator = foodMap.iterator();
