@@ -1,6 +1,6 @@
 ---
 life:
-  period: 2
+  period: 200
   rows: 20
   cols: 25
   percentAnimalSlim: 5
