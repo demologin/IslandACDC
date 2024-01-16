@@ -6,7 +6,7 @@ import com.javarush.island.khmelov.config.Window;
 import com.javarush.island.khmelov.entity.Game;
 import com.javarush.island.khmelov.entity.map.Cell;
 import com.javarush.island.khmelov.entity.organizm.Organisms;
-import com.javarush.island.khmelov.services.GameWorker;
+import com.javarush.island.khmelov.services.GameWorkerService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 //TODO need refactoring (spaghetti-code).
 public class JavaFxView extends Application implements View {
 
-    private static GameWorker gameWorker;
+    private static GameWorkerService gameWorker;
 
     private final int rows;
     private final int cols;
@@ -35,8 +35,8 @@ public class JavaFxView extends Application implements View {
     private Label[][] viewMap;
     private Label statistics;
 
-    public static void launchFxWindow(GameWorker gameWorker) {
-        JavaFxView.gameWorker = gameWorker; //send to new JavaFxView() and start(...)
+    public static void launchFxWindow(GameWorkerService gameWorkerService) {
+        JavaFxView.gameWorker = gameWorkerService; //send to new JavaFxView() and start(...)
         launch();
         gameWorker.getGame().setFinished(true);
     }
@@ -56,6 +56,24 @@ public class JavaFxView extends Application implements View {
     @Override
     public void start(Stage primaryStage) {
 
+        GridPane gameMapPane = getGameMapPane();
+
+        statistics = new Label();
+        statistics.setWrapText(true);
+        statistics.setFont(Font.font(18));
+        statistics.setMaxWidth(statWidth);
+        statistics.setMinWidth(statWidth);
+
+        HBox hBox = new HBox(gameMapPane, statistics);
+
+        Scene scene = new Scene(hBox, width, height);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        game.setView(this); //view complete, set callback in game.
+        Platform.runLater(gameWorker); //and run game
+    }
+
+    private GridPane getGameMapPane() {
         GridPane gameMapPane = new GridPane();
         gameMapPane.setPrefHeight(height);
         gameMapPane.setPrefWidth(width - statWidth);
@@ -86,20 +104,7 @@ public class JavaFxView extends Application implements View {
                 gameMapPane.add(viewMap[i][j], j, i);
             }
         }
-
-        statistics = new Label();
-        statistics.setWrapText(true);
-        statistics.setFont(Font.font(18));
-        statistics.setMaxWidth(statWidth);
-        statistics.setMinWidth(statWidth);
-
-        HBox hBox = new HBox(gameMapPane, statistics);
-
-        Scene scene = new Scene(hBox, width, height);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        game.setView(this); //view complete, set callback in game.
-        Platform.runLater(gameWorker); //and run game
+        return gameMapPane;
     }
 
     @Override
@@ -110,7 +115,7 @@ public class JavaFxView extends Application implements View {
     }
 
     @Override
-    public String showStatistics() {
+    public void showStatistics() {
         String text = game.getGameMap()
                 .getStatistics()
                 .entrySet()
@@ -118,18 +123,16 @@ public class JavaFxView extends Application implements View {
                 .map(e -> e.getKey().getIcon() + "(" + e.getKey().getName() + "): " + e.getValue())
                 .collect(Collectors.joining("\n"));
         Platform.runLater(() -> statistics.setText(text));
-        return text;
     }
 
     @Override
-    public String showScale() {
-        return null;
+    public void showScale() {
+        //
     }
 
     @Override
-    public String showMap() {
+    public void showMap() {
         Platform.runLater(this::fillViewMap);
-        return mapOut.toString();
     }
 
     private void fillViewMap() {

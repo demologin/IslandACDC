@@ -70,14 +70,19 @@ public abstract class Organism implements Reproducible, Cloneable {
 
     }
 
+    protected boolean isSafe(Cell cell) {
+        return cell.getResidents().get(this.getType()).contains(this);
+    }
+
 
     protected boolean safeDie(Cell target) {
         target.getLock().lock();
         try {
-            return target
-                    .getResidents()
-                    .get(type)
-                    .remove(this);
+            return isSafe(target)
+                   && target
+                           .getResidents()
+                           .get(type)
+                           .remove(this);
         } finally {
             target.getLock().unlock();
         }
@@ -90,7 +95,7 @@ public abstract class Organism implements Reproducible, Cloneable {
             weight += maxWeight * percent / 100;
             weight = Math.max(0, weight);
             weight = Math.min(weight, maxWeight);
-            return currentCell
+            return isSafe(currentCell) && currentCell
                     .getResidents()
                     .get(type)
                     .contains(this);
@@ -130,7 +135,7 @@ public abstract class Organism implements Reproducible, Cloneable {
         try {
             Residents residents = cell.getResidents();
             Organisms organisms = residents.get(getType());
-            return organisms.remove(this);
+            return isSafe(cell) && organisms.remove(this);
         } finally {
             cell.getLock().unlock();
         }
@@ -140,30 +145,31 @@ public abstract class Organism implements Reproducible, Cloneable {
         currentCell.getLock().lock();
         boolean foodFound = false;
         try {
-            double needFood = getNeedFood();
-            if (!(needFood <= 0)) {
-
-                var foodIterator = foodMap.iterator();
-                while (needFood > 0 && foodIterator.hasNext()) {
-                    Map.Entry<String, Integer> entry = foodIterator.next();
-                    String keyFood = entry.getKey();
-                    Integer probably = entry.getValue();
-                    Residents residents = currentCell.getResidents();
-                    var foods = residents.get(keyFood);
-                    if (Objects.nonNull(foods) && !foods.isEmpty() && Rnd.get(probably)) {
-                        for (Iterator<Organism> organismIterator = foods.iterator(); organismIterator.hasNext(); ) {
-                            Organism o = organismIterator.next();
-                            double foodWeight = o.getWeight();
-                            double delta = Math.min(foodWeight, needFood);
-                            setWeight(getWeight() + delta);
-                            o.setWeight(foodWeight - delta);
-                            if (o.getWeight() <= 0) {
-                                organismIterator.remove();
-                            }
-                            needFood -= delta;
-                            foodFound = true;
-                            if (needFood <= 0) {
-                                break;
+            if (isSafe(currentCell)) {
+                double needFood = getNeedFood();
+                if (!(needFood <= 0)) {
+                    var foodIterator = foodMap.iterator();
+                    while (needFood > 0 && foodIterator.hasNext()) {
+                        Map.Entry<String, Integer> entry = foodIterator.next();
+                        String keyFood = entry.getKey();
+                        Integer probably = entry.getValue();
+                        Residents residents = currentCell.getResidents();
+                        var foods = residents.get(keyFood);
+                        if (Objects.nonNull(foods) && !foods.isEmpty() && Rnd.get(probably)) {
+                            for (Iterator<Organism> organismIterator = foods.iterator(); organismIterator.hasNext(); ) {
+                                Organism o = organismIterator.next();
+                                double foodWeight = o.getWeight();
+                                double delta = Math.min(foodWeight, needFood);
+                                setWeight(getWeight() + delta);
+                                o.setWeight(foodWeight - delta);
+                                if (o.getWeight() <= 0) {
+                                    organismIterator.remove();
+                                }
+                                needFood -= delta;
+                                foodFound = true;
+                                if (needFood <= 0) {
+                                    break;
+                                }
                             }
                         }
                     }
