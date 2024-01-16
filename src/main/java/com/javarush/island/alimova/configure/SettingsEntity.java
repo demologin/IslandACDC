@@ -2,16 +2,10 @@ package com.javarush.island.alimova.configure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.javarush.island.alimova.entity.alive.animals.herbivores.*;
-import com.javarush.island.alimova.entity.alive.animals.predators.*;
-import com.javarush.island.alimova.entity.alive.plants.Grass;
-import com.javarush.island.khmelov.config.Setting;
 import lombok.SneakyThrows;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Arrays;
@@ -21,8 +15,8 @@ import java.util.Objects;
 
 public class SettingsEntity implements Serializable {
 
-    private static final String pathSetting = "alimova" + File.separator + "setting.yaml";
-    private static final String pathToResources = System.getProperty("user.dir") + File.separator + "src"
+    private final String pathSetting = "alimova" + File.separator + "setting.yaml";
+    private final String pathToResources = System.getProperty("user.dir") + File.separator + "src"
             + File.separator + "main" + File.separator + "resources";
 
 
@@ -61,23 +55,27 @@ public class SettingsEntity implements Serializable {
 
     public int periodGame;
 
+    public int maxLifeCycle = 30;
+
 
     public void setDefaultSettings() {
-        nameOrganism = DefaultSettings.nameOrganism;
-        iconOrganism = DefaultSettings.iconOrganism;
-        classNameOrganism = DefaultSettings.classNameOrganism;
-        eatingTable = DefaultSettings.eatingTable;
-        limitWeightOrganism = DefaultSettings.limitWeightOrganism;
-        maxAmountOrganism = DefaultSettings.maxAmountOrganism;
-        maxSpeedOrganism = DefaultSettings.maxSpeedOrganism;
-        maxFoodWeightOrganism = DefaultSettings.maxFoodWeightOrganism;
-        heightTable = DefaultSettings.heightTable;
-        widthTable = DefaultSettings.widthTable;
-        viewHeightTable = DefaultSettings.viewHeightTable;
-        viewWidthTable = DefaultSettings.viewWidthTable;
-        initialNumberOfPlants = DefaultSettings.initialNumberOfPlants;
-        minRandomOrganism = DefaultSettings.minRandomOrganism;
-        maxRandomOrganism = DefaultSettings.maxRandomOrganism;
+        nameOrganism = DefaultSettings.NAME_ORGANISM;
+        iconOrganism = DefaultSettings.ICON_ORGANISM;
+        classNameOrganism = DefaultSettings.CLASS_NAME_ORGANISM;
+        eatingTable = DefaultSettings.EATING_TABLE;
+        limitWeightOrganism = DefaultSettings.LIMIT_WEIGHT_ORGANISM;
+        maxAmountOrganism = DefaultSettings.MAX_AMOUNT_ORGANISM;
+        maxSpeedOrganism = DefaultSettings.MAX_SPEED_ORGANISM;
+        maxFoodWeightOrganism = DefaultSettings.MAX_FOOD_WEIGHT_ORGANISM;
+        heightTable = DefaultSettings.HEIGHT_TABLE;
+        widthTable = DefaultSettings.WIDTH_TABLE;
+        viewHeightTable = DefaultSettings.VIEW_HEIGHT_TABLE;
+        viewWidthTable = DefaultSettings.VIEW_WIDTH_TABLE;
+        initialNumberOfPlants = DefaultSettings.INITIAL_NUMBER_OF_PLANTS;
+        minRandomOrganism = DefaultSettings.MIN_RANDOM_ORGANISM;
+        maxRandomOrganism = DefaultSettings.MAX_RANDOM_ORGANISM;
+        periodGame = DefaultSettings.PERIOD_GAME;
+        maxLifeCycle = DefaultSettings.MAX_LIFE_CYCLE;
     }
 
     @SneakyThrows

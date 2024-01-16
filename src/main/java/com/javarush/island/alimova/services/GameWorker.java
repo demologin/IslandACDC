@@ -34,26 +34,22 @@ public class GameWorker implements Runnable{
         executorService.shutdown();
 
         try {
-            if(executorService.awaitTermination(settings.periodGame, TimeUnit.SECONDS)) {
+            //if(executorService.awaitTermination(settings.periodGame, TimeUnit.SECONDS)) {
+            if(executorService.awaitTermination(200, TimeUnit.MILLISECONDS)) {
                 tableGame.printTable();
                 System.out.println();
                 statisticOrganism.printStatistic();
                 if (!statisticOrganism.checkAliveAnimals()) {
-                    throw new GameException("FINISH GAME");       //тут нужно своё
+                    //throw new GameException("FINISH GAME");       //тут нужно своё
                     //либо прекращать поток изнутри не исключением, а остановкой
                 }
             } else {
                 System.out.println("time");
-                throw new GameException("There is not enough time for processing.\n Please change your settings.");        //может, здесь кинуть exception
+                //throw new GameException("There is not enough time for processing.\n Please change your settings.");        //может, здесь кинуть exception
 
             }
         } catch (InterruptedException e) {
-            throw new RuntimeException("Application error", e);
-        } catch (GameException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException("Application error", e);
         }
     }
 }

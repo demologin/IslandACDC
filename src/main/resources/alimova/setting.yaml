@@ -34,13 +34,14 @@ classNameOrganism:
 - "com.javarush.island.alimova.entity.alive.animals.herbivores.Caterpillar"
 - "com.javarush.island.alimova.entity.alive.plants.Grass"
 initialNumberOfPlants: 200
-heightTable: 1000
+heightTable: 100
 widthTable: 20
-viewHeightTable: 3
-viewWidthTable: 3
-minRandomOrganism: 1000
-maxRandomOrganism: 1100
+viewHeightTable: 5
+viewWidthTable: 5
+minRandomOrganism: 10
+maxRandomOrganism: 20
 periodGame: 1
+maxLifeCycle: 30
 eatingTable:
 - - 0
   - 0

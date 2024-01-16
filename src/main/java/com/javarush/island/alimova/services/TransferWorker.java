@@ -16,22 +16,11 @@ public class TransferWorker implements Runnable{
 
     @Override
     public void run() {
-        //тут зациклить? (добавить проверку по поводу прекращения работы)
-        Thread currentThread = Thread.currentThread();
-        while(!currentThread.isInterrupted()) {
-            TransferOrganism transferOrganism = Table.getAnimalFromTransferQueue();
-            if (Objects.nonNull(transferOrganism)) {
-                moveOrganism(transferOrganism);
-            } else {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    currentThread.interrupt();
-                    throw new RuntimeException(e);
-                }
-            }
-
+        TransferOrganism transferOrganism;
+        while(Objects.nonNull(transferOrganism = Table.getAnimalFromTransferQueue())) {
+            moveOrganism(transferOrganism);
         }
+
     }
 
     private void moveOrganism(TransferOrganism transferOrganism) {

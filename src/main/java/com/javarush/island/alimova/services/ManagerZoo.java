@@ -1,5 +1,6 @@
 package com.javarush.island.alimova.services;
 
+import com.javarush.island.alimova.configure.DefaultSettings;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
@@ -14,9 +15,9 @@ public class ManagerZoo {
     private SettingsEntity settings;
     private Table table;
 
-    private final int AMOUNT_THREAD_GAME = 1;
+    private ScheduledExecutorService executorServiceOrganism;
 
-    private final int AMOUNT_THREAD_TRANSFER = 10;
+    private ScheduledExecutorService executorServiceTransfer;
 
     private FabricOrganism fabric;
 
@@ -68,17 +69,44 @@ public class ManagerZoo {
 
     public void startLive() {
 
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(AMOUNT_THREAD_GAME);
-        scheduledExecutorService.scheduleAtFixedRate(new GameWorker(table, settings, statisticOrganism), 0, settings.periodGame, TimeUnit.SECONDS);
-        startTransferCell();
+        executorServiceOrganism = Executors.newSingleThreadScheduledExecutor();
+        executorServiceOrganism.scheduleAtFixedRate(() -> testWork(table, settings, statisticOrganism), 0, settings.periodGame, TimeUnit.SECONDS);
+
+        executorServiceTransfer = Executors.newSingleThreadScheduledExecutor();
+        executorServiceTransfer.scheduleWithFixedDelay(new TransferWorker(table.getTableGame()), 0, 10, TimeUnit.MILLISECONDS);
+
     }
 
-    private void startTransferCell() {
-        ExecutorService executorService = Executors.newFixedThreadPool(AMOUNT_THREAD_TRANSFER);
-        for (int i = 0; i < AMOUNT_THREAD_TRANSFER; i++) {
-            executorService.execute(new TransferWorker(table.getTableGame()));
+    private void testWork(Table tableGame, SettingsEntity settings, StatisticOrganism statisticOrganism) {
+        ExecutorService executorService = Executors.newFixedThreadPool(tableGame.height * tableGame.width);
+        for (int i = 0; i < tableGame.height; i++) {
+            for (int j = 0; j < tableGame.width; j++) {
+                executorService.execute((new OrganismWorker(tableGame.getCurrentCell(i, j), settings)));
+            }
         }
         executorService.shutdown();
 
+        try {
+            if(executorService.awaitTermination(settings.periodGame, TimeUnit.SECONDS)) {
+                tableGame.printTable();
+                System.out.println();
+                statisticOrganism.printStatistic();
+                if (!statisticOrganism.checkAliveAnimals()) {
+                    System.out.println(DefaultSettings.MESSAGE_FINAL_GAME);
+                    stopGame();
+                }
+            } else {
+                System.err.println(DefaultSettings.MESSAGE_TIME_OUT_GAME);
+                stopGame();
+
+            }
+        } catch (InterruptedException e) {
+            //throw new RuntimeException("Application error", e);
+        }
+    }
+
+    private void stopGame() {
+        executorServiceOrganism.shutdown();
+        executorServiceTransfer.shutdown();
     }
 }
