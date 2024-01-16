@@ -6,7 +6,7 @@ import com.javarush.island.khmelov.config.Window;
 import com.javarush.island.khmelov.entity.Game;
 import com.javarush.island.khmelov.entity.map.Cell;
 import com.javarush.island.khmelov.entity.organizm.Organisms;
-import com.javarush.island.khmelov.services.GameWorkerService;
+import com.javarush.island.khmelov.services.GameServiceProcessor;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class JavaFxView extends Application implements View {
 
-    private static GameWorkerService gameWorker;
+    private static GameServiceProcessor gameWorker;
 
     private final int rows;
     private final int cols;
@@ -33,7 +33,7 @@ public class JavaFxView extends Application implements View {
     private Label[][] labelCells;
     private Label statistics;
 
-    public static void launchFxWindow(GameWorkerService gameWorkerService) {
+    public static void launchFxWindow(GameServiceProcessor gameWorkerService) {
         JavaFxView.gameWorker = gameWorkerService;
         launch();
         gameWorker.getGame().setFinished(true);

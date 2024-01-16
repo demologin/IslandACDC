@@ -1,5 +1,7 @@
 package com.javarush.island.khmelov.entity.organizm;
 
+import com.javarush.island.khmelov.api.entity.Eating;
+import com.javarush.island.khmelov.api.entity.Movable;
 import com.javarush.island.khmelov.api.entity.Reproducible;
 import com.javarush.island.khmelov.config.Setting;
 import com.javarush.island.khmelov.entity.map.Cell;
@@ -18,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @SuppressWarnings("unused")
 @Getter
 @EqualsAndHashCode(of = "id")
-public abstract class Organism implements Reproducible, Cloneable {
+public abstract class Organism implements Movable, Eating, Reproducible, Cloneable {
 
     private final static AtomicLong idCounter = new AtomicLong(System.currentTimeMillis());
     private final Set<Map.Entry<String, Integer>> foodMap;

@@ -1,7 +1,6 @@
 package com.javarush.island.khmelov.services;
 
 import com.javarush.island.khmelov.entity.Game;
-import com.javarush.island.khmelov.entity.organizm.animals.Animal;
 
 import java.util.Arrays;
 
@@ -15,12 +14,6 @@ public class EatingService extends AbstractService {
     public void run() {
         Arrays.stream(game.getGameMap().getCells()) //row
                 .flatMap(Arrays::stream) //cell
-                .forEach(cell -> processOneCell(cell,
-                        o -> {
-                            if (o instanceof Animal animal) {
-                                animal.eat(cell);
-                            }
-                        })
-                );
+                .forEach(cell -> processOneCell(cell, o -> o.eat(cell)));
     }
 }

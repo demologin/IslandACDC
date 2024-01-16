@@ -7,7 +7,7 @@ import com.javarush.island.khmelov.util.Rnd;
 
 public class RandomFillService extends AbstractService {
 
-    public static final int PERCENT_PROBABLY = 1;
+    public static final double PERCENT_PROBABLY = 1;
     private final int ROWS;
     private final int COLS;
     private final Initialization entityFactory;

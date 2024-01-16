@@ -25,8 +25,10 @@ public class ConsoleRunner {
                 new EatingService(game),
                 new MovingService(game),
                 new ReproducingService(game),
-                new RandomFillService(game));
-        GameWorkerService gameWorkerService = new GameWorkerService(game, services);
+                new RandomFillService(game),
+                new ViewService(game)
+        );
+        GameServiceProcessor gameWorkerService = new GameServiceProcessor(game, services);
         gameWorkerService.start();
     }
 }

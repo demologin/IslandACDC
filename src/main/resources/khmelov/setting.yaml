@@ -1,8 +1,8 @@
 ---
 life:
-  period: 200
-  rows: 20
-  cols: 25
+  period: 2
+  rows: 40
+  cols: 50
   percentAnimalSlim: 5
   percentPlantGrow: 22
 
@@ -14,7 +14,7 @@ console:
 window:
   width: 1400
   height: 800
-  cellIconCount: 4
+  cellIconCount: 1
 
 foodMap:
   Wolf:
