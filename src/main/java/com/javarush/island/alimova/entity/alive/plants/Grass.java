@@ -14,6 +14,6 @@ public class Grass extends Plant{
     }
     @Override
     public String toString() {
-        return "__Grass__";
+        return "Grass";
     }
 }

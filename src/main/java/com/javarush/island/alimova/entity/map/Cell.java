@@ -124,7 +124,6 @@ public class Cell {
     }
 
     public Set<Class<?>> getSetKind() {
-        //не самое безопасное решение
         return manyCreatures.keySet();
     }
 

@@ -38,7 +38,7 @@ public class TransferWorker implements Runnable{
     }
 
     private static void changeCells(TransferOrganism transferOrganism, Cell cellEnd, String nameOrganism, Cell cellStart, int heightStart, int widthStart, int heightEnd, int widthEnd) {
-        boolean checkLimit = false;
+        boolean checkLimit;
         cellEnd.getLocker().lock();
         try {
             checkLimit = cellEnd.reservedPlaceForOrganism(nameOrganism);
@@ -59,7 +59,6 @@ public class TransferWorker implements Runnable{
             if (deleteOrganism) {
                 try {
                     cellEnd.addOrganismToQueueWithoutStatistic(transferOrganism.organism);
-                    //System.out.println("Move " + nameOrganism + "[" + heightStart + " " + widthStart + "] [" + heightEnd + " " + widthEnd + "] ");
                 } finally {
                     cellEnd.getLocker().unlock();
                 }

@@ -34,7 +34,7 @@ public class OrganismWorker implements Runnable{
 
                 if (Animal.class.isAssignableFrom(classOrganism)) {
                     eatAnimal(classOrganism);
-                    multiplyAnimal(classOrganism, checkSatiety);      //--для тестирования статистики
+                    multiplyAnimal(classOrganism, checkSatiety);
                     moveAnimal(classOrganism);
                 }
 
@@ -48,7 +48,7 @@ public class OrganismWorker implements Runnable{
     }
 
     private void moveAnimal(Class<?> classOrganism) {
-        List<Organism> listOrganism = cell.getListOrganism(classOrganism);//не уверена, что верно тут синхронизировать
+        List<Organism> listOrganism = cell.getListOrganism(classOrganism);
         for (Organism organism : listOrganism) {
             Animal animal = (Animal)organism;
             animal.move(cell);

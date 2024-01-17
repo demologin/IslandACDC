@@ -31,12 +31,12 @@ public abstract class Animal extends Organism implements Eating, Moving {
     protected int lifeCycle = 0;
 
     public Animal(double weight, int maxAmount,
-                  int maxSpeed, double maxFoodWeight) {
+                  int maxSpeed, double maxFoodWeight, boolean satiety) {
         super(weight, maxAmount);
         this.maxSpeed = maxSpeed;
         this.maxFoodWeight = maxFoodWeight;
         this.eatenMass = 0;
-        this.satiety = false;
+        this.satiety = satiety;
         this.hungry = false;
     }
 
@@ -81,7 +81,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
         checkLifeCycle(currentCell, settings);
     }
 
-    private void checkHungry(double currentEatenMass, Cell currentCell) {
+    protected void checkHungry(double currentEatenMass, Cell currentCell) {
         if (currentEatenMass == eatenMass) {
             this.eatenMass -= maxFoodWeight * 0.1;
         }
@@ -91,7 +91,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
             if (counterHunger >= MAX_COUNTER_HUNGER) {
                 currentCell.killOrganism(this);
             }
-            hungry = true;      //надо убирать этот флаг
+            hungry = true;
         }
     }
 
@@ -144,12 +144,12 @@ public abstract class Animal extends Organism implements Eating, Moving {
 
     @Override
     public void move(Cell terminalCell) {
-        if (this.hungry && !checkAlive()) {
+        if (this.hungry && checkAlive()) {
             terminalCell.addAnimalToMove(this);
         }
     }
 
     public boolean checkAlive() {
-        return counterHunger >= MAX_COUNTER_HUNGER;
+        return counterHunger < MAX_COUNTER_HUNGER;
     }
 }

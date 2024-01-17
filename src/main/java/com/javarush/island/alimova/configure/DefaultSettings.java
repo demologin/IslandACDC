@@ -64,7 +64,7 @@ public class DefaultSettings {
     };
 
     public static final double[] MAX_FOOD_WEIGHT_ORGANISM = {
-            8, 3, 2, 80, 1, 60, 50, 0.45, 0.01, 10, 15, 50, 0.15, 0.005, 0
+            8, 3, 2, 80, 1, 60, 50, 0.45, 0.01, 10, 15, 50, 0.15, 0, 0
     };
 
     public static final int HEIGHT_TABLE = 10;
@@ -79,7 +79,8 @@ public class DefaultSettings {
     public static final String MESSAGE_FINAL_GAME = """
             -------------------------------
             Finish game!
-            --------------------------------
+            (All the animals died)
+            -------------------------------
             """;
 
     public static final String MESSAGE_TIME_OUT_GAME = "There is not enough time for processing.\nPlease change your settings.";

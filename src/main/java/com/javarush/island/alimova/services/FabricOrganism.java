@@ -34,12 +34,12 @@ public class FabricOrganism {
                 result = (Organism) constructor.newInstance(weight, maxAmount);
             } else if (Animal.class.isAssignableFrom(classOrganism)) {
                 Constructor<?> constructor = classOrganism.getDeclaredConstructor(double.class, int.class, int.class,
-                        double.class);
+                        double.class, boolean.class);
                 double weight = settings.limitWeightOrganism[indexOrganism];
                 int maxAmount = settings.maxAmountOrganism[indexOrganism];
                 int maxSpeed = settings.maxSpeedOrganism[indexOrganism];
                 double maxFoodWeight = settings.maxFoodWeightOrganism[indexOrganism];
-                result = (Organism) constructor.newInstance(weight, maxAmount, maxSpeed, maxFoodWeight);
+                result = (Organism) constructor.newInstance(weight, maxAmount, maxSpeed, maxFoodWeight, false);
             }
             else {
                 throw new RuntimeException();   //какой-то свой эксепшен надо

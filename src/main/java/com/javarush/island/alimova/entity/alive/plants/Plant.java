@@ -11,7 +11,7 @@ public abstract class Plant extends Organism {
 
     @Override
     public void multiply(Cell currentCell) {
-        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());  //может быть хранить где-то имя
+        long amountGrass = currentCell.checkAmountOrganism(this.getClass().getSimpleName());
         if (amountGrass < this.maxAmount) {
             try {
                 Organism newGrass = this.clone();

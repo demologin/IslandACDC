@@ -28,7 +28,7 @@ public class StatisticOrganism {
     }
 
 
-    public void addNewOrganism(int index) {    //правильно ли здесь ставить?
+    public void addNewOrganism(int index) {
         locker.lock();
         try {
             Long number = amountOfAliveOrganism.get(index);

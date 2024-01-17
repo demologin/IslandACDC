@@ -36,10 +36,10 @@ classNameOrganism:
 initialNumberOfPlants: 200
 heightTable: 100
 widthTable: 20
-viewHeightTable: 5
-viewWidthTable: 5
-minRandomOrganism: 10
-maxRandomOrganism: 500
+viewHeightTable: 10
+viewWidthTable: 10
+minRandomOrganism: 100
+maxRandomOrganism: 2000
 periodGame: 1
 maxLifeCycle: 20
 eatingTable:
