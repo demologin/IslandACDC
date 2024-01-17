@@ -6,8 +6,9 @@ import com.javarush.island.khmelov.util.Rnd;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Residents extends LinkedHashMap<String, Organisms> {
+public class Residents extends ConcurrentHashMap<String, Organisms> {
     private static final int PERCENT_RANDOM_ROTATE = 1;
 
     private void checkNull(Object key) {
