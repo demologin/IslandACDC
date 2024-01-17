@@ -31,6 +31,8 @@ public abstract class Organism implements Cloneable{
 
     private Semaphore semaphore = new Semaphore(1);
 
+    private boolean ate;
+
     @Override
     public Organism clone() throws CloneNotSupportedException {
         Organism clone = (Organism) super.clone();

@@ -101,7 +101,7 @@ public class Flock {
 
     public void eat(Square currentSquare) {
         try {
-            AtomicBoolean ate = new AtomicBoolean(false);
+            AtomicBoolean flockAte = new AtomicBoolean(false);
             currentSquare.getFlockList()
                     .stream()
                     .filter(flock -> {
@@ -110,7 +110,7 @@ public class Flock {
                         return number <= probability;
                     })
                     .forEach(flock -> {
-                        if (!ate.get()) {
+                        if (!flockAte.get()) {
                             double maxWeight = OrganismDataTable.getData(name).get("weight");
                             List<Organism> otherFlockOrganisms = flock.getOrganisms();
                             for (int i = 0; i < organisms.size(); i++) {
@@ -122,11 +122,14 @@ public class Flock {
                                     organisms.get(i).setWeight(maxWeight);
                                     otherFlockOrganisms.get(i).die(flock, currentSquare);
                                 }
+                                if (!organisms.get(i).isAte()) {
+                                    organisms.get(i).setWeight(organisms.get(i).getWeight() * 0.9);
+                                }
                             }
-                            ate.set(true);
+                            flockAte.set(true);
                         }
                     });
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new AppException(e);
         } finally {
             unblockOtherThreadsInFlock();
