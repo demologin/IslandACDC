@@ -5,9 +5,6 @@ import com.javarush.island.boyarinov.entities.organism.animals.Animal;
 
 public class Herbivore extends Animal {
 
-    public Herbivore(Island island) {
-        super(island);
-    }
 
     @Override
     public void die() {

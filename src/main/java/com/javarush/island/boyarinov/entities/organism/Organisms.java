@@ -8,12 +8,7 @@ public abstract class Organisms {
     private String name;
     private int weight;
     private int maxOfAnimalsToCell;
-    private Cell location;
-    public final Island island;
 
-    public Organisms(Island island) {
-        this.island = island;
-    }
 
     public String getName() {
         return name;
@@ -39,11 +34,4 @@ public abstract class Organisms {
         this.maxOfAnimalsToCell = maxOfAnimalsToCell;
     }
 
-    public Cell getLocation() {
-        return location;
-    }
-
-    public void setLocation(Cell location) {
-        this.location = location;
-    }
 }
