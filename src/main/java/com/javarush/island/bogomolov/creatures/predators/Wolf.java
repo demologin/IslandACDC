@@ -1,30 +1,28 @@
 package com.javarush.island.bogomolov.creatures.predators;
 
 import com.javarush.island.bogomolov.Limit;
-import com.javarush.island.bogomolov.api.annotation.CreatureAnnotation;
-import com.javarush.island.bogomolov.creatures.Animal;
+import com.javarush.island.bogomolov.storage.Cell;
 
-@CreatureAnnotation(name = "Wolf", weight = 50, maxCountPerCell = 30, speedPerCell = 3, requiredFood = 8)
+
 public class Wolf extends Predator {
-    public Wolf(String name, int weight, int speedPerCell, int requiredFood, Limit limit) {
-        super(name, weight, speedPerCell, requiredFood, limit);
+    public Wolf() {
+        super("Wolf", 50, 3, 8, 30);
     }
+
 
     @Override
-    public boolean eat() {
+    public double getChancesToEat(String targetName) {
 
-        return false;
+        return switch (targetName) {
+            case "Horse", "Buffalo" -> 0.1;
+            case "Deer", "Boar" -> 0.15;
+            case "Rabbit", "Goat" -> 0.6;
+            case "Mouse" -> 0.8;
+            case "Sheep" -> 0.7;
+            case "Duck" -> 0.4;
+            default -> 0;
+        };
     }
 
-    @Override
-    public boolean move() {
 
-        return false;
-    }
-
-    @Override
-    public boolean spawn() {
-
-        return false;
-    }
 }

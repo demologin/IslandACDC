@@ -2,15 +2,17 @@ package com.javarush.island.bogomolov.creatures;
 
 import com.javarush.island.bogomolov.Limit;
 import com.javarush.island.bogomolov.api.annotation.CreatureAnnotation;
+import com.javarush.island.bogomolov.storage.Cell;
 
-@CreatureAnnotation(name = "Grass", weight = 1, maxCountPerCell = 200, speedPerCell = 0, requiredFood = 0.0)
+
 public class Grass extends Plant {
-    public Grass(String name, int weight, Limit limit) {
-        super(name, weight, limit);
+    public Grass() {
+        super("Grass", 1, 200);
     }
 
+
     @Override
-    public boolean spawn() {
+    public boolean spawn(Cell cell) {
         return false;
     }
 }

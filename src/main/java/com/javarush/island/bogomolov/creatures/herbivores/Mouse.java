@@ -2,25 +2,13 @@ package com.javarush.island.bogomolov.creatures.herbivores;
 
 import com.javarush.island.bogomolov.Limit;
 import com.javarush.island.bogomolov.api.annotation.CreatureAnnotation;
+import com.javarush.island.bogomolov.storage.Cell;
 
-@CreatureAnnotation(name="Mouse",weight = 0.05,maxCountPerCell = 500,speedPerCell = 1,requiredFood = 0.01)
-public class Mouse extends Herbivore{
-    public Mouse(String name, int weight, int speedPerCell, int requiredFood, Limit limit) {
-        super(name, weight, speedPerCell, requiredFood, limit);
+
+public class Mouse extends Herbivore {
+    public Mouse() {
+        super("Mouse", 0.05, 1, 0.01, 500);
     }
 
-    @Override
-    public boolean eat() {
-        return false;
-    }
 
-    @Override
-    public boolean move() {
-        return false;
-    }
-
-    @Override
-    public boolean spawn() {
-        return false;
-    }
 }
