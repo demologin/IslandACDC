@@ -35,6 +35,9 @@ public class Settings {
     @Getter
     private static int gameHeight;
 
+    @Getter
+    private static int maxFlockSize;
+
     private Settings() {
     }
 
@@ -49,6 +52,7 @@ public class Settings {
         animalsOnSquareAtTheBeginning = DefaultSettings.animalsOnSquareAtTheBeginning;
         gameWidth = DefaultSettings.gameWidth;
         gameHeight = DefaultSettings.gameHeight;
+        maxFlockSize = DefaultSettings.maxFlockSize;
     }
 
     private static void loadFromJson(){
@@ -61,6 +65,7 @@ public class Settings {
             animalsOnSquareAtTheBeginning = settings.get("animalsOnSquareAtTheBeginning");
             gameWidth = settings.get("gameWidth");
             gameHeight = settings.get("gameHeight");
+            maxFlockSize = settings.get("maxFlockSize");
 
         } catch (IOException e) {
             ShowAlert.showErrorAlert("Failed to load settings");

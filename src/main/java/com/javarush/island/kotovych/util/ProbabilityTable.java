@@ -27,9 +27,9 @@ public class ProbabilityTable {
     }
 
 
-    public static int getProbability(Organism predator, Organism prey){
-        Map<String, Integer> predatorMap = probabilityTable.get(predator.getName());
-        int probability = predatorMap.get(prey.getName());
+    public static int getProbability(String predator, String prey){
+        Map<String, Integer> predatorMap = probabilityTable.get(predator);
+        int probability = predatorMap.get(prey);
         return probability;
     }
 }

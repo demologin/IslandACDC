@@ -27,8 +27,8 @@ public class OrganismDataTable {
     }
 
 
-    public static Map<String, Double> getData(Organism source){
-        Map<String, Double> result = dataTable.get(source.getName());
+    public static Map<String, Double> getData(String source){
+        Map<String, Double> result = dataTable.get(source);
         return result;
     }
 }

@@ -2,6 +2,8 @@ package com.javarush.island.kotovych.game;
 
 import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.factory.OrganismFactory;
+import com.javarush.island.kotovych.game.statistics.Statistics;
+import com.javarush.island.kotovych.organisms.Flock;
 import com.javarush.island.kotovych.organisms.Organism;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.EmojiTable;
@@ -22,48 +24,56 @@ public class Square {
     private Semaphore semaphore = new Semaphore(1);
 
     private Map<String, AtomicInteger> organismCount = new ConcurrentHashMap<>();
-    private List<Organism> organismList = new CopyOnWriteArrayList<>();
+    private List<Flock> flockList = new CopyOnWriteArrayList<>();
+    private AtomicInteger totalAnimalsInSquare = new AtomicInteger(0);
+    private Statistics statistics;
 
-    public Square(int x, int y) {
+    public Square(int x, int y, Statistics statistics) {
         this.x = x;
         this.y = y;
+        this.statistics = statistics;
         fill();
     }
 
-    public boolean addOrganism(Organism organism) {
+    public boolean addFlock(Flock flock) {
         try {
-            blockOtherThreads();
-            String name = organism.getName();
-            organismCount.putIfAbsent(name, new AtomicInteger(0));
-            if (this.getOrganismList().size() < Settings.getMaxAnimalsOnSquare()
-                    && (getOrganismCount().get(name) == null || getOrganismCount().get(name).get() < organism.getMaxOnOneSquare()
-            )
-            ) {
-                organismList.add(organism);
-                organismCount.get(name).getAndIncrement();
+            blockOtherThreadsInSquare();
+            organismCount.putIfAbsent(flock.getName(), new AtomicInteger(0));
+            if (totalAnimalsInSquare.get() + flock.getOrganisms().size() < Settings.getMaxAnimalsOnSquare()) {
+                flockList.add(flock);
+                organismCount.get(flock.getName()).addAndGet(flock.getOrganisms().size());
+                totalAnimalsInSquare.addAndGet(flock.getOrganisms().size());
+                statistics.getTotalOrganisms().addAndGet(flock.getOrganisms().size());
+                statistics.getTotalOrganismCount().putIfAbsent(flock.getName(), new AtomicInteger(0));
+                statistics.getTotalOrganismCount().get(flock.getName()).addAndGet(flock.getOrganisms().size());
                 return true;
-            } else {
-                return false;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
             return false;
+        } catch (Exception e) {
+            throw new AppException(e);
         } finally {
-            unblockOtherThreads();
+            unblockOtherThreadsInSquare();
         }
     }
 
-    public void removeOrganism(Organism organism) {
+    public void addOrganismToMap(Organism organism){
+        organismCount.get(organism.getName()).incrementAndGet();
+        statistics.getTotalOrganismCount().get(organism.getName()).incrementAndGet();
+    }
+
+    public void removeFlock(Flock flock) {
         try {
-            blockOtherThreads();
-            if (organismList.remove(organism)) {
-                String name = organism.getName();
-                organismCount.get(name).decrementAndGet();
+            blockOtherThreadsInSquare();
+            if (flockList.remove(flock)) {
+                organismCount.get(flock.getName()).addAndGet(-flock.getOrganisms().size());
+                totalAnimalsInSquare.addAndGet(-flock.getOrganisms().size());
+                statistics.getTotalOrganisms().addAndGet(-flock.getOrganisms().size());
+                statistics.getTotalOrganismCount().get(flock.getName()).addAndGet(-flock.getOrganisms().size());
             }
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
-            unblockOtherThreads();
+            unblockOtherThreadsInSquare();
         }
     }
 
@@ -72,7 +82,7 @@ public class Square {
         StringBuilder builder = new StringBuilder();
         builder.append("""
                 Square at (%d, %d) - Entities: %d {
-                """.formatted(this.getX(), this.getY(), this.getOrganismList().size()));
+                """.formatted(this.getX(), this.getY(), totalAnimalsInSquare.get()));
         for (Map.Entry<String, AtomicInteger> entry : organismCount.entrySet()) {
             builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue().get()));
         }
@@ -82,22 +92,29 @@ public class Square {
 
     private void fill() {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
-        while (organismList.size() != Settings.getAnimalsOnSquareAtTheBeginning()
-                && organismList.size() != Settings.getMaxAnimalsOnSquare()) {
-            Organism organism = OrganismFactory.newOrganism((String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)]);
-            addOrganism(organism);
+        while (totalAnimalsInSquare.get() != Settings.getAnimalsOnSquareAtTheBeginning()) {
+            Flock flock;
+            int organismsInFlock = ThreadLocalRandom.current().nextInt(1, Settings.getMaxFlockSize());
+            int organismsInSquareAfterAddingFlock = organismsInFlock + totalAnimalsInSquare.get();
+            if (organismsInSquareAfterAddingFlock > Settings.getAnimalsOnSquareAtTheBeginning()) {
+                int diff = organismsInSquareAfterAddingFlock - Settings.getAnimalsOnSquareAtTheBeginning();
+                organismsInFlock -= diff;
+            }
+            String organism = (String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)];
+            flock = new Flock(organism, organismsInFlock);
+            addFlock(flock);
         }
     }
 
-    private void blockOtherThreads() {
+    private void blockOtherThreadsInSquare() {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new AppException();
         }
     }
 
-    private void unblockOtherThreads() {
+    private void unblockOtherThreadsInSquare() {
         if (semaphore.availablePermits() == 0) {
             semaphore.release();
         }

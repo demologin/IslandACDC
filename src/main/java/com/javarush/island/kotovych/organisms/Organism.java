@@ -1,12 +1,12 @@
 package com.javarush.island.kotovych.organisms;
 
-import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
+@ToString(of = "name")
 public abstract class Organism implements Cloneable{
     private static AtomicLong idCounter = new AtomicLong(System.currentTimeMillis());
     private long id = idCounter.incrementAndGet();
@@ -33,14 +34,14 @@ public abstract class Organism implements Cloneable{
     public Organism clone() throws CloneNotSupportedException {
         Organism clone = (Organism) super.clone();
         clone.id = idCounter.incrementAndGet();
-        double maxWeight = OrganismDataTable.getData(this).get("weight");
+        double maxWeight = OrganismDataTable.getData(this.getName()).get("weight");
         clone.setWeight(ThreadLocalRandom.current().nextDouble(maxWeight / 2, maxWeight));
         return clone;
     }
 
     public Organism(){
         setName(this.getClass().getSimpleName());
-        Map<String, Double> data = OrganismDataTable.getData(this);
+        Map<String, Double> data = OrganismDataTable.getData(this.getName());
         setWeight(ThreadLocalRandom.current().nextDouble(data.get("weight") / 2, data.get("weight")));
         setMaxOnOneSquare(data.get("maxOnOneSquare").intValue());
         setMaxStepSize(data.get("maxStepSize").intValue());
@@ -48,11 +49,11 @@ public abstract class Organism implements Cloneable{
         setEmoji(EmojiTable.getEmoji(this.getName()));
     }
 
-    public void die(Square currentSquare){
-        currentSquare.removeOrganism(this);
+    public void die(Flock flock, Square square){
+        flock.removeOrganism(this, square);
     }
 
-    protected void blockOtherThreads() {
+    protected void blockOtherThreadsIntOrganism() {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
@@ -60,9 +61,13 @@ public abstract class Organism implements Cloneable{
         }
     }
 
-    protected void unblockOtherThreads(){
+    protected void unblockOtherThreadsInOrganism(){
         if(semaphore.availablePermits() == 0){
             semaphore.release();
         }
+    }
+
+    public void addWeight(double value){
+        this.weight += value;
     }
 }

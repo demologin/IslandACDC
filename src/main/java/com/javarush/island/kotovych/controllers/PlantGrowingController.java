@@ -1,13 +1,11 @@
 package com.javarush.island.kotovych.controllers;
 
-import com.javarush.island.kotovych.factory.OrganismFactory;
 import com.javarush.island.kotovych.game.GameScene;
-import com.javarush.island.kotovych.game.Square;
+import com.javarush.island.kotovych.organisms.Flock;
+import com.javarush.island.kotovych.settings.Settings;
+
 import java.util.Arrays;
-import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.IntStream;
 
 public class PlantGrowingController implements Controller {
 
@@ -19,20 +17,17 @@ public class PlantGrowingController implements Controller {
 
     @Override
     public void run() {
-        IntStream.range(0, gameScene.getField().length)
+        Arrays.stream(gameScene.getField())
+                .flatMap(Arrays::stream)
                 .parallel()
-                .forEach(x -> {
-                    Square[] column = gameScene.getField()[x];
-
-                    Arrays.stream(column)
-                            .parallel()
-                            .forEach(square -> {
-                                int randomNumber = ThreadLocalRandom.current().nextInt(2);
-                                if (randomNumber == 1) {
-                                    IntStream.range(0, 10)
-                                            .forEach(i -> square.addOrganism(OrganismFactory.newOrganism("Plant")));
-                                }
-                            });
+                .forEach(square -> {
+                    int number = ThreadLocalRandom.current().nextInt(2);
+                    if(number == 1){
+                        Flock flock = new Flock("Plant", 10);
+                        if(square.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()){
+                            square.addFlock(flock);
+                        }
+                    }
                 });
     }
 }
