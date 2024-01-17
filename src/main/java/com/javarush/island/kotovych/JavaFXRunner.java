@@ -20,6 +20,7 @@ public class JavaFXRunner extends Application {
         BorderPane root = new BorderPane();
         root.setCenter(matrixPane.createScrollPane(matrixPane.createMatrixPane()));
         root.setBottom(matrixPane.createControlPanel());
+        root.setLeft(matrixPane.createInformationPanel());
 
         Scene scene = new Scene(root, 400, 400);
 

@@ -61,11 +61,11 @@ public class GameScene{
     public void startAllRequiredControllers(){
         int delay = Settings.getDelay();
         controllers = Executors.newScheduledThreadPool(5);
-        controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
+       // controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(movingController, 0, delay, TimeUnit.MILLISECONDS);
-        controllers.scheduleWithFixedDelay(reproductionController, 0, delay, TimeUnit.MILLISECONDS);
-        controllers.scheduleWithFixedDelay(dyingController, 0, delay, TimeUnit.MILLISECONDS);
-        controllers.scheduleWithFixedDelay(plantGrowingController, 0, delay, TimeUnit.MILLISECONDS);
+       // controllers.scheduleWithFixedDelay(reproductionController, 0, delay, TimeUnit.MILLISECONDS);
+       // controllers.scheduleWithFixedDelay(dyingController, 0, delay, TimeUnit.MILLISECONDS);
+       // controllers.scheduleWithFixedDelay(plantGrowingController, 0, delay, TimeUnit.MILLISECONDS);
     }
 
     public void stopControllers(){

@@ -2,6 +2,7 @@ package com.javarush.island.kotovych.game.visual;
 
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
+import com.javarush.island.kotovych.game.statistics.VisualStatisticsChanger;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.ShowAlert;
 import javafx.geometry.Insets;
@@ -11,6 +12,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 public class VisualGameScene {
     GameScene gameScene;
@@ -20,6 +22,11 @@ public class VisualGameScene {
 
     private Pane matrixPane;
     private double scaleFactor = 1.0;
+
+    private Label totalOrganisms;
+    private Label totalOrganismCount;
+
+    VisualStatisticsChanger visualStatisticsChanger;
 
     public VisualGameScene(GameScene gameScene) {
         this.gameScene = gameScene;
@@ -112,6 +119,30 @@ public class VisualGameScene {
         controlPanel.setMinHeight(50);
 
         return controlPanel;
+    }
+
+    public GridPane createInformationPanel() {
+        GridPane informationPanel = new GridPane();
+
+        Label organismsLabel = new Label("Organisms:");
+        totalOrganisms = new Label("0");
+        totalOrganismCount = new Label("P");
+
+        totalOrganisms.setStyle("-fx-font-weight: bold");
+
+        informationPanel.add(organismsLabel, 0, 0);
+        informationPanel.add(totalOrganisms, 1, 0);
+        informationPanel.add(totalOrganismCount, 0, 1);
+
+        informationPanel.setAlignment(Pos.TOP_RIGHT);
+        informationPanel.setHgap(5);
+        informationPanel.setVgap(5);
+        informationPanel.setPadding(new Insets(10, 10, 0, 0));
+
+        visualStatisticsChanger = new VisualStatisticsChanger(totalOrganisms, totalOrganismCount);
+        gameScene.getStatistics().setVisualStatisticsChanger(visualStatisticsChanger);
+
+        return informationPanel;
     }
 
     private void toggleStartStop(Button startStopButton, TextField inputField) {

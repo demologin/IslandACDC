@@ -43,9 +43,7 @@ public class Square {
                 flockList.add(flock);
                 organismCount.get(flock.getName()).addAndGet(flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(flock.getOrganisms().size());
-                statistics.getTotalOrganisms().addAndGet(flock.getOrganisms().size());
-                statistics.getTotalOrganismCount().putIfAbsent(flock.getName(), new AtomicInteger(0));
-                statistics.getTotalOrganismCount().get(flock.getName()).addAndGet(flock.getOrganisms().size());
+                statistics.addOrganism(flock.getName(), flock.getOrganisms().size());
                 return true;
             }
             return false;
@@ -57,8 +55,9 @@ public class Square {
     }
 
     public void addOrganismToMap(Organism organism){
+        totalAnimalsInSquare.incrementAndGet();
         organismCount.get(organism.getName()).incrementAndGet();
-        statistics.getTotalOrganismCount().get(organism.getName()).incrementAndGet();
+        statistics.addOrganism(organism.getName(), 1);
     }
 
     public void removeFlock(Flock flock) {
@@ -67,8 +66,7 @@ public class Square {
             if (flockList.remove(flock)) {
                 organismCount.get(flock.getName()).addAndGet(-flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(-flock.getOrganisms().size());
-                statistics.getTotalOrganisms().addAndGet(-flock.getOrganisms().size());
-                statistics.getTotalOrganismCount().get(flock.getName()).addAndGet(-flock.getOrganisms().size());
+                statistics.removeOrganism(flock.getName(), flock.getOrganisms().size());
             }
         } catch (Exception e) {
             throw new AppException(e);

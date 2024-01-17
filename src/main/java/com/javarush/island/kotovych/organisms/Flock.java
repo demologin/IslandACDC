@@ -36,8 +36,7 @@ public class Flock {
             blockOtherThreadsInFlock();
             organisms.remove(organism);
             square.getTotalAnimalsInSquare().decrementAndGet();
-            square.getStatistics().getTotalOrganisms().decrementAndGet();
-            square.getStatistics().getTotalOrganismCount().get(organism.getName()).decrementAndGet();
+            square.getStatistics().removeOrganism(name, 1);
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
@@ -52,8 +51,7 @@ public class Flock {
                 organisms.add(organism);
                 square.addOrganismToMap(organism);
                 square.getTotalAnimalsInSquare().incrementAndGet();
-                square.getStatistics().getTotalOrganismCount().get(organism.getName()).incrementAndGet();
-                square.getStatistics().getTotalOrganisms().incrementAndGet();
+                square.getStatistics().addOrganism(name, 1);
             }
         } catch (Exception e) {
             throw new AppException(e);
