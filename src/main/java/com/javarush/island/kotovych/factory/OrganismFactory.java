@@ -37,7 +37,6 @@ public class OrganismFactory {
         try {
             return organismPrototypes.get(source).clone();
         } catch (CloneNotSupportedException e){
-            e.printStackTrace();
             throw new AppException(e);
         }
     }

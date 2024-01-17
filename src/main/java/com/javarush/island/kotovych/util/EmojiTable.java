@@ -3,8 +3,6 @@ package com.javarush.island.kotovych.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.island.kotovych.exceptions.AppException;
-import com.javarush.island.kotovych.organisms.Organism;
-import lombok.Setter;
 
 import java.io.IOException;
 import java.net.URL;

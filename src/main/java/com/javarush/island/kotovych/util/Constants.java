@@ -1,7 +1,5 @@
 package com.javarush.island.kotovych.util;
 
-import java.io.File;
-
 public class Constants {
     private Constants(){}
 

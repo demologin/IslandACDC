@@ -1,16 +1,9 @@
 package com.javarush.island.kotovych.controllers;
 
 import com.javarush.island.kotovych.game.GameScene;
-import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.organisms.Flock;
-import com.javarush.island.kotovych.organisms.Organism;
-import com.javarush.island.kotovych.organisms.animals.Animal;
-import com.javarush.island.kotovych.settings.Settings;
-import com.javarush.island.kotovych.util.OrganismDataTable;
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class EatingController implements Controller {
 

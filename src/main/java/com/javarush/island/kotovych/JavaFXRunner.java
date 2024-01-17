@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 public class JavaFXRunner extends Application {
     GameScene gameScene = new GameScene();
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
         launch(args);
     }
 

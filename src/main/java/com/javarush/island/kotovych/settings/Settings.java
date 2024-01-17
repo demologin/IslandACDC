@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javarush.island.kotovych.util.Constants;
 import com.javarush.island.kotovych.util.ShowAlert;
-import javafx.scene.control.Alert;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,14 +1,11 @@
 package com.javarush.island.kotovych.controllers;
 
 import com.javarush.island.kotovych.game.GameScene;
-import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.organisms.Flock;
-import com.javarush.island.kotovych.organisms.animals.Animal;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.IntStream;
 
 public class MovingController implements Controller {
     private static List<Flock> movedFlocks = new CopyOnWriteArrayList<>();

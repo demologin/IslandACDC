@@ -93,7 +93,7 @@ public class Flock {
             } catch (ArrayIndexOutOfBoundsException e) {
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new AppException(e);
         } finally {
             unblockOtherThreadsInFlock();
         }
@@ -107,10 +107,7 @@ public class Flock {
                     .filter(flock -> {
                         int probability = ProbabilityTable.getProbability(this.getName(), flock.getName());
                         int number = ThreadLocalRandom.current().nextInt(probability);
-                        if (number <= probability) {
-                            return true;
-                        }
-                        return false;
+                        return number <= probability;
                     })
                     .forEach(flock -> {
                         if (!ate.get()) {

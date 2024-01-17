@@ -1,5 +1,6 @@
 package com.javarush.island.kotovych.organisms;
 
+import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
@@ -57,7 +58,7 @@ public abstract class Organism implements Cloneable{
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new AppException(e);
         }
     }
 
