@@ -33,11 +33,11 @@ public class TransferWorker implements Runnable{
         if(heightEnd < table.length && widthEnd < table[0].length) {
             Cell cellStart = table[heightStart][widthStart];
             Cell cellEnd = table[heightEnd][widthEnd];
-            changeCells(transferOrganism, cellEnd, nameOrganism, cellStart, heightStart, widthStart, heightEnd, widthEnd);
+            changeCells(transferOrganism, cellEnd, nameOrganism, cellStart);
         }
     }
 
-    private static void changeCells(TransferOrganism transferOrganism, Cell cellEnd, String nameOrganism, Cell cellStart, int heightStart, int widthStart, int heightEnd, int widthEnd) {
+    private static void changeCells(TransferOrganism transferOrganism, Cell cellEnd, String nameOrganism, Cell cellStart) {
         boolean checkLimit;
         cellEnd.getLocker().lock();
         try {
@@ -47,7 +47,7 @@ public class TransferWorker implements Runnable{
         }
 
         if (checkLimit) {
-            boolean deleteOrganism = false;
+            boolean deleteOrganism;
             cellStart.getLocker().lock();
             try {
                 deleteOrganism = cellStart.deleteOrganism(transferOrganism.organism);
