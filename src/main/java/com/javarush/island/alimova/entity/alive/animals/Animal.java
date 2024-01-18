@@ -95,19 +95,18 @@ public abstract class Animal extends Organism implements Eating, Moving {
         }
     }
 
-    private void checkLifeCycle(Cell currentCell, SettingsEntity settings) {
+    protected void checkLifeCycle(Cell currentCell, SettingsEntity settings) {
         lifeCycle++;
-        if (lifeCycle >= settings.maxLifeCycle && counterHunger < MAX_COUNTER_HUNGER) {
+        if (lifeCycle >= settings.maxLifeCycle && checkAlive()) {
             currentCell.killOrganism(this);
         }
     }
 
-    private void eatInCell(Cell currentCell, SettingsEntity settings, Set<Class<?>> setAnimal) {
+    protected void eatInCell(Cell currentCell, SettingsEntity settings, Set<Class<?>> setAnimal) {
         for (Class<?> classOrganism : setAnimal) {
             String organismName = classOrganism.getSimpleName();
             if(willBeEaten(organismName, settings)) {
                 LinkedList<Organism> organismList = (LinkedList<Organism>) currentCell.getListOrganism(classOrganism);
-                //ещё делать что-то при ситуации, что животных нет
                 if (!organismList.isEmpty()) {
                     eatingOrganism(currentCell, organismList, organismName);
                     break;
@@ -117,7 +116,7 @@ public abstract class Animal extends Organism implements Eating, Moving {
         }
     }
 
-    private void eatingOrganism(Cell currentCell, LinkedList<Organism> organismList, String organismName) {
+    protected void eatingOrganism(Cell currentCell, LinkedList<Organism> organismList, String organismName) {
         Organism organism;
         organism = organismList.removeFirst();
         currentCell.deleteOrganismFromStatistics(organismName);

@@ -133,7 +133,7 @@ public class Cell {
         transferOrganism.setAddressStart(heightCoordinate, widthCoordinate);
         
         int indexOrganism = settings.getIndexOrganism(organism.getClass());
-        int speed = ThreadLocalRandom.current().nextInt(0, settings.maxSpeedOrganism[indexOrganism]);
+        int speed = ThreadLocalRandom.current().nextInt(0, settings.maxSpeedOrganism[indexOrganism] + 1);
         if(speed == 0) {
             return;
         }
