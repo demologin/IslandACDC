@@ -2,22 +2,20 @@ package com.javarush.island.boyarinov.entities.organism.animals;
 
 import com.javarush.island.boyarinov.entities.map.Cell;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
-import com.javarush.island.boyarinov.interfaces.Dying;
 import com.javarush.island.boyarinov.interfaces.Eating;
 import com.javarush.island.boyarinov.interfaces.Movable;
 import com.javarush.island.boyarinov.interfaces.Multiplying;
+import com.javarush.island.boyarinov.util.Limit;
 import com.javarush.island.boyarinov.util.RandomNum;
 
 import java.util.Set;
 
-public abstract class Animal extends Organisms implements Movable, Eating, Multiplying, Dying {
-
-    private int travelSpeed;
-    private int maxKgFood;
+public abstract class Animal extends Organisms implements Movable, Eating, Multiplying {
 
 
     @Override
     public boolean move(Cell cell) {
+        int travelSpeed = Limit.getTravelSpeed().get(this.getClass());
         int countStep = RandomNum.getRndNumber(0, travelSpeed + 1);
         if (countStep == 0) {
             return false;
@@ -32,6 +30,9 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
             nextCell.getOrganismsSet().add(this);
             currentCell.getOrganismsSet().remove(this);
             currentCell = nextCell;
+            double currentWeight = getWeight();
+            double newWeight = currentWeight - (10 * currentWeight / 100);
+            setWeight(newWeight);
         }
 
         return true;
@@ -42,7 +43,8 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
         int index = RandomNum.getRndNumber(0, size);
         Cell nextCell = cell.getAvailableCells().get(index);
         int numberAnimal = countNumberAnimal(nextCell.getOrganismsSet());
-        if (numberAnimal < getMaxOfAnimalsToCell()) {
+        int maxOfAnimalsToCell = Limit.getMaxOfAnimalsToCell().get(this.getClass());
+        if (numberAnimal < maxOfAnimalsToCell) {
             return nextCell;
         }
         return null;
@@ -57,21 +59,5 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
             }
         }
         return count;
-    }
-
-    public int getTravelSpeed() {
-        return travelSpeed;
-    }
-
-    public void setTravelSpeed(int travelSpeed) {
-        this.travelSpeed = travelSpeed;
-    }
-
-    public int getMaxKgFood() {
-        return maxKgFood;
-    }
-
-    public void setMaxKgFood(int maxKgFood) {
-        this.maxKgFood = maxKgFood;
     }
 }

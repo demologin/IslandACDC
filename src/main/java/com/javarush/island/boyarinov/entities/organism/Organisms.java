@@ -1,13 +1,9 @@
 package com.javarush.island.boyarinov.entities.organism;
 
-import com.javarush.island.boyarinov.entities.map.Cell;
-import com.javarush.island.boyarinov.entities.map.Island;
-
 public abstract class Organisms {
 
     private String name;
-    private int weight;
-    private int maxOfAnimalsToCell;
+    private double weight;
 
 
     public String getName() {
@@ -18,20 +14,19 @@ public abstract class Organisms {
         this.name = name;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
-    public int getMaxOfAnimalsToCell() {
-        return maxOfAnimalsToCell;
+    @Override
+    public String toString() {
+        return "Organisms{" +
+                "name='" + name + '\'' +
+                ", weight=" + weight +
+                '}';
     }
-
-    public void setMaxOfAnimalsToCell(int maxOfAnimalsToCell) {
-        this.maxOfAnimalsToCell = maxOfAnimalsToCell;
-    }
-
 }

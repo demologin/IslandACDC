@@ -5,12 +5,6 @@ import com.javarush.island.boyarinov.entities.organism.animals.Animal;
 
 public class Herbivore extends Animal {
 
-
-    @Override
-    public void die() {
-
-    }
-
     @Override
     public void eat() {
 
