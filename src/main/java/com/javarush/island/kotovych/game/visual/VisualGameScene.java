@@ -2,6 +2,7 @@ package com.javarush.island.kotovych.game.visual;
 
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
+import com.javarush.island.kotovych.game.statistics.Statistics;
 import com.javarush.island.kotovych.game.statistics.VisualStatisticsChanger;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.ShowAlert;
@@ -25,13 +26,8 @@ public class VisualGameScene {
 
     private Pane matrixPane;
     private double scaleFactor = 1.0;
-    Label totalOrganisms = new Label();
-    Label totalOrganismCount = new Label();
 
     VisualStatisticsChanger visualStatisticsChanger;
-
-    ScheduledExecutorService statisticChangerExecutor = Executors.newScheduledThreadPool(1);
-
     public VisualGameScene(GameScene gameScene) {
         this.gameScene = gameScene;
     }
@@ -129,6 +125,8 @@ public class VisualGameScene {
         GridPane informationPanel = new GridPane();
 
         Label organismsLabel = new Label("Organisms:");
+        Label totalOrganisms = new Label("0");
+        Label totalOrganismCount = new Label();
         totalOrganisms.setStyle("-fx-font-weight: bold");
 
         informationPanel.add(organismsLabel, 0, 0);
@@ -140,8 +138,11 @@ public class VisualGameScene {
         informationPanel.setVgap(5);
         informationPanel.setPadding(new Insets(10, 10, 0, 0));
 
-        visualStatisticsChanger = new VisualStatisticsChanger(gameScene, totalOrganisms, totalOrganismCount);
-        statisticChangerExecutor.scheduleAtFixedRate(visualStatisticsChanger, 0, Settings.getDelay(), TimeUnit.MILLISECONDS);
+        visualStatisticsChanger = new VisualStatisticsChanger(totalOrganisms, totalOrganismCount);
+        Statistics statistics = gameScene.getStatistics();
+        statistics.setVisualStatisticsChanger(visualStatisticsChanger);
+        visualStatisticsChanger.update(statistics.getTotalOrganisms(), statistics.getTotalOrganismCount());
+
         return informationPanel;
     }
 

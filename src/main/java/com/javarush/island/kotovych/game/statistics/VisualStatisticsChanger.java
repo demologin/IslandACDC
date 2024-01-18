@@ -6,17 +6,13 @@ import javafx.scene.control.Label;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VisualStatisticsChanger implements Runnable{
+public class VisualStatisticsChanger{
     Label totalOrganisms;
     Label organismCount;
-    GameScene gameScene;
 
-    Statistics statistics;
-    public VisualStatisticsChanger(GameScene gameScene, Label totalOrganisms, Label organismCount) {
+    public VisualStatisticsChanger(Label totalOrganisms, Label organismsCount){
         this.totalOrganisms = totalOrganisms;
-        this.organismCount = organismCount;
-        this.gameScene = gameScene;
-        statistics = gameScene.getStatistics();
+        this.organismCount = organismsCount;
     }
 
     public void update(AtomicInteger totalValue, Map<String, AtomicInteger> totalOrganismCount) {
@@ -29,11 +25,5 @@ public class VisualStatisticsChanger implements Runnable{
             }
         }
         organismCount.setText(builder.toString());
-    }
-
-
-    @Override
-    public void run() {
-        update(statistics.getTotalOrganisms(), statistics.getTotalOrganismCount());
     }
 }
