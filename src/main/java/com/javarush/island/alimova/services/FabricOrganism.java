@@ -1,10 +1,12 @@
 package com.javarush.island.alimova.services;
 
 
+import com.javarush.island.alimova.configure.DefaultSettings;
 import com.javarush.island.alimova.configure.SettingsEntity;
 import com.javarush.island.alimova.entity.alive.Organism;
 import com.javarush.island.alimova.entity.alive.animals.Animal;
 import com.javarush.island.alimova.entity.alive.plants.Plant;
+import com.javarush.island.alimova.exception.GameException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +44,7 @@ public class FabricOrganism {
                 result = (Organism) constructor.newInstance(weight, maxAmount, maxSpeed, maxFoodWeight, false);
             }
             else {
-                throw new RuntimeException();   //какой-то свой эксепшен надо
+                throw new GameException(DefaultSettings.MESSAGE_FABRIC_ERROR);
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InstantiationException |

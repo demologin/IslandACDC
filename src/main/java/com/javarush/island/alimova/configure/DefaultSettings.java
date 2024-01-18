@@ -97,4 +97,6 @@ public class DefaultSettings {
 
     public static final String MESSAGE_THREAD_INTERRUPTED = "\nThe thread is interrupted. Possible problem with the size of the card";
 
+    public static final String MESSAGE_FABRIC_ERROR = "\nProblems with creating instances of organisms. Change the settings.";
+
 }
