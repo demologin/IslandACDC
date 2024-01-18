@@ -83,7 +83,10 @@ public class Square {
                 Square at (%d, %d) - Entities: %d {
                 """.formatted(this.getX(), this.getY(), totalAnimalsInSquare.get()));
         for (Map.Entry<String, AtomicInteger> entry : organismCount.entrySet()) {
-            builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue().get()));
+            int value = entry.getValue().get();
+            if(value != 0) {
+                builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue().get()));
+            }
         }
         builder.append("}");
         return builder.toString();
