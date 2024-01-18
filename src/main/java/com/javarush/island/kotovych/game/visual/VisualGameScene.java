@@ -12,7 +12,10 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class VisualGameScene {
     GameScene gameScene;
@@ -22,11 +25,12 @@ public class VisualGameScene {
 
     private Pane matrixPane;
     private double scaleFactor = 1.0;
-
-    private Label totalOrganisms;
-    private Label totalOrganismCount;
+    Label totalOrganisms = new Label();
+    Label totalOrganismCount = new Label();
 
     VisualStatisticsChanger visualStatisticsChanger;
+
+    ScheduledExecutorService statisticChangerExecutor = Executors.newScheduledThreadPool(1);
 
     public VisualGameScene(GameScene gameScene) {
         this.gameScene = gameScene;
@@ -125,9 +129,6 @@ public class VisualGameScene {
         GridPane informationPanel = new GridPane();
 
         Label organismsLabel = new Label("Organisms:");
-        totalOrganisms = new Label("0");
-        totalOrganismCount = new Label("P");
-
         totalOrganisms.setStyle("-fx-font-weight: bold");
 
         informationPanel.add(organismsLabel, 0, 0);
@@ -139,9 +140,8 @@ public class VisualGameScene {
         informationPanel.setVgap(5);
         informationPanel.setPadding(new Insets(10, 10, 0, 0));
 
-        visualStatisticsChanger = new VisualStatisticsChanger(totalOrganisms, totalOrganismCount);
-        gameScene.getStatistics().setVisualStatisticsChanger(visualStatisticsChanger);
-
+        visualStatisticsChanger = new VisualStatisticsChanger(gameScene, totalOrganisms, totalOrganismCount);
+        statisticChangerExecutor.scheduleAtFixedRate(visualStatisticsChanger, 0, Settings.getDelay(), TimeUnit.MILLISECONDS);
         return informationPanel;
     }
 

@@ -4,6 +4,7 @@ import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.OrganismDataTable;
+import com.javarush.island.kotovych.util.Rnd;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,6 @@ import lombok.ToString;
 
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Getter
@@ -38,14 +38,14 @@ public abstract class Organism implements Cloneable{
         Organism clone = (Organism) super.clone();
         clone.id = idCounter.incrementAndGet();
         double maxWeight = OrganismDataTable.getData(this.getName()).get("weight");
-        clone.setWeight(ThreadLocalRandom.current().nextDouble(maxWeight / 2, maxWeight));
+        clone.setWeight(Rnd.nextDouble(maxWeight / 2, maxWeight));
         return clone;
     }
 
     public Organism(){
         setName(this.getClass().getSimpleName());
         Map<String, Double> data = OrganismDataTable.getData(this.getName());
-        setWeight(ThreadLocalRandom.current().nextDouble(data.get("weight") / 2, data.get("weight")));
+        setWeight(Rnd.nextDouble(data.get("weight") / 2, data.get("weight")));
         setMaxOnOneSquare(data.get("maxOnOneSquare").intValue());
         setMaxStepSize(data.get("maxStepSize").intValue());
         setKilogramsOfFoodNeeded(data.get("kilogramsOfFoodNeeded"));

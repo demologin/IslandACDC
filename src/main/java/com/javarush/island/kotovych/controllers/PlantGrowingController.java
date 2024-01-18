@@ -3,6 +3,7 @@ package com.javarush.island.kotovych.controllers;
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.organisms.Flock;
 import com.javarush.island.kotovych.settings.Settings;
+import com.javarush.island.kotovych.util.Rnd;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,7 +22,7 @@ public class PlantGrowingController implements Controller {
                 .flatMap(Arrays::stream)
                 .parallel()
                 .forEach(square -> {
-                    int number = ThreadLocalRandom.current().nextInt(2);
+                    int number = Rnd.nextInt(2);
                     if(number == 1){
                         Flock flock = new Flock("Plant", 10);
                         if(square.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()){

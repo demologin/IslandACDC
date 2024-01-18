@@ -37,6 +37,9 @@ public class Settings {
     @Getter
     private static int maxFlockSize;
 
+    @Getter
+    private static int animalGeneratingDelay;
+
     private Settings() {
     }
 
@@ -52,6 +55,7 @@ public class Settings {
         gameWidth = DefaultSettings.gameWidth;
         gameHeight = DefaultSettings.gameHeight;
         maxFlockSize = DefaultSettings.maxFlockSize;
+        animalGeneratingDelay = DefaultSettings.animalGeneratingDelay;
     }
 
     private static void loadFromJson(){
@@ -65,6 +69,7 @@ public class Settings {
             gameWidth = settings.get("gameWidth");
             gameHeight = settings.get("gameHeight");
             maxFlockSize = settings.get("maxFlockSize");
+            animalGeneratingDelay = settings.get("animalGeneratingDelay");
 
         } catch (IOException e) {
             ShowAlert.showErrorAlert("Failed to load settings");

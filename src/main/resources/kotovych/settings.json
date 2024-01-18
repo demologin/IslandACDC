@@ -5,5 +5,5 @@
   "gameWidth": 100,
   "gameHeight": 20,
   "maxFlockSize": 100,
-  "randomAnimalGeneratingDelay": 5000
+  "animalGeneratingDelay": 5000
 }

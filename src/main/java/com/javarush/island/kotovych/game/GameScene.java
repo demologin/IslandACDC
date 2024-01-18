@@ -28,10 +28,11 @@ public class GameScene{
     private Controller reproductionController;
     private Controller dyingController;
     private Controller plantGrowingController;
+    private Controller randomAnimalGeneratorController;
 
     private AtomicInteger totalAnimalsInGame = new AtomicInteger(0);
 
-    private Statistics statistics = new Statistics(this);
+    private Statistics statistics = new Statistics();
 
     public GameScene() {
         this.width = Settings.getGameWidth();
@@ -50,6 +51,7 @@ public class GameScene{
         reproductionController = new ReproductionController(this);
         dyingController = new DeathController(this);
         plantGrowingController = new PlantGrowingController(this);
+        randomAnimalGeneratorController = new RandomAnimalGeneratorController(this);
 
     }
 
@@ -60,12 +62,14 @@ public class GameScene{
 
     public void startAllRequiredControllers(){
         int delay = Settings.getDelay();
+        int animalGeneratingDelay = Settings.getAnimalGeneratingDelay();
         controllers = Executors.newScheduledThreadPool(5);
-       // controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
+        controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(movingController, 0, delay, TimeUnit.MILLISECONDS);
-       // controllers.scheduleWithFixedDelay(reproductionController, 0, delay, TimeUnit.MILLISECONDS);
-       // controllers.scheduleWithFixedDelay(dyingController, 0, delay, TimeUnit.MILLISECONDS);
-       // controllers.scheduleWithFixedDelay(plantGrowingController, 0, delay, TimeUnit.MILLISECONDS);
+        controllers.scheduleWithFixedDelay(reproductionController, 0, delay, TimeUnit.MILLISECONDS);
+        controllers.scheduleWithFixedDelay(dyingController, 0, delay, TimeUnit.MILLISECONDS);
+        controllers.scheduleWithFixedDelay(plantGrowingController, 0, delay, TimeUnit.MILLISECONDS);
+        controllers.scheduleWithFixedDelay(randomAnimalGeneratorController, 0, animalGeneratingDelay, TimeUnit.MILLISECONDS);
     }
 
     public void stopControllers(){

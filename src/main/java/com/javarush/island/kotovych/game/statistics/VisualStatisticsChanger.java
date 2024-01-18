@@ -1,24 +1,23 @@
 package com.javarush.island.kotovych.game.statistics;
 
-import com.javarush.island.kotovych.exceptions.AppException;
+import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.util.EmojiTable;
-import com.javarush.island.kotovych.util.ShowAlert;
 import javafx.scene.control.Label;
-
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VisualStatisticsChanger {
+public class VisualStatisticsChanger implements Runnable{
     Label totalOrganisms;
     Label organismCount;
+    GameScene gameScene;
 
-    public VisualStatisticsChanger(Label totalOrganisms, Label organismCount) {
+    Statistics statistics;
+    public VisualStatisticsChanger(GameScene gameScene, Label totalOrganisms, Label organismCount) {
         this.totalOrganisms = totalOrganisms;
         this.organismCount = organismCount;
+        this.gameScene = gameScene;
+        statistics = gameScene.getStatistics();
     }
-
-    Semaphore semaphore = new Semaphore(1);
 
     public void update(AtomicInteger totalValue, Map<String, AtomicInteger> totalOrganismCount) {
         totalOrganisms.setText(String.valueOf(totalValue.get()));
@@ -30,5 +29,11 @@ public class VisualStatisticsChanger {
             }
         }
         organismCount.setText(builder.toString());
+    }
+
+
+    @Override
+    public void run() {
+        update(statistics.getTotalOrganisms(), statistics.getTotalOrganismCount());
     }
 }

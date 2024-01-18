@@ -7,6 +7,7 @@ import com.javarush.island.kotovych.organisms.Flock;
 import com.javarush.island.kotovych.organisms.Organism;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.EmojiTable;
+import com.javarush.island.kotovych.util.Rnd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -92,7 +93,7 @@ public class Square {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
         while (totalAnimalsInSquare.get() != Settings.getAnimalsOnSquareAtTheBeginning()) {
             Flock flock;
-            int organismsInFlock = ThreadLocalRandom.current().nextInt(1, Settings.getMaxFlockSize());
+            int organismsInFlock = Rnd.nextInt(1, Settings.getMaxFlockSize());
             int organismsInSquareAfterAddingFlock = organismsInFlock + totalAnimalsInSquare.get();
             if (organismsInSquareAfterAddingFlock > Settings.getAnimalsOnSquareAtTheBeginning()) {
                 int diff = organismsInSquareAfterAddingFlock - Settings.getAnimalsOnSquareAtTheBeginning();

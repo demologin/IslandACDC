@@ -8,6 +8,7 @@ import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.Direction;
 import com.javarush.island.kotovych.util.OrganismDataTable;
 import com.javarush.island.kotovych.util.ProbabilityTable;
+import com.javarush.island.kotovych.util.Rnd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -67,7 +68,7 @@ public class Flock {
                 return;
             }
             int maxStepSize = OrganismDataTable.getData(this.getName()).get("maxStepSize").intValue();
-            int stepSize = ThreadLocalRandom.current().nextInt(maxStepSize + 1);
+            int stepSize = Rnd.nextInt(maxStepSize + 1);
 
             int squareX = currentSquare.getX();
             int squareY = currentSquare.getY();
@@ -91,6 +92,7 @@ public class Flock {
             } catch (ArrayIndexOutOfBoundsException e) {
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new AppException(e);
         } finally {
             unblockOtherThreadsInFlock();
@@ -104,7 +106,7 @@ public class Flock {
                     .stream()
                     .filter(flock -> {
                         int probability = ProbabilityTable.getProbability(this.getName(), flock.getName());
-                        int number = ThreadLocalRandom.current().nextInt(probability);
+                        int number = Rnd.nextInt(probability);
                         return number <= probability;
                     })
                     .forEach(flock -> {
@@ -119,10 +121,12 @@ public class Flock {
                                 if (organisms.get(i).getWeight() > maxWeight) {
                                     organisms.get(i).setWeight(maxWeight);
                                     otherFlockOrganisms.get(i).die(flock, currentSquare);
+                                    organisms.get(i).setAte(true);
                                 }
                                 if (!organisms.get(i).isAte()) {
                                     organisms.get(i).setWeight(organisms.get(i).getWeight() * 0.9);
                                 }
+                                organisms.get(i).setAte(false);
                             }
                             flockAte.set(true);
                         }

@@ -8,5 +8,6 @@ public class DefaultSettings {
     public static final int gameWidth = 100;
     public static final int gameHeight = 20;
     public static final int maxFlockSize = 100;
+    public static final int animalGeneratingDelay = 5000;
     private DefaultSettings(){}
 }
