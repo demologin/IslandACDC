@@ -18,7 +18,7 @@ public class GameScene{
     private CopyOnWriteArrayList<Square> squares = new CopyOnWriteArrayList<>();
 
     private ExecutorService squarePool;
-    private ScheduledExecutorService controllers = Executors.newScheduledThreadPool(5);
+    private ScheduledExecutorService controllers = Executors.newScheduledThreadPool(6);
 
     private int width;
     private int height;
@@ -63,7 +63,7 @@ public class GameScene{
     public void startAllRequiredControllers(){
         int delay = Settings.getDelay();
         int animalGeneratingDelay = Settings.getAnimalGeneratingDelay();
-        controllers = Executors.newScheduledThreadPool(5);
+        controllers = Executors.newScheduledThreadPool(6);
         controllers.scheduleWithFixedDelay(eatingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(movingController, 0, delay, TimeUnit.MILLISECONDS);
         controllers.scheduleWithFixedDelay(reproductionController, 0, delay, TimeUnit.MILLISECONDS);

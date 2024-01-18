@@ -1,19 +1,21 @@
 package com.javarush.island.kotovych.game.statistics;
 
-import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.util.EmojiTable;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class VisualStatisticsChanger{
+public class VisualStatisticsChanger implements Runnable{
     Label totalOrganisms;
     Label organismCount;
 
-    public VisualStatisticsChanger(Label totalOrganisms, Label organismsCount){
+    private Statistics statistics;
+
+    public VisualStatisticsChanger(Statistics statistics, Label totalOrganisms, Label organismsCount){
         this.totalOrganisms = totalOrganisms;
         this.organismCount = organismsCount;
+        this.statistics = statistics;
     }
 
     public void update(AtomicInteger totalValue, Map<String, AtomicInteger> totalOrganismCount) {
@@ -26,5 +28,10 @@ public class VisualStatisticsChanger{
             }
         }
         Platform.runLater(() -> organismCount.setText(builder.toString()));
+    }
+
+    @Override
+    public void run() {
+        update(statistics.getTotalOrganisms(), statistics.getTotalOrganismCount());
     }
 }
