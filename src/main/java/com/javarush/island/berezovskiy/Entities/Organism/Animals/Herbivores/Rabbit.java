@@ -1,38 +1,30 @@
 package com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores;
 
-import com.javarush.island.berezovskiy.Entities.Organism.Animals.Animal;
-import com.javarush.island.berezovskiy.Entities.Organism.Organism;
-
+import com.javarush.island.berezovskiy.Configs.Configs;
+import com.javarush.island.berezovskiy.Constants.Constants;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Rabbit extends Herbivorous{
+    public static AtomicInteger getRabbitNumber() {
+        return rabbitNumber;
+    }
 
     protected static AtomicInteger rabbitNumber = new AtomicInteger();
-    protected static int increaseOrganismNumber() {
-        return rabbitNumber.incrementAndGet();
-    }
+
     public Rabbit(){
-        Organism.increaseOrganismNumber();
-        Animal.increaseOrganismNumber();
-        Herbivorous.increaseOrganismNumber();
-        increaseOrganismNumber();
-    }
-    @Override
-    public void eat() {
-
+        this.maximumCount = Configs.MAX_RABBIT_COUNT_IN_CELL;
+        this.name = Constants.RABBIT;
+        maximumStep = Configs.MAX_STEP_RABBIT;
+        rabbitNumber.incrementAndGet();
     }
 
     @Override
-    public void move() {
-
+    public void incrementOrganismCount() {
+        Rabbit.rabbitNumber.incrementAndGet();
     }
 
     @Override
-    public void reproduce() {
-
-    }
-
-    public void setCell(){
-
+    public void decrementOrganismCount() {
+       Rabbit.rabbitNumber.decrementAndGet();
     }
 }

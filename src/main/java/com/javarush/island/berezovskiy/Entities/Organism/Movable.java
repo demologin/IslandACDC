@@ -1,5 +1,7 @@
 package com.javarush.island.berezovskiy.Entities.Organism;
 
+import com.javarush.island.berezovskiy.Entities.Cell.Cell;
+
 public interface Movable {
-    void move();
+    int[] move(Cell cell);
 }

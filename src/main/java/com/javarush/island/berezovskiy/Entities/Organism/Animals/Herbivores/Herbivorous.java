@@ -6,7 +6,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Herbivorous extends Animal {
     protected static AtomicInteger herbivoresNumber = new AtomicInteger();
+
+    protected Herbivorous(){
+        super();
+        herbivoresNumber.incrementAndGet();
+    }
     protected static int increaseOrganismNumber() {
         return herbivoresNumber.incrementAndGet();
     }
+
 }

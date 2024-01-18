@@ -1,76 +1,84 @@
 package com.javarush.island.berezovskiy.Entities;
 
 import com.javarush.island.berezovskiy.Configs.Configs;
-import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.Rabbit;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.Wolf;
 import com.javarush.island.berezovskiy.Entities.Organism.Organism;
+import com.javarush.island.berezovskiy.Entities.Organism.OrganismsSet;
+import com.javarush.island.berezovskiy.Utils.IslandModify;
+import com.javarush.island.berezovskiy.Utils.OrganismModify;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 
-public class Island {
+public class Island implements Runnable {
 
-    private static final int sizeY = Configs.ISLAND_SIZE_Y;
-    private static final int sizeX = Configs.ISLAND_SIZE_X;
-    private final Cell[][] islandSize;
+    private final int sizeY = Configs.ISLAND_WIDTH;
+    private final int sizeX = Configs.ISLAND_HEIGHT;
+
+    private final Cell[][] island;
+
+    public Cell[][] getIsland() {
+        return island;
+    }
 
     public Island() {
-        islandSize = new Cell[sizeY][sizeX];
-        createIslandField(islandSize);
-        createOrganisms(islandSize);
-        drawIsland();
+        island = new Cell[sizeX][sizeY];
+        createIslandField(island);
+        OrganismModify.createOrganismsOnIsland(island);
+        IslandModify.drawIsland(this);
+        System.out.println();
+
+        //TODO REFACTOR extracted()
+        IslandModify.drawIsland(this);
+//        extracted();
+        System.out.println();
+        IslandModify.drawIsland(this);
     }
 
+//    private void extracted() {
+//        for (Cell[] cells : island) {
+//            for (Cell cell : cells) {
+//                for (Map.Entry<String, OrganismsSet> organismIntegerEntry : cell.getOrganismHashMap().entrySet()) {
+//                    OrganismsSet organismsSet = organismIntegerEntry.getValue();
+//                    Organism organism = organismsSet.getOrganism();
+//                    if (organism.getClass() == Rabbit.class) {
+//                        organismsSet.move();
+//                        if (!island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].getOrganismHashMap().containsKey("RABBIT")) {
+//                            island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].putOrganism("RABBIT", organismsSet);
+//                            cell.removeOrganism("RABBIT");
+//                            System.out.println("Rabbit X = " + organismsSet.getCoordinateY() + " Y = " + organismsSet.getCoordinateX());
+//                        }
+//                        System.out.println("Total Rabbit Count = " + organismsSet.getOrganismCount());
+//                    }
+//                    if (organism.getClass() == Wolf.class) {
+//                        organismsSet.move();
+//                        if (!island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].getOrganismHashMap().containsKey("WOLF")) {
+//                            island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].putOrganism("WOLF", organismsSet);
+//                            cell.removeOrganism("WOLF");
+//                        }
+//                        System.out.println("Total Wolf Count = " + organismsSet.getOrganismCount());
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-    //TODO REFACTOR!!!
-    private void drawIsland() {
-        for (Cell[] cells : islandSize) {
-            for (Cell cell : cells) {
-                if(!cell.getOrganismIntegerHashMap().isEmpty()){
-                    HashMap<Organism, Integer> hashMap = cell.getOrganismIntegerHashMap();
-                    for (Map.Entry<Organism, Integer> organismIntegerEntry : hashMap.entrySet()) {
-                        Organism organism = organismIntegerEntry.getKey();
-                        Class<? extends Organism> organismClass = organism.getClass();
-                        if(organismClass.getSimpleName().equals("Wolf")){
-                            System.out.print(Constants.WOLF_IMAGE + " ");
-                        }
-                        if(organismClass.getSimpleName().equals("Rabbit")){
-                            System.out.print(Constants.RABBIT_IMAGE + " ");
-                        }
-                    }
-                }
-                else{
-                    System.out.print(Constants.EMPTY + " ");
-                }
-            }
-            System.out.println();
-        }
-    }
+//    private void changeMap(){
+//        for ()
+//    }
 
-
-    //TODO - REFACTOR!!!
-    private void createOrganisms(Cell[][] islandSize) {
-        int wolfsCount = 30;
-        int rabbitsCount = 100;
-        int cellForWolfsX = ThreadLocalRandom.current().nextInt(0,islandSize.length);
-        int cellForWolfsY = ThreadLocalRandom.current().nextInt(0,islandSize.length);
-        int cellForRabbitsX = ThreadLocalRandom.current().nextInt(0,islandSize.length);
-        int cellForRabbitsY = ThreadLocalRandom.current().nextInt(0,islandSize.length);
-
-        islandSize[cellForWolfsY][cellForWolfsX].putOrganism(new Wolf(), wolfsCount);
-        islandSize[cellForRabbitsY][cellForRabbitsX].putOrganism(new Rabbit(), rabbitsCount);
-
+    @Override
+    public void run() {
     }
 
     private void createIslandField(Cell[][] islandSize) {
         for (int coordinateX = 0; coordinateX < islandSize.length; coordinateX++) {
             for (int coordinateY = 0; coordinateY < islandSize[coordinateX].length; coordinateY++) {
-                islandSize[coordinateX][coordinateY] = new Cell(coordinateX,coordinateY);
+                islandSize[coordinateX][coordinateY] = new Cell(coordinateX, coordinateY);
             }
         }
     }
+
+
 }

@@ -1,8 +1,11 @@
 package com.javarush.island.berezovskiy.Configs;
 
 public class Configs {
-    public static final int ISLAND_SIZE_Y = 5;
-    public static final int ISLAND_SIZE_X = 5;
-    public static final int STARTING_NUMBER_RABBITS = 30;
-    public static final int STARTING_NUMBER_WOLFS = 10;
+    public static final int ISLAND_HEIGHT = 7;
+    public static final int ISLAND_WIDTH = 7;
+    public static final int MAX_RABBIT_COUNT_IN_CELL = 70;
+    public static final int MAX_WOLF_COUNT_IN_CELL = 20;
+
+    public static final int MAX_STEP_RABBIT = 3;
+    public static final int MAX_STEP_WOLF = 2;
 }
