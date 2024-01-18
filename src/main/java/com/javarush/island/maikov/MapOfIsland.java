@@ -7,12 +7,12 @@ import com.javarush.island.maikov.Grass.Clover;
 import com.javarush.island.maikov.methods.Print;
 import com.javarush.island.maikov.methods.Statistics;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MapOfIsland {
-    public static final ArrayList<Organism>[][] mapOfIsland = new ArrayList[3][3];
+    public static final HashSet<Organism>[][] mapOfIsland = new HashSet[3][3];
 
     public MapOfIsland() {
         ReentrantLock reentrantLock = new ReentrantLock();
@@ -48,7 +48,7 @@ public class MapOfIsland {
                 byte countOfPredators = (byte) ThreadLocalRandom.current().nextInt(2, 10);
                 byte countOfHerbivores = (byte) ThreadLocalRandom.current().nextInt(2, 10);
                 byte countOfClover = (byte) ThreadLocalRandom.current().nextInt(0, 5);
-                mapOfIsland[i][j] = new ArrayList<>();
+                mapOfIsland[i][j] = new HashSet<>();
                 for (int herb = 0; herb < countOfHerbivores; herb++) {
                     randomChoseHerbivore(i, j, statistics);
                 }

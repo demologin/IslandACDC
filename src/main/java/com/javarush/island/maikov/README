@@ -1,3 +1,9 @@
 1. Any Animal can reproduce only it is not hungry. Hungry for any animal: if it has less 70% from max food.
 2. When an animal moves and is at the top or bottom of the card, it jumps to the other side of the card,
    just like in the Snake game.
+3. I still don't understand why it sometimes get NullPointerException at the start. Sorry, but i didn't have time anymore, I had
+   to submit the project.
+4. When an animal moves or reproduces, it loses 20% of its life.
+5. I don't understand why Threads sometimes just stop and start work in a few second. I added information to Statistics
+   countMoving, countEating and countReproduce for show it.
+6.

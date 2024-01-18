@@ -21,55 +21,61 @@ public class Reproduce {
             if (someOrganism instanceof Herbivore) {
                 int x = ((Herbivore) someOrganism).getX();
                 int y = ((Herbivore) someOrganism).getY();
-                reproduceHerbivore(someOrganism, x, y);
+                reproduceAnimal(someOrganism, x, y);
+                statistics.countReproduce();
                 return;
             }
             if (someOrganism instanceof Predator) {
                 int x = ((Predator) someOrganism).getX();
                 int y = ((Predator) someOrganism).getY();
-                reproduceHerbivore(someOrganism, x, y);
+                reproduceAnimal(someOrganism, x, y);
+                statistics.countReproduce();
                 return;
             }
             if (someOrganism instanceof AbstractionGrass) {
                 int x = ((AbstractionGrass) someOrganism).getX();
                 int y = ((AbstractionGrass) someOrganism).getY();
-                int randomMoveOrStaySection = ThreadLocalRandom.current().nextInt(0, 2);
-                if (randomMoveOrStaySection == 0) { // if staying in this section
-                    Clover newClover = new Clover(x, y);
-                    Thread.sleep(1000);
-                    MapOfIsland.mapOfIsland[x][y].add(newClover);
-                    statistics.addToStatistics(newClover);
-
-                }
-                if (randomMoveOrStaySection == 1) { // moving X or Y
-                    int randomMoveXOrY = ThreadLocalRandom.current().nextInt(0, 2);
-                    if (randomMoveXOrY == 0) { //if moving along X
-                        if (x == 0 || x == MapOfIsland.mapOfIsland.length - 1) {
-                            x = x == 0 ? (x + 1) : (x - 1);
-                        } else {
-                            int randomMoveX = ThreadLocalRandom.current().nextInt(0, 2);
-                            x = randomMoveX == 0 ? x + 1 : x - 1;
-                        }
-                    }
-                    if (randomMoveXOrY == 1) { //if moving along Y
-                        if (y == 0 || y == MapOfIsland.mapOfIsland[x].length - 1) {
-                            y = y == 0 ? y + 1 : y - 1;
-                        } else {
-                            int randomMoveY = ThreadLocalRandom.current().nextInt(0, 2);
-                            y = randomMoveY == 0 ? y + 1 : y - 1;
-                        }
-                    }
-                    Clover newClover = new Clover(x, y);
-                    Thread.sleep(1000);
-                    MapOfIsland.mapOfIsland[x][y].add(newClover);
-                    statistics.addToStatistics(newClover);
-
-                }
+                reproduceGrass(x, y);
+                statistics.countReproduce();
             }
         }
     }
 
-    private void reproduceHerbivore(Organism someOrganism, int x, int y) throws InterruptedException {
+    private void reproduceGrass(int x, int y) throws InterruptedException {
+        int randomMoveOrStaySection = ThreadLocalRandom.current().nextInt(0, 2);
+        if (randomMoveOrStaySection == 0) { // if staying in this section
+            Clover newClover = new Clover(x, y);
+            Thread.sleep(1000);
+            MapOfIsland.mapOfIsland[x][y].add(newClover);
+            statistics.addToStatistics(newClover);
+
+        }
+        if (randomMoveOrStaySection == 1) { // moving X or Y
+            int randomMoveXOrY = ThreadLocalRandom.current().nextInt(0, 2);
+            if (randomMoveXOrY == 0) { //if moving along X
+                if (x == 0 || x == MapOfIsland.mapOfIsland.length - 1) {
+                    x = x == 0 ? (x + 1) : (x - 1);
+                } else {
+                    int randomMoveX = ThreadLocalRandom.current().nextInt(0, 2);
+                    x = randomMoveX == 0 ? x + 1 : x - 1;
+                }
+            }
+            if (randomMoveXOrY == 1) { //if moving along Y
+                if (y == 0 || y == MapOfIsland.mapOfIsland[x].length - 1) {
+                    y = y == 0 ? y + 1 : y - 1;
+                } else {
+                    int randomMoveY = ThreadLocalRandom.current().nextInt(0, 2);
+                    y = randomMoveY == 0 ? y + 1 : y - 1;
+                }
+            }
+            Clover newClover = new Clover(x, y);
+            Thread.sleep(1000);
+            MapOfIsland.mapOfIsland[x][y].add(newClover);
+            statistics.addToStatistics(newClover);
+        }
+    }
+
+    private void reproduceAnimal(Organism someOrganism, int x, int y) throws InterruptedException {
         ArrayList<Organism> oneSpaceOfIsland = new ArrayList<>(MapOfIsland.mapOfIsland[x][y]);
         for (Organism organism : oneSpaceOfIsland) {
             // I don't know why I can't use instanceof, maybe you know?
@@ -90,13 +96,25 @@ public class Reproduce {
                     Thread.sleep(1000);
                     MapOfIsland.mapOfIsland[x][y].add((Herbivore) newAnimal);
                     statistics.addToStatistics((Herbivore) newAnimal);
+                    minusLife(someOrganism);
                 }
                 if (someOrganism instanceof Predator) {
                     Thread.sleep(1000);
                     MapOfIsland.mapOfIsland[x][y].add((Predator) newAnimal);
                     statistics.addToStatistics((Predator) newAnimal);
+                    minusLife(someOrganism);
                 }
             }
+        }
+    }
+    private void minusLife(Organism someOrganism) {
+        if(someOrganism instanceof Herbivore){
+            double newLife = ((Herbivore) someOrganism).getLife();
+            ((Herbivore) someOrganism).setLife(newLife - (newLife * 0.2));
+        }
+        if(someOrganism instanceof Predator){
+            double newLife = ((Predator) someOrganism).getLife();
+            ((Predator) someOrganism).setLife(newLife - (newLife * 0.2));
         }
     }
 }

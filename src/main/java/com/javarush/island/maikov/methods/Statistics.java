@@ -25,6 +25,9 @@ public class Statistics {
     protected static volatile AtomicInteger countFox = new AtomicInteger(0);
     protected static volatile AtomicInteger countWolf = new AtomicInteger(0);
     protected static volatile AtomicInteger countClover = new AtomicInteger(0);
+    protected static volatile AtomicInteger countMoving = new AtomicInteger(0);
+    protected static volatile AtomicInteger countEating = new AtomicInteger(0);
+    protected static volatile AtomicInteger countReproduce = new AtomicInteger(0);
 
 
     public void removeFromStatistics(Organism someOrganism) {
@@ -127,5 +130,14 @@ public class Statistics {
         if (someOrganism instanceof Clover) {
             countClover.incrementAndGet();
         }
+    }
+    public void countMoving(){
+        countMoving.incrementAndGet();
+    }
+    public void countEating(){
+        countEating.incrementAndGet();
+    }
+    public void countReproduce(){
+        countReproduce.incrementAndGet();
     }
 }

@@ -10,7 +10,7 @@ public abstract class Predator extends Animals {
     private int x;
     private int y;
     private Thread thread;
-    private volatile double live;
+    private volatile double life;
 
 
 
@@ -21,7 +21,7 @@ public abstract class Predator extends Animals {
         this.maxFood = maxFood;
         this.x = x;
         this.y = y;
-        live = maxFood;
+        life = maxFood;
         thread = new Thread(this);
         thread.start();
     }
@@ -82,12 +82,12 @@ public abstract class Predator extends Animals {
         this.thread = thread;
     }
 
-    public double getLive() {
-        return live;
+    public double getLife() {
+        return life;
     }
 
-    public void setLive(double live) {
-        this.live = live;
+    public void setLife(double life) {
+        this.life = life;
     }
 
     @Override
@@ -103,7 +103,7 @@ public abstract class Predator extends Animals {
         if (Double.compare(maxFood, predator.maxFood) != 0) return false;
         if (x != predator.x) return false;
         if (y != predator.y) return false;
-        if (Double.compare(live, predator.live) != 0) return false;
+        if (Double.compare(life, predator.life) != 0) return false;
         return Objects.equals(thread, predator.thread);
     }
 
@@ -119,7 +119,7 @@ public abstract class Predator extends Animals {
         result = 31 * result + x;
         result = 31 * result + y;
         result = 31 * result + (thread != null ? thread.hashCode() : 0);
-        temp = Double.doubleToLongBits(live);
+        temp = Double.doubleToLongBits(life);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

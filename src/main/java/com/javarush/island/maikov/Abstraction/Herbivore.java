@@ -10,7 +10,7 @@ public abstract class Herbivore extends Animals {
     private int x;
     private int y;
     private Thread thread;
-    private volatile double live;
+    private volatile double life;
 
 
     protected Herbivore(double weight, int maxAnimalOnSpace, int maxSpeed, double maxFood, int x, int y) {
@@ -20,7 +20,7 @@ public abstract class Herbivore extends Animals {
         this.maxFood = maxFood;
         this.x = x;
         this.y = y;
-        live = maxFood;
+        life = maxFood;
         thread = new Thread(this);
         thread.start();
     }
@@ -81,12 +81,12 @@ public abstract class Herbivore extends Animals {
         this.thread = thread;
     }
 
-    public double getLive() {
-        return live;
+    public double getLife() {
+        return life;
     }
 
-    public void setLive(double live) {
-        this.live = live;
+    public void setLife(double life) {
+        this.life = life;
     }
 
     @Override
@@ -102,7 +102,7 @@ public abstract class Herbivore extends Animals {
         if (Double.compare(maxFood, herbivore.maxFood) != 0) return false;
         if (x != herbivore.x) return false;
         if (y != herbivore.y) return false;
-        if (Double.compare(live, herbivore.live) != 0) return false;
+        if (Double.compare(life, herbivore.life) != 0) return false;
         return Objects.equals(thread, herbivore.thread);
     }
 
@@ -119,7 +119,7 @@ public abstract class Herbivore extends Animals {
         result = 31 * result + x;
         result = 31 * result + y;
         result = 31 * result + (thread != null ? thread.hashCode() : 0);
-        temp = Double.doubleToLongBits(live);
+        temp = Double.doubleToLongBits(life);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

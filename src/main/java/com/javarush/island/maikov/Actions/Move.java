@@ -4,15 +4,19 @@ import com.javarush.island.maikov.Abstraction.Organism;
 import com.javarush.island.maikov.Abstraction.Herbivore;
 import com.javarush.island.maikov.Abstraction.Predator;
 import com.javarush.island.maikov.MapOfIsland;
+import com.javarush.island.maikov.methods.Statistics;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Move {
+    private final Statistics statistics = new Statistics();
     public void startMove(Organism someOrganism) {
+
         synchronized (MapOfIsland.mapOfIsland) {
             int[] coordinates = getCoordinates(someOrganism);
             int randomSpeed = getRandomSpeed(someOrganism);
             if (randomSpeed == 0) {
+                statistics.countMoving();
                 return;
             }
             MapOfIsland.mapOfIsland[coordinates[0]][coordinates[1]].remove(someOrganism);
@@ -29,6 +33,19 @@ public class Move {
                 }
             }
             setNewCoordinatesAndAddToList(someOrganism, coordinates);
+            minusLife(someOrganism);
+            statistics.countMoving();
+        }
+    }
+// An animal lose its life, when it moves
+    private void minusLife(Organism someOrganism) {
+        if(someOrganism instanceof Herbivore){
+            double newLife = ((Herbivore) someOrganism).getLife();
+            ((Herbivore) someOrganism).setLife(newLife - (newLife * 0.2));
+        }
+        if(someOrganism instanceof Predator){
+            double newLife = ((Predator) someOrganism).getLife();
+            ((Predator) someOrganism).setLife(newLife - (newLife * 0.2));
         }
     }
 
