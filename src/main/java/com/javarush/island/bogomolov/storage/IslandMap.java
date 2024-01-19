@@ -1,25 +1,51 @@
 package com.javarush.island.bogomolov.storage;
 
 import com.javarush.island.bogomolov.creatures.Animal;
-import com.javarush.island.bogomolov.creatures.Plant;
-import com.javarush.island.bogomolov.creatures.herbivores.Herbivore;
+import com.javarush.island.bogomolov.creatures.plants.Plant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IslandMap {
-    private final Cell[][] map;
+    private Cell[][] map;
     private final int rows = 100;
     private final int columns = 20;
+    private static volatile IslandMap islandMap;
 
 
-    public IslandMap() {
-        this.map = new Cell[this.rows][this.columns];
+    private IslandMap() {
+
     }
 
-    private IslandMap(int rows, int columns) {
-        this.map = new Cell[rows][columns];
+    public static IslandMap getislandMap() {
+        if (islandMap == null) {
+            synchronized (IslandMap.class) {
+                if (islandMap == null) {
+                    islandMap = new IslandMap();
+                }
+            }
+        }
+        return islandMap;
+    }
+
+    public void createDefaultMap() {
+        map = new Cell[rows][columns];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                map[i][j] = new Cell(i, j);
+
+            }
+        }
+    }
+
+    public void createMap(int rows, int columns) {
+        map = new Cell[rows][columns];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                map[i][j] = new Cell(i, j);
+            }
+
+        }
     }
 
 

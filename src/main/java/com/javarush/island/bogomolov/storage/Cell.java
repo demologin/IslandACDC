@@ -1,10 +1,9 @@
 package com.javarush.island.bogomolov.storage;
 
 import com.javarush.island.bogomolov.creatures.Animal;
-import com.javarush.island.bogomolov.creatures.Plant;
+import com.javarush.island.bogomolov.creatures.plants.Plant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Cell {

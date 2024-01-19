@@ -1,10 +1,9 @@
 package com.javarush.island.bogomolov.creatures.predators;
 
-import com.javarush.island.bogomolov.Limit;
-import com.javarush.island.bogomolov.api.annotation.CreatureAnnotation;
+
 import com.javarush.island.bogomolov.creatures.Animal;
 import com.javarush.island.bogomolov.storage.Cell;
-
+import com.javarush.island.bogomolov.storage.IslandMap;
 
 public class Snake extends Predator {
     public Snake() {
@@ -20,6 +19,21 @@ public class Snake extends Predator {
             case "Duck" -> 0.1;
             default -> 0;
         };
+    }
+
+    @Override
+    public void spawn() {
+
+    }
+
+    @Override
+    public void spawn(Animal couple) {
+
+
+        if (couple instanceof Snake) {
+            Cell cell = IslandMap.getislandMap().getCell(couple.getRow(), couple.getColumn());
+            IslandMap.getislandMap().addAnimal(new Snake(), cell.getRow(), cell.getColumn());
+        }
     }
 }
 
