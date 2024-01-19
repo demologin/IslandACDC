@@ -6,6 +6,7 @@ import com.javarush.island.kotovych.organisms.Flock;
 import com.javarush.island.kotovych.organisms.Organism;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.settings.Settings;
+import com.javarush.island.kotovych.util.Rnd;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,11 +20,14 @@ public abstract class Animal extends Organism {
             blockOtherThreadsInOrganism();
             for (Organism organism : flock.getOrganisms()) {
                 Animal animal = (Animal) organism;
+                int children = Rnd.nextInt(1, 4);
                 if (!reproducedAnimals.contains(this) && !reproducedAnimals.contains(animal)) {
-                    if (currentSquare.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()
+                    if (currentSquare.getTotalAnimalsInSquare().get() + children <= Settings.getMaxAnimalsOnSquare()
                             && flock.getOrganisms().size() < Settings.getMaxFlockSize()
                             && flock.getMaxOnOneSquare() < currentSquare.getOrganismCount().get(flock.getName()).get()) {
-                        flock.addOrganism(OrganismFactory.newOrganism(flock.getName()), currentSquare);
+                        for(int i = 0; i < children; i++) {
+                            flock.addOrganism(OrganismFactory.newOrganism(flock.getName()), currentSquare);
+                        }
                     }
                 }
             }
