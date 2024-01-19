@@ -123,15 +123,14 @@ public class Flock {
                             for (int i = 0; i < organisms.size(); i++) {
                                 double eatenKilograms = 0;
                                 Organism organism  = organisms.get(i);
-                                Organism otherOrganism = otherFlockOrganisms.get(i);
                                 if (organism.getWeight() > maxWeight * 0.4) {
                                     continue;
                                 }
-                                organism.addWeight(otherOrganism.getWeight());
-                                eatenKilograms += otherOrganism.getWeight();
+                                organism.addWeight(otherFlockOrganisms.get(i).getWeight());
+                                eatenKilograms += otherFlockOrganisms.get(i).getWeight();
                                 if (organism.getWeight() > maxWeight) {
                                     organism.setWeight(maxWeight);
-                                    otherOrganism.die(flock, currentSquare);
+                                    otherFlockOrganisms.get(i).die(flock, currentSquare);
                                     organism.setAte(true);
                                 }
                                 if (eatenKilograms < organism.getKilogramsOfFoodNeeded()) {
