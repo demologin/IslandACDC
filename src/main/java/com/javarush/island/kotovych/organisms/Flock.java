@@ -5,10 +5,7 @@ import com.javarush.island.kotovych.factory.OrganismFactory;
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.settings.Settings;
-import com.javarush.island.kotovych.util.Direction;
-import com.javarush.island.kotovych.util.OrganismDataTable;
-import com.javarush.island.kotovych.util.ProbabilityTable;
-import com.javarush.island.kotovych.util.Rnd;
+import com.javarush.island.kotovych.util.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,8 +33,7 @@ public class Flock {
         try {
             blockOtherThreadsInFlock();
             organisms.remove(organism);
-            square.getTotalAnimalsInSquare().decrementAndGet();
-            square.getStatistics().removeOrganism(name, 1);
+            square.removeOrganismFromMap(organism);
         } catch (Exception e) {
             throw new AppException(e);
         } finally {
@@ -48,11 +44,9 @@ public class Flock {
     public void addOrganism(Organism organism, Square square) {
         try {
             blockOtherThreadsInFlock();
-            if (organisms.size() + 1 < Settings.getMaxFlockSize()) {
+            if (organisms.size() < Settings.getMaxFlockSize()) {
                 organisms.add(organism);
                 square.addOrganismToMap(organism);
-                square.getTotalAnimalsInSquare().incrementAndGet();
-                square.getStatistics().addOrganism(name, 1);
             }
         } catch (Exception e) {
             throw new AppException(e);
@@ -86,14 +80,14 @@ public class Flock {
                 }
 
                 Square neededSquare = gameScene.getSquareByCoordinates(newX, newY);
-                if (neededSquare.addFlock(this)) {
+                if(neededSquare.addFlock(this)) {
                     currentSquare.removeFlock(this);
                 }
+
             } catch (ArrayIndexOutOfBoundsException e) {
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AppException(e);
+            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
         } finally {
             unblockOtherThreadsInFlock();
         }
@@ -101,11 +95,15 @@ public class Flock {
 
     public void eat(Square currentSquare) {
         try {
+            blockOtherThreadsInFlock();
             AtomicBoolean flockAte = new AtomicBoolean(false);
             currentSquare.getFlockList()
                     .stream()
                     .filter(flock -> {
                         int probability = ProbabilityTable.getProbability(this.getName(), flock.getName());
+                        if (probability == 0) {
+                            return false;
+                        }
                         int number = Rnd.nextInt(probability);
                         return number <= probability;
                     })
@@ -132,7 +130,7 @@ public class Flock {
                         }
                     });
         } catch (Exception e) {
-            throw new AppException(e);
+            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
         } finally {
             unblockOtherThreadsInFlock();
         }
@@ -142,7 +140,7 @@ public class Flock {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            throw new AppException(e);
+            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
         }
     }
 

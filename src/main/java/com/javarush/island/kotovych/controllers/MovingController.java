@@ -25,6 +25,7 @@ public class MovingController implements Controller {
                 .forEach(square -> {
                     List<Flock> flocks = square.getFlockList();
                     flocks.parallelStream()
+                            .filter(flock -> !flock.getName().equals("Plant"))
                             .filter(flock -> !movedFlocks.contains(flock))
                             .forEach(flock -> {
                                 flock.move(square, gameScene);

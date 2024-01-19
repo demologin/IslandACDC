@@ -13,5 +13,4 @@ module island {
     exports com.javarush.island.kotovych.game;
     exports com.javarush.island.kotovych.organisms;
     exports com.javarush.island.kotovych.controllers;
-    exports com.javarush.island.kotovych.game.statistics;
 }

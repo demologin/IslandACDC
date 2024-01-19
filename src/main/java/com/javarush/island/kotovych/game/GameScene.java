@@ -2,7 +2,6 @@ package com.javarush.island.kotovych.game;
 
 import com.javarush.island.kotovych.controllers.*;
 import com.javarush.island.kotovych.exceptions.AppException;
-import com.javarush.island.kotovych.game.statistics.Statistics;
 import com.javarush.island.kotovych.settings.Settings;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +31,6 @@ public class GameScene{
 
     private AtomicInteger totalAnimalsInGame = new AtomicInteger(0);
 
-    private Statistics statistics = new Statistics();
 
     public GameScene() {
         this.width = Settings.getGameWidth();
@@ -41,7 +39,7 @@ public class GameScene{
         field = new Square[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                field[x][y] = new Square(x, y, statistics);
+                field[x][y] = new Square(x, y);
                 squares.add(field[x][y]);
             }
         }

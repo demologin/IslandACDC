@@ -6,7 +6,6 @@ import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.Rnd;
 
 import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class PlantGrowingController implements Controller {
 
@@ -22,7 +21,7 @@ public class PlantGrowingController implements Controller {
                 .flatMap(Arrays::stream)
                 .parallel()
                 .forEach(square -> {
-                    int number = Rnd.nextInt(2);
+                    int number = Rnd.nextInt(10);
                     if(number == 1){
                         Flock flock = new Flock("Plant", 10);
                         if(square.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()){

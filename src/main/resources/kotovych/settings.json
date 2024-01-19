@@ -1,9 +1,9 @@
 {
   "delay": 2000,
-  "maxOnSquare": 2000,
-  "animalsOnSquareAtTheBeginning": 1000,
-  "gameWidth": 100,
-  "gameHeight": 20,
+  "maxOnSquare": 1000,
+  "animalsOnSquareAtTheBeginning": 100,
+  "gameWidth": 5,
+  "gameHeight": 5,
   "maxFlockSize": 100,
   "animalGeneratingDelay": 5000
 }

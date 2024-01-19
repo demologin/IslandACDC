@@ -2,12 +2,12 @@ package com.javarush.island.kotovych.game;
 
 import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.factory.OrganismFactory;
-import com.javarush.island.kotovych.game.statistics.Statistics;
 import com.javarush.island.kotovych.organisms.Flock;
 import com.javarush.island.kotovych.organisms.Organism;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.Rnd;
+import com.javarush.island.kotovych.util.ShowAlert;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,12 +27,10 @@ public class Square {
     private Map<String, AtomicInteger> organismCount = new ConcurrentHashMap<>();
     private List<Flock> flockList = new CopyOnWriteArrayList<>();
     private AtomicInteger totalAnimalsInSquare = new AtomicInteger(0);
-    private Statistics statistics;
 
-    public Square(int x, int y, Statistics statistics) {
+    public Square(int x, int y) {
         this.x = x;
         this.y = y;
-        this.statistics = statistics;
         fill();
     }
 
@@ -40,11 +38,11 @@ public class Square {
         try {
             blockOtherThreadsInSquare();
             organismCount.putIfAbsent(flock.getName(), new AtomicInteger(0));
-            if (totalAnimalsInSquare.get() + flock.getOrganisms().size() < Settings.getMaxAnimalsOnSquare()) {
+            if (totalAnimalsInSquare.get() + flock.getOrganisms().size() <= Settings.getMaxAnimalsOnSquare()
+                    && !flock.getOrganisms().isEmpty()) {
                 flockList.add(flock);
                 organismCount.get(flock.getName()).addAndGet(flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(flock.getOrganisms().size());
-                statistics.addOrganism(flock.getName(), flock.getOrganisms().size());
                 return true;
             }
             return false;
@@ -55,22 +53,28 @@ public class Square {
         }
     }
 
-    public void addOrganismToMap(Organism organism){
+    public void addOrganismToMap(Organism organism) {
         totalAnimalsInSquare.incrementAndGet();
         organismCount.get(organism.getName()).incrementAndGet();
-        statistics.addOrganism(organism.getName(), 1);
+    }
+
+    public void removeOrganismFromMap(Organism organism){
+        totalAnimalsInSquare.decrementAndGet();
+        organismCount.get(organism.getName()).decrementAndGet();
     }
 
     public void removeFlock(Flock flock) {
         try {
             blockOtherThreadsInSquare();
             if (flockList.remove(flock)) {
+                if(organismCount.get(flock.getName()).get() - flock.getOrganisms().size() < 0){
+                    throw new AppException();
+                }
                 organismCount.get(flock.getName()).addAndGet(-flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(-flock.getOrganisms().size());
-                statistics.removeOrganism(flock.getName(), flock.getOrganisms().size());
             }
         } catch (Exception e) {
-            throw new AppException(e);
+            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
         } finally {
             unblockOtherThreadsInSquare();
         }
@@ -84,7 +88,7 @@ public class Square {
                 """.formatted(this.getX(), this.getY(), totalAnimalsInSquare.get()));
         for (Map.Entry<String, AtomicInteger> entry : organismCount.entrySet()) {
             int value = entry.getValue().get();
-            if(value != 0) {
+            if (value != 0) {
                 builder.append("\t%s: %d\n".formatted(EmojiTable.getEmoji(entry.getKey()), entry.getValue().get()));
             }
         }
@@ -94,12 +98,14 @@ public class Square {
 
     private void fill() {
         Object[] organisms = OrganismFactory.getOrganismPrototypes().keySet().toArray();
-        while (totalAnimalsInSquare.get() != Settings.getAnimalsOnSquareAtTheBeginning()) {
+        int minNumber = Math.min(Settings.getMaxAnimalsOnSquare(), Settings.getAnimalsOnSquareAtTheBeginning());
+        while (totalAnimalsInSquare.get() != minNumber){
             Flock flock;
-            int organismsInFlock = Rnd.nextInt(1, Settings.getMaxFlockSize());
+            int organismsInFlock = Rnd.nextInt(1, Settings.getMaxFlockSize() + 1);
             int organismsInSquareAfterAddingFlock = organismsInFlock + totalAnimalsInSquare.get();
-            if (organismsInSquareAfterAddingFlock > Settings.getAnimalsOnSquareAtTheBeginning()) {
-                int diff = organismsInSquareAfterAddingFlock - Settings.getAnimalsOnSquareAtTheBeginning();
+
+            if (organismsInSquareAfterAddingFlock > minNumber) {
+                int diff = organismsInSquareAfterAddingFlock - minNumber;
                 organismsInFlock -= diff;
             }
             String organism = (String) organisms[ThreadLocalRandom.current().nextInt(organisms.length)];
@@ -112,7 +118,7 @@ public class Square {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            throw new AppException();
+            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
         }
     }
 

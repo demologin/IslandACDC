@@ -1,10 +1,7 @@
 package com.javarush.island.kotovych.game.visual;
 
-import com.javarush.island.kotovych.exceptions.AppException;
 import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
-import com.javarush.island.kotovych.game.statistics.Statistics;
-import com.javarush.island.kotovych.game.statistics.VisualStatisticsChanger;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.Constants;
 import com.javarush.island.kotovych.util.ShowAlert;
@@ -16,10 +13,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class VisualGameScene {
     GameScene gameScene;
     private static final int SQUARE_SIZE = 60;
@@ -29,15 +22,9 @@ public class VisualGameScene {
     private Pane matrixPane;
     private double scaleFactor = 1.0;
 
-    Label totalOrganismsLabel;
-    Label totalOrganismCountLabel;
-    ScheduledExecutorService statisticsChangerExecutor = Executors.newScheduledThreadPool(1);
 
-    Statistics statistics;
-    VisualStatisticsChanger visualStatisticsChanger;
     public VisualGameScene(GameScene gameScene) {
         this.gameScene = gameScene;
-        this.statistics = gameScene.getStatistics();
     }
 
     public Pane createMatrixPane() {
@@ -129,47 +116,8 @@ public class VisualGameScene {
         return controlPanel;
     }
 
-    public GridPane createInformationPanel() {
-        GridPane informationPanel = new GridPane();
 
-        Label organismsLabel = new Label("Organisms:");
-        totalOrganismsLabel = new Label("0");
-        totalOrganismCountLabel = new Label();
-        totalOrganismsLabel.setStyle("-fx-font-weight: bold");
 
-        informationPanel.add(organismsLabel, 0, 0);
-        informationPanel.add(totalOrganismsLabel, 1, 0);
-        informationPanel.add(totalOrganismCountLabel, 0, 1);
-
-        informationPanel.setAlignment(Pos.TOP_RIGHT);
-        informationPanel.setHgap(5);
-        informationPanel.setVgap(5);
-        informationPanel.setPadding(new Insets(10, 10, 0, 0));
-
-         visualStatisticsChanger = new VisualStatisticsChanger(statistics, totalOrganismsLabel, totalOrganismCountLabel);
-
-        visualStatisticsChanger.update(statistics.getTotalOrganisms(), statistics.getTotalOrganismCount());
-
-        return informationPanel;
-    }
-
-    private void startStatisticsChanging(){
-        Statistics statistics = gameScene.getStatistics();
-        statisticsChangerExecutor = Executors.newScheduledThreadPool(1);
-        visualStatisticsChanger = new VisualStatisticsChanger(statistics, totalOrganismsLabel, totalOrganismCountLabel);
-        statisticsChangerExecutor.scheduleAtFixedRate(visualStatisticsChanger, 0, Settings.getDelay(), TimeUnit.MILLISECONDS);
-    }
-
-    private void stopStatisticsChanging(){
-        try {
-            statisticsChangerExecutor.shutdown();
-            if (!statisticsChangerExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
-                statisticsChangerExecutor.shutdownNow();
-            }
-        } catch (InterruptedException e){
-            throw new AppException(e);
-        }
-    }
 
     private void toggleStartStop(Button startStopButton, TextField inputField) {
         String input = inputField.getText();
@@ -187,11 +135,9 @@ public class VisualGameScene {
             }
             startStopButton.setText(Constants.STOP);
             gameScene.startAllRequiredControllers();
-            startStatisticsChanging();
         } else {
             startStopButton.setText(Constants.START);
             gameScene.stopControllers();
-            stopStatisticsChanging();
         }
     }
 

@@ -18,7 +18,7 @@ public class ShowAlert {
         alert.showAndWait();
     }
 
-    private void showErrorWithStacktrace(String message, Exception ex) {
+    public static void showErrorWithStacktrace(String message, Exception ex) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(Constants.EXCEPTION);
         alert.setHeaderText(null);
