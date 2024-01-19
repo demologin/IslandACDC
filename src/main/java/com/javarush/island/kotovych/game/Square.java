@@ -39,8 +39,10 @@ public class Square {
         try {
             blockOtherThreadsInSquare();
             organismCount.putIfAbsent(flock.getName(), new AtomicInteger(0));
+            int animalsOfThisType = organismCount.get(flock.getName()).get() + flock.getOrganisms().size();
             if (totalAnimalsInSquare.get() + flock.getOrganisms().size() <= Settings.getMaxAnimalsOnSquare()
-                    && !flock.getOrganisms().isEmpty()) {
+                    && !flock.getOrganisms().isEmpty()
+                    && flock.getMaxOnOneSquare() > animalsOfThisType) {
                 flockList.add(flock);
                 organismCount.get(flock.getName()).addAndGet(flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(flock.getOrganisms().size());
@@ -102,7 +104,6 @@ public class Square {
             Flock flock;
             int organismsInFlock = Rnd.nextInt(1, Settings.getMaxFlockSize() + 1);
             int organismsInSquareAfterAddingFlock = organismsInFlock + totalAnimalsInSquare.get();
-
             if (organismsInSquareAfterAddingFlock > minNumber) {
                 int diff = organismsInSquareAfterAddingFlock - minNumber;
                 organismsInFlock -= diff;

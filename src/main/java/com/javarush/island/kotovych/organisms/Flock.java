@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -22,8 +23,16 @@ public class Flock {
     private String name;
     private Semaphore semaphore = new Semaphore(1);
 
+    private boolean blocked = false;
+
+    private int maxOnOneSquare;
+    private int maxStepSize;
+
     public Flock(String name, int animals) {
         this.name = name;
+        Map<String, Double> data = OrganismDataTable.getData(this.getName());
+        setMaxOnOneSquare(data.get("maxOnOneSquare").intValue());
+        setMaxStepSize(data.get("maxStepSize").intValue());
         for (int i = 0; i < animals; i++) {
             organisms.add(OrganismFactory.newOrganism(name));
         }
@@ -61,7 +70,6 @@ public class Flock {
             if (gameScene.getSquares().size() <= 1) {
                 return;
             }
-            int maxStepSize = OrganismDataTable.getData(this.getName()).get("maxStepSize").intValue();
             int stepSize = Rnd.nextInt(maxStepSize + 1);
 
             int squareX = currentSquare.getX();
@@ -107,6 +115,7 @@ public class Flock {
                         int number = Rnd.nextInt(probability);
                         return number <= probability;
                     })
+                    .filter(flock -> !flock.isBlocked())
                     .forEach(flock -> {
                         if (!flockAte.get()) {
                             double maxWeight = OrganismDataTable.getData(name).get("weight");
@@ -139,6 +148,7 @@ public class Flock {
     private void blockOtherThreadsInFlock() {
         try {
             semaphore.acquire();
+            blocked = true;
         } catch (InterruptedException e) {
             Platform.runLater(() -> ShowAlert.showErrorWithStacktrace(e.getMessage(), e));
         }
@@ -147,6 +157,7 @@ public class Flock {
     public void unblockOtherThreadsInFlock() {
         if (semaphore.availablePermits() == 0) {
             semaphore.release();
+            blocked = false;
         }
     }
 }

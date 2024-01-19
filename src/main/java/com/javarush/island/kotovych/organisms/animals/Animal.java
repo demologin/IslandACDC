@@ -21,7 +21,8 @@ public abstract class Animal extends Organism {
                 Animal animal = (Animal) organism;
                 if (!reproducedAnimals.contains(this) && !reproducedAnimals.contains(animal)) {
                     if (currentSquare.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()
-                            && flock.getOrganisms().size() < Settings.getMaxFlockSize()) {
+                            && flock.getOrganisms().size() < Settings.getMaxFlockSize()
+                            && flock.getMaxOnOneSquare() < currentSquare.getOrganismCount().get(flock.getName()).get()) {
                         flock.addOrganism(OrganismFactory.newOrganism(flock.getName()), currentSquare);
                     }
                 }

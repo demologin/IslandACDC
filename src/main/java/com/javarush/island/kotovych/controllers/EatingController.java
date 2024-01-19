@@ -22,6 +22,7 @@ public class EatingController implements Controller {
                 .forEach(square -> {
                     List<Flock> flocks = square.getFlockList();
                     flocks.parallelStream()
+                            .filter(flock -> !flock.isBlocked())
                             .filter(flock -> !flock.getName().equals("Plant"))
                             .forEach(flock -> flock.eat(square));
                 });

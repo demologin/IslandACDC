@@ -27,6 +27,7 @@ public class MovingController implements Controller {
                     flocks.parallelStream()
                             .filter(flock -> !flock.getName().equals("Plant"))
                             .filter(flock -> !movedFlocks.contains(flock))
+                            .filter(flock -> !flock.isBlocked())
                             .forEach(flock -> {
                                 flock.move(square, gameScene);
                                 movedFlocks.add(flock);

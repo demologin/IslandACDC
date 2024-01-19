@@ -23,7 +23,7 @@ public class PlantGrowingController implements Controller {
                 .forEach(square -> {
                     int number = Rnd.nextInt(10);
                     if(number == 1){
-                        Flock flock = new Flock("Plant", 10);
+                        Flock flock = new Flock("Plant", 5);
                         if(square.getTotalAnimalsInSquare().get() < Settings.getMaxAnimalsOnSquare()){
                             square.addFlock(flock);
                         }

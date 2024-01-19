@@ -25,8 +25,6 @@ public abstract class Organism implements Cloneable{
     private String emoji;
     private String name;
     private double weight;
-    private int maxOnOneSquare;
-    private int maxStepSize;
     private double kilogramsOfFoodNeeded;
 
     private Semaphore semaphore = new Semaphore(1);
@@ -46,8 +44,6 @@ public abstract class Organism implements Cloneable{
         setName(this.getClass().getSimpleName());
         Map<String, Double> data = OrganismDataTable.getData(this.getName());
         setWeight(Rnd.nextDouble(data.get("weight") / 2, data.get("weight")));
-        setMaxOnOneSquare(data.get("maxOnOneSquare").intValue());
-        setMaxStepSize(data.get("maxStepSize").intValue());
         setKilogramsOfFoodNeeded(data.get("kilogramsOfFoodNeeded"));
         setEmoji(EmojiTable.getEmoji(this.getName()));
     }
