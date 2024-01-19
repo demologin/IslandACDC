@@ -88,7 +88,7 @@ public class Flock {
                 }
 
                 Square neededSquare = gameScene.getSquareByCoordinates(newX, newY);
-                if(neededSquare.addFlock(this)) {
+                if (neededSquare.addFlock(this)) {
                     currentSquare.removeFlock(this);
                 }
 
@@ -122,15 +122,16 @@ public class Flock {
                             List<Organism> otherFlockOrganisms = flock.getOrganisms();
                             for (int i = 0; i < organisms.size(); i++) {
                                 double eatenKilograms = 0;
-                                Organism organism  = organisms.get(i);
+                                Organism organism = organisms.get(i);
                                 if (organism.getWeight() > maxWeight * 0.4) {
                                     continue;
                                 }
-                                organism.addWeight(otherFlockOrganisms.get(i).getWeight());
-                                eatenKilograms += otherFlockOrganisms.get(i).getWeight();
+                                Organism otherFlockOrganism = otherFlockOrganisms.get(i);
+                                organism.addWeight(otherFlockOrganism.getWeight());
+                                eatenKilograms += otherFlockOrganism.getWeight();
                                 if (organism.getWeight() > maxWeight) {
                                     organism.setWeight(maxWeight);
-                                    otherFlockOrganisms.get(i).die(flock, currentSquare);
+                                    otherFlockOrganism.die(flock, currentSquare);
                                     organism.setAte(true);
                                 }
                                 if (eatenKilograms < organism.getKilogramsOfFoodNeeded()) {
