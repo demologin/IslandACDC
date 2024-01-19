@@ -122,20 +122,22 @@ public class Flock {
                             List<Organism> otherFlockOrganisms = flock.getOrganisms();
                             for (int i = 0; i < organisms.size(); i++) {
                                 double eatenKilograms = 0;
-                                if (organisms.get(i).getWeight() > maxWeight * 0.4) {
+                                Organism organism  = organisms.get(i);
+                                Organism otherOrganism = otherFlockOrganisms.get(i);
+                                if (organism.getWeight() > maxWeight * 0.4) {
                                     continue;
                                 }
-                                organisms.get(i).addWeight(otherFlockOrganisms.get(i).getWeight());
-                                eatenKilograms += otherFlockOrganisms.get(i).getWeight();
-                                if (organisms.get(i).getWeight() > maxWeight) {
-                                    organisms.get(i).setWeight(maxWeight);
-                                    otherFlockOrganisms.get(i).die(flock, currentSquare);
-                                    organisms.get(i).setAte(true);
+                                organism.addWeight(otherOrganism.getWeight());
+                                eatenKilograms += otherOrganism.getWeight();
+                                if (organism.getWeight() > maxWeight) {
+                                    organism.setWeight(maxWeight);
+                                    otherOrganism.die(flock, currentSquare);
+                                    organism.setAte(true);
                                 }
-                                if (eatenKilograms < organisms.get(i).getKilogramsOfFoodNeeded()) {
-                                    organisms.get(i).setWeight(organisms.get(i).getWeight() * 0.9);
+                                if (eatenKilograms < organism.getKilogramsOfFoodNeeded()) {
+                                    organism.setWeight(organism.getWeight() * 0.9);
                                 }
-                                organisms.get(i).setAte(false);
+                                organism.setAte(false);
                             }
                             flockAte.set(true);
                         }
