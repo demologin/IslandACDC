@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class Animal extends Organism {
     public void reproduce(Square currentSquare, Flock flock, List<Animal> reproducedAnimals) {
         try {
-            blockOtherThreadsIntOrganism();
+            blockOtherThreadsInOrganism();
             for (Organism organism : flock.getOrganisms()) {
                 Animal animal = (Animal) organism;
                 if (!reproducedAnimals.contains(this) && !reproducedAnimals.contains(animal)) {

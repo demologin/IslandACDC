@@ -56,7 +56,7 @@ public abstract class Organism implements Cloneable{
         flock.removeOrganism(this, square);
     }
 
-    protected void blockOtherThreadsIntOrganism() {
+    protected void blockOtherThreadsInOrganism() {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {

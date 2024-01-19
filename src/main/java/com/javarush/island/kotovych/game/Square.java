@@ -53,6 +53,7 @@ public class Square {
         }
     }
 
+
     public void addOrganismToMap(Organism organism) {
         totalAnimalsInSquare.incrementAndGet();
         organismCount.get(organism.getName()).incrementAndGet();
@@ -67,9 +68,6 @@ public class Square {
         try {
             blockOtherThreadsInSquare();
             if (flockList.remove(flock)) {
-                if(organismCount.get(flock.getName()).get() - flock.getOrganisms().size() < 0){
-                    throw new AppException();
-                }
                 organismCount.get(flock.getName()).addAndGet(-flock.getOrganisms().size());
                 totalAnimalsInSquare.addAndGet(-flock.getOrganisms().size());
             }

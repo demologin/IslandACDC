@@ -12,7 +12,6 @@ import lombok.Setter;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
@@ -68,7 +67,7 @@ public class Flock {
             int squareY = currentSquare.getY();
 
             try {
-                Direction direction = Direction.values()[ThreadLocalRandom.current().nextInt(Direction.values().length)];
+                Direction direction = Direction.values()[Rnd.nextInt(Direction.values().length)];
                 int newX = squareX;
                 int newY = squareY;
 
