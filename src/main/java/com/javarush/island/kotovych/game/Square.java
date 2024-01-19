@@ -8,6 +8,7 @@ import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.EmojiTable;
 import com.javarush.island.kotovych.util.Rnd;
 import com.javarush.island.kotovych.util.ShowAlert;
+import javafx.application.Platform;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -72,7 +73,7 @@ public class Square {
                 totalAnimalsInSquare.addAndGet(-flock.getOrganisms().size());
             }
         } catch (Exception e) {
-            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
+            throw new AppException(e);
         } finally {
             unblockOtherThreadsInSquare();
         }
@@ -116,7 +117,7 @@ public class Square {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
+            Platform.runLater(() -> ShowAlert.showErrorWithStacktrace(e.getMessage(), e));
         }
     }
 

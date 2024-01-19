@@ -5,6 +5,7 @@ import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.Constants;
 import com.javarush.island.kotovych.util.ShowAlert;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -129,7 +130,7 @@ public class VisualGameScene {
                 if (input.isEmpty()) {
                     Settings.setDelay(Settings.getDelay());
                 } else {
-                    ShowAlert.showErrorAlert(Constants.NUMBER_CANNOT_BE_STRING);
+                    Platform.runLater(() -> ShowAlert.showErrorAlert(Constants.NUMBER_CANNOT_BE_STRING));
                     return;
                 }
             }

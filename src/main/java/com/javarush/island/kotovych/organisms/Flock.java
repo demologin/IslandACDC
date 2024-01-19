@@ -6,6 +6,7 @@ import com.javarush.island.kotovych.game.GameScene;
 import com.javarush.island.kotovych.game.Square;
 import com.javarush.island.kotovych.settings.Settings;
 import com.javarush.island.kotovych.util.*;
+import javafx.application.Platform;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -86,7 +87,7 @@ public class Flock {
             } catch (ArrayIndexOutOfBoundsException e) {
             }
         } catch (Exception e) {
-            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
+            Platform.runLater(() -> ShowAlert.showErrorWithStacktrace(e.getMessage(), e));
         } finally {
             unblockOtherThreadsInFlock();
         }
@@ -129,7 +130,7 @@ public class Flock {
                         }
                     });
         } catch (Exception e) {
-            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
+            Platform.runLater(() -> ShowAlert.showErrorWithStacktrace(e.getMessage(), e));
         } finally {
             unblockOtherThreadsInFlock();
         }
@@ -139,7 +140,7 @@ public class Flock {
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
-            ShowAlert.showErrorWithStacktrace(e.getMessage(), e);
+            Platform.runLater(() -> ShowAlert.showErrorWithStacktrace(e.getMessage(), e));
         }
     }
 
