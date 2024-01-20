@@ -1,6 +1,12 @@
 package com.javarush.island.berezovskiy.Constants;
 
 public class Constants {
+    public static final String HERBIVORE = "Herbivore";
+    public static final String PREDATOR = "Predator";
+    public static final String PLANT = "Plant";
+
+
+
     public static final String EMPTY = "\uD83E\uDDF1";
     public static final String UNNAMED = "UNNAMED";
 

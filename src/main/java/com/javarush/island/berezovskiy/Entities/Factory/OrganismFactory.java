@@ -1,7 +1,9 @@
-package com.javarush.island.berezovskiy.Entities.Organism;
+package com.javarush.island.berezovskiy.Entities.Factory;
 
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.Rabbit;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.Wolf;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
+import com.javarush.island.berezovskiy.Entities.Organism.OrganismsEnum;
 import com.javarush.island.berezovskiy.Entities.Organism.Plants.Grass;
 
 public class OrganismFactory {

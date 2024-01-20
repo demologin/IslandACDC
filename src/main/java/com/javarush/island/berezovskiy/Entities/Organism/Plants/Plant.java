@@ -2,12 +2,15 @@ package com.javarush.island.berezovskiy.Entities.Organism.Plants;
 
 
 import com.javarush.island.berezovskiy.Constants.Constants;
-import com.javarush.island.berezovskiy.Entities.Organism.Reproducible;
+import com.javarush.island.berezovskiy.Interfaces.Reproducible;
 import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public abstract class Plant extends Organism implements Reproducible {
+
+    protected Plant(){
+        super();
+        organismType = Constants.PLANT;
+    }
 
     @Override
     public String giveNameOfNewOrganism() {

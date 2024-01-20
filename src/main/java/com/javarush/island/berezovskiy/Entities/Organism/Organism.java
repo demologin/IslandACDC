@@ -1,21 +1,25 @@
 package com.javarush.island.berezovskiy.Entities.Organism;
 
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
+import com.javarush.island.berezovskiy.Interfaces.ChangeOrganismCount;
+import com.javarush.island.berezovskiy.Interfaces.Reproducible;
 
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class Organism implements Reproducible, ChangeOrganismCount{
+public abstract class Organism implements Reproducible, ChangeOrganismCount {
 
     protected int totalCount;
     protected String name;
     protected int maximumCount;
     protected Cell cell;
-    protected boolean isAlive;
-    protected boolean starved;
+    protected boolean isAlive = true;
+    protected boolean starved = true;
     protected boolean notReadyToGiveBirth;
     protected int id = ThreadLocalRandom.current().nextInt();
+
+    protected String organismType;
 
     public static AtomicInteger getOrganismNumber() {
         return organismNumber;
@@ -34,6 +38,12 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount{
     }
     public void setAlive(boolean alive) {
         isAlive = alive;
+    }
+    public String getOrganismType() {
+        return organismType;
+    }
+    public boolean isAlive() {
+        return isAlive;
     }
 
     public boolean isStarved() {

@@ -4,28 +4,33 @@ import com.javarush.island.berezovskiy.Configs.Configs;
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Direction;
+import com.javarush.island.berezovskiy.Entities.Factory.OrganismFactory;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Animal;
+import com.javarush.island.berezovskiy.Interfaces.Movable;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class OrganismsSet implements Movable {
+public class Flock implements Movable {
 
 //    private int coordinateX;
 //    private int coordinateY;
     private final Set<Organism> organisms = new HashSet<>();
+    OrganismFactory organismFactory = new OrganismFactory();
     private final OrganismsEnum organismEnum;
     private final String organismType;
     private Organism organism;
     private int organismCount;
-    //private Cell cell;
+    private int[] coordinatesToMove;
+    private boolean ableToMove = false;
 
+    //private Cell cell;
     public int getOrganismCount() {
         return organismCount;
     }
 
-    public OrganismsSet(OrganismsEnum organism) {
+    public Flock(OrganismsEnum organism) {
         //this.cell = cell;
         this.organismEnum = organism;
         this.organismType = organism.toString();
@@ -54,7 +59,6 @@ public class OrganismsSet implements Movable {
 //    }
 
     public void addNewOrganismsFromStart() {
-        OrganismFactory organismFactory = new OrganismFactory();
         Organism finalOrganism;
         setMaximumCountInSet(organismFactory);
         for (int i = 0; i < organismCount; i++) {
@@ -79,6 +83,12 @@ public class OrganismsSet implements Movable {
 
     }
 
+    public boolean isAbleToMove(){
+        return isAbleToMove();
+    }
+    public void disableAbleToMove(){
+        this.ableToMove = false;
+    }
 
     private void setOrganism() {
         if (organisms.stream().findAny().isPresent()) {
@@ -112,7 +122,7 @@ public class OrganismsSet implements Movable {
 //        }
 //        return new int[]{coordinateX, coordinateY};
 //    }
-    public int[] move(Cell cell) {
+    public void move(Cell cell) {
         int newCoordinateX = cell.getCoordinateX();
         int newCoordinateY = cell.getCoordinateY();
         if (organism instanceof Animal animal) {
@@ -130,8 +140,14 @@ public class OrganismsSet implements Movable {
                     case DOWN -> newCoordinateY++;
                 }
             }
+            if(newCoordinateX != cell.getCoordinateX() && newCoordinateY != cell.getCoordinateY()){
+                this.ableToMove = true;
+                this.coordinatesToMove = new int[]{newCoordinateX, newCoordinateX};
+            }
         }
-        return new int[]{newCoordinateX, newCoordinateY};
+    }
+    public int[] getCoordinatesToMove(){
+        return this.coordinatesToMove;
     }
 
     private boolean checkRandomSide(Direction direction, int randomStep, int coordinateX, int coordinateY) {

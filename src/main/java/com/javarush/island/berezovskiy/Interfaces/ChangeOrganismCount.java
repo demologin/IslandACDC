@@ -1,4 +1,4 @@
-package com.javarush.island.berezovskiy.Entities.Organism;
+package com.javarush.island.berezovskiy.Interfaces;
 
 public interface ChangeOrganismCount {
     void incrementOrganismCount();

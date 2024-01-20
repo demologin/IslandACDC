@@ -5,7 +5,7 @@ import com.javarush.island.berezovskiy.Configs.Configs;
 public enum OrganismsEnum {
     ///HERBIVORES
     //___________
-    RABBIT(),
+    RABBIT,
 
     ///PREDATORS
     //___________
