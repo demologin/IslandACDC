@@ -3,7 +3,7 @@ package com.javarush.island.maikov.Actions;
 import com.javarush.island.maikov.Abstraction.Organism;
 import com.javarush.island.maikov.Abstraction.Herbivore;
 import com.javarush.island.maikov.Abstraction.Predator;
-import com.javarush.island.maikov.MapOfIsland;
+import com.javarush.island.maikov.MapOfIsland.MapOfIsland;
 import com.javarush.island.maikov.methods.Statistics;
 
 import java.util.concurrent.ThreadLocalRandom;

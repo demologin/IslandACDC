@@ -6,4 +6,4 @@
 4. When an animal moves or reproduces, it loses 20% of its life.
 5. I don't understand why Threads sometimes just stop and start work in a few second. I added information to Statistics
    countMoving, countEating and countReproduce for show it.
-6.
+6. My mistakes, that i made different classes for Predator and Herbivore, so I had to cast every time.

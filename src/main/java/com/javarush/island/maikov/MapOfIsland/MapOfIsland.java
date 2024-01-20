@@ -1,10 +1,11 @@
-package com.javarush.island.maikov;
+package com.javarush.island.maikov.MapOfIsland;
 
 import com.javarush.island.maikov.Abstraction.Organism;
-import com.javarush.island.maikov.Animals.Herbivore.*;
-import com.javarush.island.maikov.Animals.Predators.*;
-import com.javarush.island.maikov.Grass.Clover;
-import com.javarush.island.maikov.methods.Print;
+import com.javarush.island.maikov.Constants.Constants;
+import com.javarush.island.maikov.Organism.Grass.Clover;
+import com.javarush.island.maikov.Organism.Herbivore.*;
+import com.javarush.island.maikov.Organism.Predators.*;
+import com.javarush.island.maikov.methods.PrintToConsole;
 import com.javarush.island.maikov.methods.Statistics;
 
 import java.util.HashSet;
@@ -12,7 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MapOfIsland {
-    public static final HashSet<Organism>[][] mapOfIsland = new HashSet[3][3];
+    public static final HashSet<Organism>[][] mapOfIsland = new HashSet[10][10];
+    private static boolean gameWorker = true;
 
     public MapOfIsland() {
         ReentrantLock reentrantLock = new ReentrantLock();
@@ -28,10 +30,19 @@ public class MapOfIsland {
         } catch (InterruptedException e) {
             System.out.println("Возникла проблема при загрузке");
         }
-        Print print = new Print();
-        while (true) {
+        PrintToConsole print = new PrintToConsole();
+
+
+        while (gameWorker) {
+            if (Statistics.countHerbivores.get() == 0) {
+                System.out.println("No more Herbivores, the game is stopping");
+                gameWorker = false;
+            }
+            if (Statistics.countPredators.get() == 0) {
+                System.out.println("No more Predators, the game is stopping");
+                gameWorker = false;
+            }
             print.printToConsole(mapOfIsland);
-            System.out.println("=================================");
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
@@ -45,9 +56,12 @@ public class MapOfIsland {
         Statistics statistics = new Statistics();
         for (int i = 0; i < mapOfIsland.length; i++) {
             for (int j = 0; j < mapOfIsland[i].length; j++) {
-                byte countOfPredators = (byte) ThreadLocalRandom.current().nextInt(2, 10);
-                byte countOfHerbivores = (byte) ThreadLocalRandom.current().nextInt(2, 10);
-                byte countOfClover = (byte) ThreadLocalRandom.current().nextInt(0, 5);
+                byte countOfPredators = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfAnimalsOnOneCell,
+                        Constants.maxValueOfAnimalsOnOneCell);
+                byte countOfHerbivores = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfAnimalsOnOneCell,
+                        Constants.maxValueOfAnimalsOnOneCell);
+                byte countOfClover = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfGrassOnOneCell,
+                        Constants.maxValueOfGrassOnOneCell);
                 mapOfIsland[i][j] = new HashSet<>();
                 for (int herb = 0; herb < countOfHerbivores; herb++) {
                     randomChoseHerbivore(i, j, statistics);
@@ -65,7 +79,8 @@ public class MapOfIsland {
     }
 
     private void randomChosePredators(int i, int j, Statistics statistics) {
-        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(1, 6);
+        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.minRandomPredatorsOnOneCell,
+                Constants.maxRandomPredatorsOnOneCell + 1);
         switch (randomChose) {
             case 1 -> {
                 Bear newBear = new Bear(i, j);
@@ -97,7 +112,8 @@ public class MapOfIsland {
     }
 
     private void randomChoseHerbivore(int i, int j, Statistics statistics) {
-        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(1, 11);
+        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.minRandomHerbivoresOnOneCell,
+                Constants.maxRandomHerbivoresOnOneCell + 1);
         switch (randomChose) {
             case 1 -> {
                 Boar newBoar = new Boar(i, j);

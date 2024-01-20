@@ -1,8 +1,8 @@
-package com.javarush.island.maikov.Animals.Herbivore;
+package com.javarush.island.maikov.Organism.Herbivore;
 
 
 import com.javarush.island.maikov.Abstraction.Herbivore;
-import com.javarush.island.maikov.Constants;
+import com.javarush.island.maikov.Constants.Constants;
 
 public class Duck extends Herbivore {
     public Duck(int x, int y) {

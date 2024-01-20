@@ -2,7 +2,7 @@ package com.javarush.island.maikov.Abstraction;
 
 import java.util.Objects;
 
-public abstract class Herbivore extends Animals {
+public abstract class Herbivore extends AnimalsWorker {
     private double weight;
     private int maxAnimalOnSpace;
     private int maxSpeed;

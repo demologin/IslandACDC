@@ -1,7 +1,7 @@
-package com.javarush.island.maikov.Animals.Predators;
+package com.javarush.island.maikov.Organism.Predators;
 
 import com.javarush.island.maikov.Abstraction.Predator;
-import com.javarush.island.maikov.Constants;
+import com.javarush.island.maikov.Constants.Constants;
 
 public class Fox extends Predator {
 

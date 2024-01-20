@@ -1,7 +1,7 @@
-package com.javarush.island.maikov.Animals.Herbivore;
+package com.javarush.island.maikov.Organism.Herbivore;
 
 import com.javarush.island.maikov.Abstraction.Herbivore;
-import com.javarush.island.maikov.Constants;
+import com.javarush.island.maikov.Constants.Constants;
 
 public class Buffalo extends Herbivore {
     public Buffalo(int x, int y) {

@@ -3,9 +3,10 @@ package com.javarush.island.maikov.Actions;
 import com.javarush.island.maikov.Abstraction.Organism;
 import com.javarush.island.maikov.Abstraction.Herbivore;
 import com.javarush.island.maikov.Abstraction.Predator;
-import com.javarush.island.maikov.Grass.AbstractionGrass;
-import com.javarush.island.maikov.Grass.Clover;
-import com.javarush.island.maikov.MapOfIsland;
+import com.javarush.island.maikov.Abstraction.Grass;
+import com.javarush.island.maikov.Constants.Constants;
+import com.javarush.island.maikov.Organism.Grass.Clover;
+import com.javarush.island.maikov.MapOfIsland.MapOfIsland;
 import com.javarush.island.maikov.methods.Statistics;
 
 import java.lang.reflect.Constructor;
@@ -32,20 +33,19 @@ public class Reproduce {
                 statistics.countReproduce();
                 return;
             }
-            if (someOrganism instanceof AbstractionGrass) {
-                int x = ((AbstractionGrass) someOrganism).getX();
-                int y = ((AbstractionGrass) someOrganism).getY();
+            if (someOrganism instanceof Grass) {
+                int x = ((Grass) someOrganism).getX();
+                int y = ((Grass) someOrganism).getY();
                 reproduceGrass(x, y);
                 statistics.countReproduce();
             }
         }
     }
 
-    private void reproduceGrass(int x, int y) throws InterruptedException {
+    private void reproduceGrass(int x, int y) {
         int randomMoveOrStaySection = ThreadLocalRandom.current().nextInt(0, 2);
         if (randomMoveOrStaySection == 0) { // if staying in this section
             Clover newClover = new Clover(x, y);
-            Thread.sleep(1000);
             MapOfIsland.mapOfIsland[x][y].add(newClover);
             statistics.addToStatistics(newClover);
 
@@ -54,7 +54,7 @@ public class Reproduce {
             int randomMoveXOrY = ThreadLocalRandom.current().nextInt(0, 2);
             if (randomMoveXOrY == 0) { //if moving along X
                 if (x == 0 || x == MapOfIsland.mapOfIsland.length - 1) {
-                    x = x == 0 ? (x + 1) : (x - 1);
+                    x = x == 0 ? x + 1 : 0;
                 } else {
                     int randomMoveX = ThreadLocalRandom.current().nextInt(0, 2);
                     x = randomMoveX == 0 ? x + 1 : x - 1;
@@ -62,14 +62,13 @@ public class Reproduce {
             }
             if (randomMoveXOrY == 1) { //if moving along Y
                 if (y == 0 || y == MapOfIsland.mapOfIsland[x].length - 1) {
-                    y = y == 0 ? y + 1 : y - 1;
+                    y = y == 0 ? y + 1 : 0;
                 } else {
                     int randomMoveY = ThreadLocalRandom.current().nextInt(0, 2);
                     y = randomMoveY == 0 ? y + 1 : y - 1;
                 }
             }
             Clover newClover = new Clover(x, y);
-            Thread.sleep(1000);
             MapOfIsland.mapOfIsland[x][y].add(newClover);
             statistics.addToStatistics(newClover);
         }
@@ -80,6 +79,7 @@ public class Reproduce {
         for (Organism organism : oneSpaceOfIsland) {
             // I don't know why I can't use instanceof, maybe you know?
             if (organism.getClass().equals(someOrganism.getClass())) {
+                // I made it before last lecture, so i didn't refactor it
                 Class<?> aClass = organism.getClass();
                 Object newAnimal;
                 try {
@@ -107,14 +107,15 @@ public class Reproduce {
             }
         }
     }
+
     private void minusLife(Organism someOrganism) {
-        if(someOrganism instanceof Herbivore){
+        if (someOrganism instanceof Herbivore) {
             double newLife = ((Herbivore) someOrganism).getLife();
-            ((Herbivore) someOrganism).setLife(newLife - (newLife * 0.2));
+            ((Herbivore) someOrganism).setLife(newLife - (newLife * Constants.minusLifeForMoveAndReproduce));
         }
-        if(someOrganism instanceof Predator){
+        if (someOrganism instanceof Predator) {
             double newLife = ((Predator) someOrganism).getLife();
-            ((Predator) someOrganism).setLife(newLife - (newLife * 0.2));
+            ((Predator) someOrganism).setLife(newLife - (newLife * Constants.minusLifeForMoveAndReproduce));
         }
     }
 }
