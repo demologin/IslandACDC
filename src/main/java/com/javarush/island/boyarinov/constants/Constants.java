@@ -1,17 +1,35 @@
 package com.javarush.island.boyarinov.constants;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
+import com.javarush.island.boyarinov.entities.organism.animals.herbivores.*;
 import com.javarush.island.boyarinov.entities.organism.animals.insects.*;
 import com.javarush.island.boyarinov.entities.organism.animals.predators.*;
-import com.javarush.island.boyarinov.entities.organism.animals.herbivores.*;
-import com.javarush.island.boyarinov.entities.organism.plants.Grass;
+import com.javarush.island.boyarinov.entities.organism.plants.*;
 
-public class Constants {
+import java.util.HashMap;
+import java.util.Map;
+
+public final class Constants {
+
+    private Constants() {
+    }
+
+    public static final int PERCENT_LOSE_WEIGHT = 10;
 
     public static final String[] ANIMAL_NAME = new String[]{
             "Wolf", "Snake", "Fox", "Bear", "Eagle", "Horse", "Deer", "Rabbit", "Mouse",
             "Goat", "Sheep", "Boar", "Buffalo", "Duck", "Caterpillar", "Grass"
     };
+
+    @JsonIgnore
+    private static final Map<String, Integer> ANIMAL_INDEX_IN_TABLE = new HashMap<>();
+
+    static {
+        for (int i = 0; i < ANIMAL_NAME.length; i++) {
+            ANIMAL_INDEX_IN_TABLE.put(ANIMAL_NAME[i], i);
+        }
+    }
 
     public static final Class<? extends Organisms>[] ANIMAL_CLASS_NAME = new Class[]{
             Wolf.class, Snake.class, Fox.class, Bear.class, Eagle.class, Horse.class, Deer.class,
@@ -54,6 +72,8 @@ public class Constants {
             8, 3, 2, 80, 1, 60, 50, 0.45, 0.01, 10, 15, 50, 100, 0.15, 0, 0
     };
 
-    private Constants() {
+    public static Map<String, Integer> getAnimalIndexInTable() {
+        return new HashMap<>(ANIMAL_INDEX_IN_TABLE);
     }
 }
+
