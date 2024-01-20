@@ -56,12 +56,12 @@ public class MapOfIsland {
         Statistics statistics = new Statistics();
         for (int i = 0; i < mapOfIsland.length; i++) {
             for (int j = 0; j < mapOfIsland[i].length; j++) {
-                byte countOfPredators = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfAnimalsOnOneCell,
-                        Constants.maxValueOfAnimalsOnOneCell);
-                byte countOfHerbivores = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfAnimalsOnOneCell,
-                        Constants.maxValueOfAnimalsOnOneCell);
-                byte countOfClover = (byte) ThreadLocalRandom.current().nextInt(Constants.minValueOfGrassOnOneCell,
-                        Constants.maxValueOfGrassOnOneCell);
+                byte countOfPredators = (byte) ThreadLocalRandom.current().nextInt(Constants.MIN_VALUE_OF_ANIMALS_ON_ONE_CELL,
+                        Constants.MAX_VALUE_OF_ANIMALS_ON_ONE_CELL);
+                byte countOfHerbivores = (byte) ThreadLocalRandom.current().nextInt(Constants.MIN_VALUE_OF_ANIMALS_ON_ONE_CELL,
+                        Constants.MAX_VALUE_OF_ANIMALS_ON_ONE_CELL);
+                byte countOfClover = (byte) ThreadLocalRandom.current().nextInt(Constants.MIN_VALUE_OF_GRASS_ON_ONE_CELL,
+                        Constants.MAX_VALUE_OF_GRASS_ON_ONE_CELL);
                 mapOfIsland[i][j] = new HashSet<>();
                 for (int herb = 0; herb < countOfHerbivores; herb++) {
                     randomChoseHerbivore(i, j, statistics);
@@ -79,8 +79,8 @@ public class MapOfIsland {
     }
 
     private void randomChosePredators(int i, int j, Statistics statistics) {
-        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.minRandomPredatorsOnOneCell,
-                Constants.maxRandomPredatorsOnOneCell + 1);
+        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.MIN_RANDOM_PREDATORS_ON_ONE_CELL,
+                Constants.MAX_RANDOM_PREDATORS_ON_ONE_CELL + 1);
         switch (randomChose) {
             case 1 -> {
                 Bear newBear = new Bear(i, j);
@@ -112,8 +112,8 @@ public class MapOfIsland {
     }
 
     private void randomChoseHerbivore(int i, int j, Statistics statistics) {
-        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.minRandomHerbivoresOnOneCell,
-                Constants.maxRandomHerbivoresOnOneCell + 1);
+        byte randomChose = (byte) ThreadLocalRandom.current().nextInt(Constants.MIN_RANDOM_HERBIVORES_ON_ONE_CELL,
+                Constants.MAX_RANDOM_HERBIVORES_ON_ONE_CELL + 1);
         switch (randomChose) {
             case 1 -> {
                 Boar newBoar = new Boar(i, j);

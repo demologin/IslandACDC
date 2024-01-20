@@ -37,7 +37,7 @@ public class RandomEating {
         Class<? extends Organism> classEatenOrganism = eatenOrganism.getClass();
         int mapOfFoodX = mapOfFood.get(classOrganism);
         int mapOfFoodY = mapOfFood.get(classEatenOrganism);
-        int opportunityValue = Constants.setProbablyTable[mapOfFoodX][mapOfFoodY];
+        int opportunityValue = Constants.SET_PROBABLY_TABLE[mapOfFoodX][mapOfFoodY];
         return ThreadLocalRandom.current().nextInt(0, 100) < opportunityValue;
     }
 }

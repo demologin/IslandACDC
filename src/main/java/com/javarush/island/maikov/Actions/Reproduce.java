@@ -111,11 +111,11 @@ public class Reproduce {
     private void minusLife(Organism someOrganism) {
         if (someOrganism instanceof Herbivore) {
             double newLife = ((Herbivore) someOrganism).getLife();
-            ((Herbivore) someOrganism).setLife(newLife - (newLife * Constants.minusLifeForMoveAndReproduce));
+            ((Herbivore) someOrganism).setLife(newLife - (newLife * Constants.MINUS_LIFE_FOR_MOVE_AND_REPRODUCE));
         }
         if (someOrganism instanceof Predator) {
             double newLife = ((Predator) someOrganism).getLife();
-            ((Predator) someOrganism).setLife(newLife - (newLife * Constants.minusLifeForMoveAndReproduce));
+            ((Predator) someOrganism).setLife(newLife - (newLife * Constants.MINUS_LIFE_FOR_MOVE_AND_REPRODUCE));
         }
     }
 }

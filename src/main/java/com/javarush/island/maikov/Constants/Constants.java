@@ -17,20 +17,17 @@ public class Constants {
     public static final String DUCK = "\uD83E\uDD86";
     public static final String CATERPILLAR = "\uD83D\uDC1B";
     public static final String CLOVER = "♣";
-    public static final double minLifeForReproduce = 0.7;
-    public static final double minusLifeForMoveAndReproduce = 0.2;
-    public static final int minValueOfAnimalsOnOneCell = 2;
-    public static final int maxValueOfAnimalsOnOneCell = 10;
-    public static final int minValueOfGrassOnOneCell = 0;
-    public static final int maxValueOfGrassOnOneCell = 5;
-    public static final int minRandomPredatorsOnOneCell = 1;
-    public static final int maxRandomPredatorsOnOneCell = 5;
-    public static final int minRandomHerbivoresOnOneCell = 1;
-    public static final int maxRandomHerbivoresOnOneCell = 10;
-
-
-
-    public static final int[][] setProbablyTable = {
+    public static final double MIN_LIFE_FOR_REPRODUCE = 0.7;
+    public static final double MINUS_LIFE_FOR_MOVE_AND_REPRODUCE = 0.2;
+    public static final int MIN_VALUE_OF_ANIMALS_ON_ONE_CELL = 2;
+    public static final int MAX_VALUE_OF_ANIMALS_ON_ONE_CELL = 10;
+    public static final int MIN_VALUE_OF_GRASS_ON_ONE_CELL = 0;
+    public static final int MAX_VALUE_OF_GRASS_ON_ONE_CELL = 5;
+    public static final int MIN_RANDOM_PREDATORS_ON_ONE_CELL = 1;
+    public static final int MAX_RANDOM_PREDATORS_ON_ONE_CELL = 5;
+    public static final int MIN_RANDOM_HERBIVORES_ON_ONE_CELL = 1;
+    public static final int MAX_RANDOM_HERBIVORES_ON_ONE_CELL = 10;
+    public static final int[][] SET_PROBABLY_TABLE = {
             {0, 0, 0, 0, 0, 10, 15, 60, 80, 60, 70, 15, 10, 40, 0, 0},
             {0, 0, 15, 0, 0, 0, 0, 20, 40, 0, 0, 0, 0, 10, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 70, 90, 0, 0, 0, 0, 60, 40, 0},

@@ -64,11 +64,11 @@ public abstract class AnimalsWorker extends Organism {
     private boolean isHungry(Organism someOrganism) { // look README.
         if (someOrganism instanceof Herbivore) {
             return ((Herbivore) someOrganism).getLife() < ((Herbivore) someOrganism).getMaxFood() *
-                    Constants.minLifeForReproduce;
+                    Constants.MIN_LIFE_FOR_REPRODUCE;
         }
         if (someOrganism instanceof Predator) {
             return ((Predator) someOrganism).getLife() < ((Predator) someOrganism).getMaxFood() *
-                    Constants.minLifeForReproduce;
+                    Constants.MIN_LIFE_FOR_REPRODUCE;
         }
         return false;
     }
