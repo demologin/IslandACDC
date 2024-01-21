@@ -23,6 +23,11 @@ public interface Rndm {
          return steps;
     }
 
+    static int nextPercent() {
+         return ThreadLocalRandom.current().nextInt(1,100);
+    }
+
+
     static int choose(int a, int b) {
          if (ThreadLocalRandom.current().nextBoolean()) {
              return a;

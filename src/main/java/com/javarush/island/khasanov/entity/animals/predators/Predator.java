@@ -1,7 +1,7 @@
 package com.javarush.island.khasanov.entity.animals.predators;
 
 import com.javarush.island.khasanov.entity.animals.Animal;
-import com.javarush.island.khasanov.repository.Island;
+import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.repository.Position;
 
 public abstract class Predator extends Animal {

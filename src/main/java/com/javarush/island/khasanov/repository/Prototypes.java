@@ -5,7 +5,7 @@ import com.javarush.island.khasanov.entity.animals.herbivores.Rabbit;
 import com.javarush.island.khasanov.entity.animals.predators.Wolf;
 import com.javarush.island.khasanov.entity.plants.Grass;
 
-public enum IslandObjects {
+public enum Prototypes {
     WOLF(new Wolf()),
     RABBIT(new Rabbit()),
     GRASS(new Grass());
@@ -13,12 +13,12 @@ public enum IslandObjects {
 
     private final IslandObject islandObject;
 
-    IslandObjects(IslandObject islandObject) {
+    Prototypes(IslandObject islandObject) {
         this.islandObject = islandObject;
     }
 
     public static IslandObject get(String islandObjectName) {
-        IslandObjects found = IslandObjects.valueOf(islandObjectName.toUpperCase());
+        Prototypes found = Prototypes.valueOf(islandObjectName.toUpperCase());
         return found.islandObject;
     }
 }

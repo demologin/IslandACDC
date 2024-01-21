@@ -1,7 +1,7 @@
 package com.javarush.island.khasanov.entity.animals.herbivores;
 
 import com.javarush.island.khasanov.entity.IslandObject;
-import com.javarush.island.khasanov.repository.Island;
+import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.repository.Position;
 
 public class Rabbit extends Herbivore {
