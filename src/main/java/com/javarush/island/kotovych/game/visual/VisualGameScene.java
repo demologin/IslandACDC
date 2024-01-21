@@ -97,7 +97,7 @@ public class VisualGameScene {
         HBox controlPanel = new HBox();
 
         TextField inputField = new TextField();
-        inputField.setPromptText("Enter input...");
+        inputField.setPromptText(Constants.ENTER_DELAY);
 
         Button startStopButton = new Button(Constants.START);
         startStopButton.setOnAction(event -> toggleStartStop(startStopButton, inputField));
