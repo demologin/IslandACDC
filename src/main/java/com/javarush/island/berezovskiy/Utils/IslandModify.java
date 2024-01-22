@@ -4,12 +4,8 @@ import com.javarush.island.berezovskiy.Configs.Configs;
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Island;
-import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.*;
-import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.*;
-import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
-import com.javarush.island.berezovskiy.Entities.Organism.Plants.Grass;
-import com.javarush.island.berezovskiy.Entities.Statistics.StatisticPrinter;
+import com.javarush.island.berezovskiy.Entities.Printer.StatisticPrinter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -23,6 +19,7 @@ public final class IslandModify {
         if (IslandModify.island == null) {
             IslandModify.island = island;
         }
+        System.out.println();
         for (Cell[] cells : island.getIsland()) {
             for (Cell cell : cells) {
                 printDelimiter("|");

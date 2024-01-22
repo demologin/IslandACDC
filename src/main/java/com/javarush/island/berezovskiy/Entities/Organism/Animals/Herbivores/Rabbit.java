@@ -22,11 +22,11 @@ public class Rabbit extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Organism.organismAmount.incrementAndGet();
+        Rabbit.rabbitNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Organism.organismAmount.decrementAndGet();
+        Rabbit.rabbitNumber.decrementAndGet();
     }
 }

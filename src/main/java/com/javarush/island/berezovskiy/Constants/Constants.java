@@ -11,7 +11,7 @@ public class Constants {
     public static final String PLANT = "PLANT";
     public static final String EMPTY = "\uD83E\uDDF1";
     public static final String UNNAMED = "UNNAMED";
-    public static final String ORGANISM_NUMBER = "organismNumber";
+    public static final String TOTAL_ORGANISM_AMOUNT = "Total amount = ";
 
 
 

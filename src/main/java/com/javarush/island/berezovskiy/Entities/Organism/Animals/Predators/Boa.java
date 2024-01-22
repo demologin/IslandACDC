@@ -20,11 +20,11 @@ public class Boa extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
-        Boa.organismAmount.incrementAndGet();
+        Boa.boaNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Boa.organismAmount.decrementAndGet();
+        Boa.boaNumber.decrementAndGet();
     }
 }

@@ -1,4 +1,4 @@
-package com.javarush.island.berezovskiy.Entities.Statistics;
+package com.javarush.island.berezovskiy.Entities.Printer;
 
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
@@ -28,12 +28,12 @@ public final class StatisticPrinter {
             int organismAmount = defineOrganismType(organismName);
             String organismImage = Constants.IMAGE_MAP.get(organismName);
             if (organismAmount > 0) {
-                System.out.print(organismName+" " + organismImage + " = " + organismAmount + " ");
+                System.out.print(organismImage + " = " + organismAmount + " ");
             }
         }
     }
     private static void printTotalOrganismsAmountOnIsland() {
-        System.out.println(Organism.getOrganismNumber());
+        System.out.println(Constants.TOTAL_ORGANISM_AMOUNT + Organism.getOrganismNumber());
     }
     private static int defineOrganismType(String name) {
         OrganismsEnum organismsEnum = OrganismsEnum.valueOf(name);

@@ -21,11 +21,11 @@ public class Buffalo extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Buffalo.organismAmount.incrementAndGet();
+        Buffalo.buffaloNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Buffalo.organismAmount.decrementAndGet();
+       Buffalo.buffaloNumber.decrementAndGet();
     }
 }

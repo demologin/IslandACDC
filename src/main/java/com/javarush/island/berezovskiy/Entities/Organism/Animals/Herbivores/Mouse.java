@@ -21,11 +21,11 @@ public class Mouse extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Mouse.organismAmount.incrementAndGet();
+        Mouse.mouseNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Mouse.organismAmount.decrementAndGet();
+       Mouse.mouseNumber.decrementAndGet();
     }
 }

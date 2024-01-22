@@ -21,11 +21,11 @@ public class Sheep extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Sheep.organismAmount.incrementAndGet();
+        Sheep.sheepNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Sheep.organismAmount.decrementAndGet();
+       Sheep.sheepNumber.decrementAndGet();
     }
 }

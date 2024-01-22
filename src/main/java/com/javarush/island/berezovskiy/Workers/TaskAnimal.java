@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
-    private ConcurrentMap<String, Flock> organismHashMap;
+    private ConcurrentMap<String, Flock> taskOrganismHashMap;
     private int flocksAmountInCell;
     private CellWorker cellWorker;
     Lock taskAnimalLock = new ReentrantLock();
@@ -26,17 +26,12 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
     }
 
     private void moveFlock() {
-        taskAnimalLock.lock();
-        try {
-            this.organismHashMap = cellWorker.getCell().getOrganismHashMap();
-            if (!this.organismHashMap.isEmpty()) {
-                for (Map.Entry<String, Flock> stringFlockEntry : organismHashMap.entrySet()) {
+            this.taskOrganismHashMap = cellWorker.getCell().getOrganismHashMap();
+            if (!this.taskOrganismHashMap.isEmpty()) {
+                for (Map.Entry<String, Flock> stringFlockEntry : taskOrganismHashMap.entrySet()) {
                     stringFlockEntry.getValue().move(cellWorker.getCell());
                 }
             }
-        } finally {
-            taskAnimalLock.unlock();
-        }
     }
     private void eatOrganism(){
         taskAnimalLock.lock();
@@ -47,15 +42,15 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
     public void setOrganismsMap() {
         taskAnimalLock.lock();
         try {
-            organismHashMap = cellWorker.getCell().getOrganismHashMap();
-            flocksAmountInCell = organismHashMap.size();
+            taskOrganismHashMap = cellWorker.getCell().getOrganismHashMap();
+            flocksAmountInCell = taskOrganismHashMap.size();
         } finally {
             taskAnimalLock.unlock();
         }
     }
 
-    public ConcurrentMap<String, Flock> getOrganismHashMap() {
-        return organismHashMap;
+    public ConcurrentMap<String, Flock> getTaskOrganismHashMap() {
+        return taskOrganismHashMap;
     }
 
     @Override
@@ -67,7 +62,7 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
         TaskAnimal that = (TaskAnimal) object;
 
         if (flocksAmountInCell != that.flocksAmountInCell) return false;
-        if (!Objects.equals(organismHashMap, that.organismHashMap))
+        if (!Objects.equals(taskOrganismHashMap, that.taskOrganismHashMap))
             return false;
         if (!Objects.equals(cellWorker, that.cellWorker)) return false;
         if (!Objects.equals(taskAnimalLock, that.taskAnimalLock))
@@ -78,7 +73,7 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (organismHashMap != null ? organismHashMap.hashCode() : 0);
+        result = 31 * result + (taskOrganismHashMap != null ? taskOrganismHashMap.hashCode() : 0);
         result = 31 * result + flocksAmountInCell;
         result = 31 * result + (cellWorker != null ? cellWorker.hashCode() : 0);
         result = 31 * result + (taskAnimalLock != null ? taskAnimalLock.hashCode() : 0);

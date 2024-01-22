@@ -6,11 +6,13 @@ import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.Herb
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.Predator;
 import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 import com.javarush.island.berezovskiy.Entities.Organism.Plants.Plant;
+import com.javarush.island.berezovskiy.Utils.Rnd;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal extends Organism implements Eatable {
     protected int maximumStep;
+
     public int getMaximumStep() {
         return maximumStep;
     }
@@ -18,14 +20,19 @@ public abstract class Animal extends Organism implements Eatable {
     @Override
     public void eat(Organism organismForFood) {
         if (this.isStarved() && organismForFood.isAlive()) {
-            if ((this instanceof Herbivorous && organismForFood instanceof Plant) || (this instanceof Predator && organismForFood instanceof Herbivorous)) {
-                if (chanceBeingEaten()) {
-                    this.starved = false;
-                    this.notReadyToGiveBirth = false;
-                    organismForFood.setAlive(false);
-                }
+            canEat(organismForFood);
+            if (chanceBeingEaten()) {
+                this.starved = false;
+                this.notReadyToGiveBirth = false;
+                organismForFood.setAlive(false);
             }
         }
+    }
+
+    protected boolean canEat(Organism organismForFood) {
+        return (this.isStarved() && organismForFood.isAlive()) &&
+                ((this instanceof Herbivorous && organismForFood instanceof Plant) ||
+                        (this instanceof Predator && organismForFood instanceof Herbivorous));
     }
 
     @Override
@@ -41,11 +48,10 @@ public abstract class Animal extends Organism implements Eatable {
     }
 
     public boolean chanceBeingEaten() {
-        return ThreadLocalRandom.current().nextBoolean();
+        return Rnd.getRandomBoolean();
     }
-
     public boolean chanceToGiveBirth() {
-        return ThreadLocalRandom.current().nextBoolean();
+        return Rnd.getRandomBoolean();
     }
 
 

@@ -21,11 +21,11 @@ public class Goat extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Goat.organismAmount.incrementAndGet();
+        Goat.goatNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Goat.organismAmount.decrementAndGet();
+       Goat.goatNumber.decrementAndGet();
     }
 }

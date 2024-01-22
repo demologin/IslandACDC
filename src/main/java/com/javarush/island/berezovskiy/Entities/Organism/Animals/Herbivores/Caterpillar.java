@@ -21,11 +21,11 @@ public class Caterpillar extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Caterpillar.organismAmount.incrementAndGet();
+        Caterpillar.caterpillarNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Caterpillar.organismAmount.decrementAndGet();
+       Caterpillar.caterpillarNumber.decrementAndGet();
     }
 }

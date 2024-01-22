@@ -21,11 +21,11 @@ public class Deer extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Deer.organismAmount.incrementAndGet();
+        Deer.deerNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Deer.organismAmount.decrementAndGet();
+       Deer.deerNumber.decrementAndGet();
     }
 }

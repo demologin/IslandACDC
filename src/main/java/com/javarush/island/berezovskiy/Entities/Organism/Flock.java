@@ -7,6 +7,7 @@ import com.javarush.island.berezovskiy.Entities.Direction;
 import com.javarush.island.berezovskiy.Entities.Factory.OrganismFactory;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Animal;
 import com.javarush.island.berezovskiy.Interfaces.Movable;
+import com.javarush.island.berezovskiy.Utils.Rnd;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ public class Flock implements Movable {
     }
 
     private boolean ableToMove = false;
+
     public int getOrganismCount() {
         return organismCount;
     }
@@ -47,9 +49,11 @@ public class Flock implements Movable {
             organisms.remove(organism);
         }
     }
+
     public String getOrganismType() {
         return organismType;
     }
+
     public void addNewOrganismsFromStart() {
         Organism finalOrganism;
         setMaximumCountInSet(organismFactory);
@@ -58,6 +62,7 @@ public class Flock implements Movable {
             organisms.add(finalOrganism);
         }
     }
+
     public void setMaximumCountInSet(OrganismFactory organismFactory) {
         organismCount = ThreadLocalRandom.current().nextInt(2, organismFactory.getMaximinCountOrganism(organismEnum));
     }
@@ -70,38 +75,32 @@ public class Flock implements Movable {
                 organisms.add(organismChild);
             }
         }
-
     }
-
     public void setAbleToMove() {
         flockLock.lock();
-        try{
-        this.ableToMove = true;}
-        finally {
+        try {
+            this.ableToMove = true;
+        } finally {
             flockLock.unlock();
         }
     }
-
     public void disableAbleToMove() {
         flockLock.lock();
         try {
             this.ableToMove = false;
-        }finally {
+        } finally {
             flockLock.unlock();
         }
     }
-
     private void setOrganism() {
         flockLock.lock();
-        try{
-        if (organisms.stream().findAny().isPresent()) {
-            organism = organisms.stream().findAny().get();
-        }}
-        finally {
+        try {
+            if (organisms.stream().findAny().isPresent()) {
+                organism = organisms.stream().findAny().get();
+            }
+        } finally {
             flockLock.unlock();
         }
-
-
     }
     public Organism getOrganism() {
         return organism;
@@ -113,18 +112,21 @@ public class Flock implements Movable {
             int newCoordinateX = cell.getCoordinateX();
             int newCoordinateY = cell.getCoordinateY();
             if (organism instanceof Animal animal) {
-                int randomStep = ThreadLocalRandom.current().nextInt(0, animal.getMaximumStep() + 1);
-                for (int i = 0; i < randomStep; i++) {
-                    Direction direction = Direction.values()[(ThreadLocalRandom.current().nextInt(0, 4))];
-                    if (!checkRandomSide(direction, randomStep, newCoordinateX, newCoordinateY)) {
-                        i--;
-                        continue;
+                int randomStep = Rnd.getRandom(0, animal.getMaximumStep() + 1);
+                int count = 0;
+                while (count < randomStep) {
+                    Direction direction = Direction.values()[Rnd.getRandom(0, 4)];
+                    if(!checkRandomSide(direction, randomStep, newCoordinateX, newCoordinateY)) {
+                        count++;
                     }
-                    switch (direction) {
-                        case LEFT -> newCoordinateX--;
-                        case RIGHT -> newCoordinateX++;
-                        case UP -> newCoordinateY--;
-                        case DOWN -> newCoordinateY++;
+                    else{
+                        switch (direction) {
+                            case LEFT -> newCoordinateX--;
+                            case RIGHT -> newCoordinateX++;
+                            case UP -> newCoordinateY--;
+                            case DOWN -> newCoordinateY++;
+                        }
+                        count++;
                     }
                 }
                 if (newCoordinateX != cell.getCoordinateX() || newCoordinateY != cell.getCoordinateY()) {
@@ -133,7 +135,8 @@ public class Flock implements Movable {
                     this.coordinatesToMove[1] = newCoordinateY;
                 }
             }
-        }finally {
+        } finally {
+
             flockLock.unlock();
         }
     }

@@ -13,17 +13,17 @@ public class Grass extends Plant{
         this.name = Constants.GRASS;
         Grass.grassNumber.incrementAndGet();
     }
-    @Override
-    public void incrementOrganismCount() {
-        Grass.organismAmount.incrementAndGet();
-    }
+
     public static AtomicInteger getOrganismNumber() {
         return Grass.grassNumber;
     }
-
+    @Override
+    public void incrementOrganismCount() {
+        Grass.grassNumber.incrementAndGet();
+    }
     @Override
     public void decrementOrganismCount() {
-        Grass.organismAmount.decrementAndGet();
+        Grass.grassNumber.decrementAndGet();
     }
 
 }

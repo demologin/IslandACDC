@@ -20,11 +20,11 @@ public class Fox extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
-        Fox.organismAmount.incrementAndGet();
+        Fox.foxNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Fox.organismAmount.decrementAndGet();
+        Fox.foxNumber.decrementAndGet();
     }
 }

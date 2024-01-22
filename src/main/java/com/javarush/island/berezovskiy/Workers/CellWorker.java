@@ -39,12 +39,12 @@ public class CellWorker extends ConcurrentHashMap<String,Flock> implements Runna
     public void work() {
         this.flocksInCell = cell.getOrganismHashMap();
             setTaskAnimal();
-        System.out.println(Thread.currentThread() + " I am running");
             taskAnimal.liveOrganismInCell();
-            this.flocksInCell = taskAnimal.getOrganismHashMap();
+            this.flocksInCell = taskAnimal.getTaskOrganismHashMap();
             for (Map.Entry<String, Flock> stringFlockEntry : flocksInCell.entrySet()) {
                 moveAnimalToAnotherCell(stringFlockEntry.getValue());
             }
+
 
     }
 

@@ -16,7 +16,7 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
     protected Cell cell;
     protected boolean isAlive = true;
     protected boolean starved = true;
-    protected boolean notReadyToGiveBirth;
+    protected boolean notReadyToGiveBirth = true;
     protected int id = Rnd.getRandom();
     protected String organismType;
     protected static AtomicInteger organismAmount = new AtomicInteger();

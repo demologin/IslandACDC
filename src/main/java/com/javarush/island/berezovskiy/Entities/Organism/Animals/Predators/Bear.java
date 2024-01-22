@@ -20,11 +20,11 @@ public class Bear extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
-        Bear.organismAmount.incrementAndGet();
+        Bear.bearNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Bear.organismAmount.decrementAndGet();
+        Bear.bearNumber.decrementAndGet();
     }
 }

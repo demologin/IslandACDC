@@ -21,11 +21,11 @@ public class Horse extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Horse.organismAmount.incrementAndGet();
+        Horse.horseNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Horse.organismAmount.decrementAndGet();
+       Horse.horseNumber.decrementAndGet();
     }
 }

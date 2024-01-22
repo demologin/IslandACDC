@@ -19,11 +19,11 @@ public class Wolf extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
-        Wolf.organismAmount.incrementAndGet();
+        Wolf.wolfNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Wolf.organismAmount.decrementAndGet();
+        Wolf.wolfNumber.decrementAndGet();
     }
 }

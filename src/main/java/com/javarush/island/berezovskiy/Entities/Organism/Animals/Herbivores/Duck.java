@@ -21,11 +21,11 @@ public class Duck extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Duck.organismAmount.incrementAndGet();
+        Duck.duckNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Duck.organismAmount.decrementAndGet();
+       Duck.duckNumber.decrementAndGet();
     }
 }

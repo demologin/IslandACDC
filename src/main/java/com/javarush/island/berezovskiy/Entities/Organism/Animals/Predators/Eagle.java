@@ -20,11 +20,11 @@ public class Eagle extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
-        Eagle.organismAmount.incrementAndGet();
+        Eagle.eagleNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Eagle.organismAmount.decrementAndGet();
+        Eagle.eagleNumber.decrementAndGet();
     }
 }

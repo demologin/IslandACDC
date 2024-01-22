@@ -22,11 +22,11 @@ public class Boar extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
-        Boar.organismAmount.incrementAndGet();
+        Boar.boarNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Boar.organismAmount.decrementAndGet();
+       Boar.boarNumber.decrementAndGet();
     }
 }
