@@ -2,12 +2,14 @@ package com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores;
 
 import com.javarush.island.berezovskiy.Configs.OrganismConfigs;
 import com.javarush.island.berezovskiy.Constants.Constants;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Mouse extends Herbivorous{
+public class Mouse extends Herbivorous {
     private static final AtomicInteger mouseNumber = new AtomicInteger(0);
-    public Mouse(){
+
+    public Mouse() {
         super();
         this.maximumCount = OrganismConfigs.MAX_MOUSE_COUNT_IN_CELL;
         this.name = Constants.MOUSE;
@@ -21,11 +23,13 @@ public class Mouse extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
+        Organism.organismAmount.incrementAndGet();
         Mouse.mouseNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Mouse.mouseNumber.decrementAndGet();
+        Organism.organismAmount.decrementAndGet();
+        Mouse.mouseNumber.decrementAndGet();
     }
 }

@@ -4,7 +4,6 @@ import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Interfaces.ChangeOrganismCount;
 import com.javarush.island.berezovskiy.Interfaces.Reproducible;
 import com.javarush.island.berezovskiy.Utils.Rnd;
-
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +14,11 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
     protected int maximumCount;
     protected Cell cell;
     protected boolean isAlive = true;
+
+    public void setNotReadyToGiveBirth(boolean notReadyToGiveBirth) {
+        this.notReadyToGiveBirth = notReadyToGiveBirth;
+    }
+
     protected boolean starved = true;
     protected boolean notReadyToGiveBirth = true;
     protected int id = Rnd.getRandom();
@@ -40,6 +44,10 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
         return isAlive;
     }
 
+    public void setStarved(boolean starved) {
+        this.starved = starved;
+    }
+
     public boolean isStarved() {
         return starved;
     }
@@ -54,9 +62,7 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-
         Organism organism = (Organism) object;
-
         if (totalCount != organism.totalCount) return false;
         if (maximumCount != organism.maximumCount) return false;
         if (id != organism.id) return false;

@@ -19,20 +19,23 @@ public abstract class Animal extends Organism implements Eatable {
 
     @Override
     public void eat(Organism organismForFood) {
-        if (this.isStarved() && organismForFood.isAlive()) {
-            canEat(organismForFood);
-            if (chanceBeingEaten()) {
-                this.starved = false;
-                this.notReadyToGiveBirth = false;
-                organismForFood.setAlive(false);
-            }
+        if (chanceBeingEaten() && canEat(organismForFood)) {
+            this.setStarved(false);
+            this.setNotReadyToGiveBirth(false);
+            organismForFood.setAlive(false);
         }
     }
 
     protected boolean canEat(Organism organismForFood) {
-        return (this.isStarved() && organismForFood.isAlive()) &&
-                ((this instanceof Herbivorous && organismForFood instanceof Plant) ||
-                        (this instanceof Predator && organismForFood instanceof Herbivorous));
+        return (this.isStarved() || organismForFood.isAlive()) &&
+                        (!this.getName().equals(organismForFood.getName())) &&
+                        ((this instanceof Herbivorous && organismForFood instanceof Plant) ||
+                                (this instanceof Predator && organismForFood instanceof Herbivorous) ||
+                                (this instanceof Predator && organismForFood instanceof Predator));
+    }
+
+    public boolean chanceBeingEaten() {
+        return Rnd.getRandomBoolean();
     }
 
     @Override
@@ -47,9 +50,6 @@ public abstract class Animal extends Organism implements Eatable {
 
     }
 
-    public boolean chanceBeingEaten() {
-        return Rnd.getRandomBoolean();
-    }
     public boolean chanceToGiveBirth() {
         return Rnd.getRandomBoolean();
     }

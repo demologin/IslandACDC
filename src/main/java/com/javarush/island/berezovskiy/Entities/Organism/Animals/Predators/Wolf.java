@@ -2,6 +2,7 @@ package com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators;
 
 import com.javarush.island.berezovskiy.Configs.OrganismConfigs;
 import com.javarush.island.berezovskiy.Constants.Constants;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,11 +20,13 @@ public class Wolf extends Predator {
     }
     @Override
     public void incrementOrganismCount() {
+        Organism.organismAmount.incrementAndGet();
         Wolf.wolfNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
+        Organism.organismAmount.decrementAndGet();
         Wolf.wolfNumber.decrementAndGet();
     }
 }

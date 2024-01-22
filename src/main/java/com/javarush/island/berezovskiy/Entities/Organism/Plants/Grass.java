@@ -2,6 +2,7 @@ package com.javarush.island.berezovskiy.Entities.Organism.Plants;
 
 import com.javarush.island.berezovskiy.Configs.OrganismConfigs;
 import com.javarush.island.berezovskiy.Constants.Constants;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,10 +20,12 @@ public class Grass extends Plant{
     }
     @Override
     public void incrementOrganismCount() {
+        Organism.organismAmount.incrementAndGet();
         Grass.grassNumber.incrementAndGet();
     }
     @Override
     public void decrementOrganismCount() {
+        Organism.organismAmount.decrementAndGet();
         Grass.grassNumber.decrementAndGet();
     }
 

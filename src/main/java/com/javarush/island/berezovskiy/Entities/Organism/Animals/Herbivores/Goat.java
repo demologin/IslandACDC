@@ -2,6 +2,7 @@ package com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores;
 
 import com.javarush.island.berezovskiy.Configs.OrganismConfigs;
 import com.javarush.island.berezovskiy.Constants.Constants;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,11 +22,13 @@ public class Goat extends Herbivorous{
 
     @Override
     public void incrementOrganismCount() {
+        Organism.organismAmount.incrementAndGet();
         Goat.goatNumber.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-       Goat.goatNumber.decrementAndGet();
+        Organism.organismAmount.decrementAndGet();
+        Goat.goatNumber.decrementAndGet();
     }
 }

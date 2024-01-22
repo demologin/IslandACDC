@@ -5,7 +5,7 @@ import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Island;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
-import com.javarush.island.berezovskiy.Entities.Printer.StatisticPrinter;
+import com.javarush.island.berezovskiy.Printer.StatisticPrinter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;

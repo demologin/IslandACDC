@@ -1,4 +1,4 @@
-package com.javarush.island.berezovskiy.Entities.Printer;
+package com.javarush.island.berezovskiy.Printer;
 
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;

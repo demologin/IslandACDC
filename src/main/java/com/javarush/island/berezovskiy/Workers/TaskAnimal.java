@@ -1,6 +1,8 @@
 package com.javarush.island.berezovskiy.Workers;
 
+import com.javarush.island.berezovskiy.Entities.Organism.Animals.Animal;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
+import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,30 +15,95 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
     private int flocksAmountInCell;
     private CellWorker cellWorker;
     Lock taskAnimalLock = new ReentrantLock();
-
-    List<String> organismsInMap = Collections.synchronizedList(new ArrayList<>());
+    HashMap<String, Integer> flocksAmountInMap = new HashMap<>();
 
     public TaskAnimal(CellWorker cellworker) {
         this.cellWorker = cellworker;
     }
 
     public void liveOrganismInCell() {
+        setOrganismsMap();
+        eat();
         moveFlock();
-
     }
 
     private void moveFlock() {
-            this.taskOrganismHashMap = cellWorker.getCell().getOrganismHashMap();
+        taskAnimalLock.lock();
+        try {
             if (!this.taskOrganismHashMap.isEmpty()) {
-                for (Map.Entry<String, Flock> stringFlockEntry : taskOrganismHashMap.entrySet()) {
-                    stringFlockEntry.getValue().move(cellWorker.getCell());
+                for (Map.Entry<String, Flock> flock : taskOrganismHashMap.entrySet()) {
+                    flock.getValue().move(cellWorker.getCell());
                 }
             }
+        } finally {
+            taskAnimalLock.unlock();
+        }
     }
-    private void eatOrganism(){
-        taskAnimalLock.lock();
 
-        taskAnimalLock.unlock();
+    private void eat() {
+        if (flocksAmountInCell > 1) {
+            tryToEat();
+            deleteDeadOrganisms();
+            deleteEmptyFlocks();
+        }
+
+    }
+    private void reproduce(){
+
+    }
+
+    private void deleteEmptyFlocks() {
+        taskAnimalLock.lock();
+        try {
+            for (Iterator<Entry<String, Flock>> iterator = taskOrganismHashMap.entrySet().iterator(); iterator.hasNext(); ) {
+                Entry<String, Flock> stringFlockEntry = iterator.next();
+                Flock currentFlock = stringFlockEntry.getValue();
+                if (currentFlock.getOrganisms().isEmpty()) {
+                    iterator.remove();
+                }
+            }
+        } finally {
+            taskAnimalLock.unlock();
+        }
+    }
+
+    private void deleteDeadOrganisms() {
+        taskAnimalLock.lock();
+        try {
+            for (Flock flock : taskOrganismHashMap.values()) {
+                Set<Organism> organismsInFlock = flock.getOrganisms();
+                for (Iterator<Organism> iterator = organismsInFlock.iterator(); iterator.hasNext(); ) {
+                    Organism organism = iterator.next();
+                    if(!organism.isAlive()){
+                        organism.decrementOrganismCount();
+                        iterator.remove();
+                    }
+                }
+            }
+        } finally {
+            taskAnimalLock.unlock();
+        }
+    }
+
+    private void tryToEat() {
+        taskAnimalLock.lock();
+        try {
+            for (Flock flock : taskOrganismHashMap.values()) {
+                Set<Organism> organismsInFlock = flock.getOrganisms();
+                for (Organism organism : organismsInFlock) {
+                    for (Flock flockForFood : taskOrganismHashMap.values()) {
+                        Set<Organism> setOrganismsForFood = flockForFood.getOrganisms();
+                        for (Organism organismForFood : setOrganismsForFood) {
+                            if (organism instanceof Animal animal && organism.isStarved()) {
+                                animal.eat(organismForFood);
+                            }
+                        }
+                    }
+                }
+            }
+        } finally {
+            taskAnimalLock.unlock();
+        }
     }
 
     public void setOrganismsMap() {
@@ -67,7 +134,7 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
         if (!Objects.equals(cellWorker, that.cellWorker)) return false;
         if (!Objects.equals(taskAnimalLock, that.taskAnimalLock))
             return false;
-        return Objects.equals(organismsInMap, that.organismsInMap);
+        return Objects.equals(flocksAmountInMap, that.flocksAmountInMap);
     }
 
     @Override
@@ -77,7 +144,7 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
         result = 31 * result + flocksAmountInCell;
         result = 31 * result + (cellWorker != null ? cellWorker.hashCode() : 0);
         result = 31 * result + (taskAnimalLock != null ? taskAnimalLock.hashCode() : 0);
-        result = 31 * result + (organismsInMap != null ? organismsInMap.hashCode() : 0);
+        result = 31 * result + (flocksAmountInMap != null ? flocksAmountInMap.hashCode() : 0);
         return result;
     }
 }

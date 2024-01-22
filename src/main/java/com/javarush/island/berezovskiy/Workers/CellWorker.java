@@ -44,8 +44,6 @@ public class CellWorker extends ConcurrentHashMap<String,Flock> implements Runna
             for (Map.Entry<String, Flock> stringFlockEntry : flocksInCell.entrySet()) {
                 moveAnimalToAnotherCell(stringFlockEntry.getValue());
             }
-
-
     }
 
     public void setTaskAnimal(){

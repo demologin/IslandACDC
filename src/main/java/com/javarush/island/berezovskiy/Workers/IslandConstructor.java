@@ -1,4 +1,4 @@
-package com.javarush.island.berezovskiy;
+package com.javarush.island.berezovskiy.Workers;
 
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Island;

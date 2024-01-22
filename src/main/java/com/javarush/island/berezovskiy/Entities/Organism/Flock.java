@@ -4,27 +4,30 @@ import com.javarush.island.berezovskiy.Configs.Configs;
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Direction;
-import com.javarush.island.berezovskiy.Entities.Factory.OrganismFactory;
+import com.javarush.island.berezovskiy.Factory.OrganismFactory;
 import com.javarush.island.berezovskiy.Entities.Organism.Animals.Animal;
 import com.javarush.island.berezovskiy.Interfaces.Movable;
 import com.javarush.island.berezovskiy.Utils.Rnd;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Flock implements Movable {
 
-    private final Set<Organism> organisms = Collections.synchronizedSet(new HashSet<>());
+    private final Set<Organism> organisms = new HashSet<>();
     OrganismFactory organismFactory = new OrganismFactory();
     private final OrganismsEnum organismEnum;
     private final String organismType;
     private Organism organism;
     private final Lock flockLock = new ReentrantLock();
     private int organismCount;
+
+    public Set<Organism> getOrganisms() {
+        return organisms;
+    }
+
     private final int[] coordinatesToMove = new int[2];
 
     public boolean isAbleToMove() {
@@ -46,6 +49,7 @@ public class Flock implements Movable {
 
     public void removeOrganism(Organism organism) {
         if (!organism.isAlive) {
+            organism.decrementOrganismCount();
             organisms.remove(organism);
         }
     }
@@ -63,8 +67,10 @@ public class Flock implements Movable {
         }
     }
 
+
     public void setMaximumCountInSet(OrganismFactory organismFactory) {
-        organismCount = ThreadLocalRandom.current().nextInt(2, organismFactory.getMaximinCountOrganism(organismEnum));
+        int organismMaxCountInFlock = organismFactory.getMaximinCountOrganism(organismEnum);
+        organismCount = Rnd.getRandom(Configs.MIN_ANIMAL_IN_FLOCK, organismMaxCountInFlock);
     }
 
     protected void addNewOrganismChild(Organism organism) {
@@ -131,6 +137,7 @@ public class Flock implements Movable {
                 }
                 if (newCoordinateX != cell.getCoordinateX() || newCoordinateY != cell.getCoordinateY()) {
                     this.setAbleToMove();
+                    organisms.forEach(organism1 -> organism1.setStarved(true));
                     this.coordinatesToMove[0] = newCoordinateX;
                     this.coordinatesToMove[1] = newCoordinateY;
                 }
