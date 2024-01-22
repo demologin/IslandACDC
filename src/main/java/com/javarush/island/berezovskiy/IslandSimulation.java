@@ -6,26 +6,35 @@ import com.javarush.island.berezovskiy.Entities.Island;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class IslandSimulation {
     public static void main(String[] args) {
         Island island = new Island();
-        int threadPool = Configs.ISLAND_HEIGHT+Configs.ISLAND_WIDTH+1;
-        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(threadPool);
-        scheduledExecutorService.scheduleAtFixedRate(()->{
-            island.run();
-            for (Cell[] cells : island.getIsland()) {
-                for (Cell cell : cells) {
-                    cell.startWorking();
-                }
-            }}, 1,5,TimeUnit.SECONDS);
+        int threadPool = Configs.ISLAND_HEIGHT*Configs.ISLAND_WIDTH;
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.scheduleAtFixedRate(island::run, 1, 5, TimeUnit.SECONDS);
 
         try {
             scheduledExecutorService.awaitTermination(Configs.TIME_FOR_WAITING, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        ScheduledExecutorService cellExecutor = Executors.newScheduledThreadPool(threadPool);
+
+        for (Cell[] cells : island.getIsland()) {
+            for (Cell cell : cells) {
+                cellExecutor.scheduleAtFixedRate(cell.startWorking(),0,Configs.TIME_FOR_WAITING,TimeUnit.SECONDS);
+            }
+        }
+        try {
+            cellExecutor.awaitTermination(Configs.TIME_FOR_WAITING, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
 }
+

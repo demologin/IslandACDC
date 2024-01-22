@@ -6,8 +6,6 @@ import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 import com.javarush.island.berezovskiy.Utils.IslandModify;
 import com.javarush.island.berezovskiy.Utils.OrganismModify;
 
-import java.util.concurrent.TimeUnit;
-
 public class Island implements Runnable {
 
     private final int sizeY = Configs.ISLAND_WIDTH;
@@ -24,7 +22,6 @@ public class Island implements Runnable {
         island = new Cell[sizeX][sizeY];
         createIslandField(island);
         OrganismModify.createOrganismsOnIsland(island);
-        IslandModify.drawIsland(this);
     }
     @Override
     public void run() {
@@ -38,38 +35,6 @@ public class Island implements Runnable {
             }
         }
     }
-
-//    private void extracted() {
-//        for (Cell[] cells : island) {
-//            for (Cell cell : cells) {
-//                for (Map.Entry<String, OrganismsSet> organismIntegerEntry : cell.getOrganismHashMap().entrySet()) {
-//                    OrganismsSet organismsSet = organismIntegerEntry.getValue();
-//                    Organism organism = organismsSet.getOrganism();
-//                    if (organism.getClass() == Rabbit.class) {
-//                        organismsSet.move();
-//                        if (!island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].getOrganismHashMap().containsKey("RABBIT")) {
-//                            island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].putOrganism("RABBIT", organismsSet);
-//                            cell.removeOrganism("RABBIT");
-//                            System.out.println("Rabbit X = " + organismsSet.getCoordinateY() + " Y = " + organismsSet.getCoordinateX());
-//                        }
-//                        System.out.println("Total Rabbit Count = " + organismsSet.getOrganismCount());
-//                    }
-//                    if (organism.getClass() == Wolf.class) {
-//                        organismsSet.move();
-//                        if (!island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].getOrganismHashMap().containsKey("WOLF")) {
-//                            island[organismsSet.getCoordinateX()][organismsSet.getCoordinateY()].putOrganism("WOLF", organismsSet);
-//                            cell.removeOrganism("WOLF");
-//                        }
-//                        System.out.println("Total Wolf Count = " + organismsSet.getOrganismCount());
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//    private void changeMap(){
-//        for ()
-//    }
     private void createIslandField(Cell[][] islandSize) {
         if (islandNotCreated) {
             for (int coordinateX = 0; coordinateX < islandSize.length; coordinateX++) {

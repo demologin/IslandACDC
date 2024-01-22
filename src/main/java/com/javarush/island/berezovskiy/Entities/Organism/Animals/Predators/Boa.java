@@ -5,25 +5,26 @@ import com.javarush.island.berezovskiy.Constants.Constants;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Wolf extends Predator {
-    private static final AtomicInteger wolfNumber = new AtomicInteger(0);
-    public Wolf() {
+public class Boa extends Predator {
+    private static final AtomicInteger boaNumber = new AtomicInteger(0);
+    public Boa() {
         super();
-        maximumCount = OrganismConfigs.MAX_WOLF_COUNT_IN_CELL;
-        this.name = Constants.WOLF;
-        maximumStep = OrganismConfigs.MAX_WOLF_STEP;
-        Wolf.wolfNumber.incrementAndGet();
+        maximumCount = OrganismConfigs.MAX_BOA_COUNT_IN_CELL;
+        this.name = Constants.BOA;
+        maximumStep = OrganismConfigs.MAX_BOA_STEP;
+        Boa.boaNumber.incrementAndGet();
     }
+
     public static AtomicInteger getOrganismNumber() {
-        return Wolf.wolfNumber;
+        return Boa.boaNumber;
     }
     @Override
     public void incrementOrganismCount() {
-        Wolf.organismAmount.incrementAndGet();
+        Boa.organismAmount.incrementAndGet();
     }
 
     @Override
     public void decrementOrganismCount() {
-        Wolf.organismAmount.decrementAndGet();
+        Boa.organismAmount.decrementAndGet();
     }
 }

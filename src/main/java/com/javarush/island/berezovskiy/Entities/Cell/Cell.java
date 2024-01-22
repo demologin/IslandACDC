@@ -2,26 +2,29 @@ package com.javarush.island.berezovskiy.Entities.Cell;
 
 import com.javarush.island.berezovskiy.Configs.Configs;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
+import com.javarush.island.berezovskiy.Workers.CellWorker;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell extends ConcurrentHashMap<String, Flock>{
-    private final HashMap<String, Flock> organismsInCell = new HashMap<>();
+    private final ConcurrentMap<String, Flock> organismsInCell = new ConcurrentHashMap<>();
     private Lock cellLock = new ReentrantLock();
 
     private final int coordinateX;
     private final int coordinateY;
-    private boolean isCellFull = false;
-    private int animalLimitInCell = Configs.ANIMAL_LIMIT_IN_CELL;
+    private boolean cellFull = false;
     private CellWorker cellWorker;
     private AtomicInteger flocksInCell = new AtomicInteger(0);
 
     public boolean isCellFull() {
-        return isCellFull;
+        return cellFull;
+    }
+    public void setCellFull(boolean cellFull) {
+        this.cellFull = cellFull;
     }
 
     public Cell(int coordinateX, int coordinateY) {
@@ -31,43 +34,47 @@ public class Cell extends ConcurrentHashMap<String, Flock>{
     public void putOrganism(String name, Flock organism){
         cellLock.lock();
         try {
-            organismsInCell.put(name, organism);
+            this.organismsInCell.put(name, organism);
             organism.disableAbleToMove();
-            flocksInCell.incrementAndGet();
-            if (flocksInCell.get() == animalLimitInCell) {
-                this.isCellFull = true;
+            this.flocksInCell.incrementAndGet();
+            if (this.flocksInCell.get() == Configs.ANIMAL_LIMIT_IN_CELL) {
+                this.cellFull = true;
             }
         }finally {
             cellLock.unlock();
         }
     }
-    public void startWorking(){
-        cellWorker = new CellWorker(this);
-        cellWorker.run();
-    }
     public void removeOrganism(String name){
         cellLock.lock();
         try{
-        organismsInCell.remove(name);
-        flocksInCell.decrementAndGet();}
+        this.organismsInCell.remove(name);
+        this.flocksInCell.decrementAndGet();}
         finally {
             cellLock.unlock();
         }
-
     }
-    public HashMap<String, Flock> getOrganismHashMap(){
+
+    public CellWorker startWorking(){
+        return new CellWorker(this);
+    }
+    public ConcurrentMap<String, Flock> getOrganismHashMap(){
         return organismsInCell;
     }
-
     public int getCoordinateX() {
         return coordinateX;
     }
-
     public int getCoordinateY() {
         return coordinateY;
     }
     public Lock getCellLock() {
         return cellLock;
+    }
+    public CellWorker getCellWorker() {
+        return cellWorker;
+    }
+
+    public boolean isCellEmpty(){
+        return organismsInCell.isEmpty();
     }
 
 

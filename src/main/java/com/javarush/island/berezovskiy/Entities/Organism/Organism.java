@@ -3,9 +3,9 @@ package com.javarush.island.berezovskiy.Entities.Organism;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Interfaces.ChangeOrganismCount;
 import com.javarush.island.berezovskiy.Interfaces.Reproducible;
+import com.javarush.island.berezovskiy.Utils.Rnd;
 
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Organism implements Reproducible, ChangeOrganismCount {
@@ -17,17 +17,11 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
     protected boolean isAlive = true;
     protected boolean starved = true;
     protected boolean notReadyToGiveBirth;
-    protected int id = ThreadLocalRandom.current().nextInt();
-
+    protected int id = Rnd.getRandom();
     protected String organismType;
-
-    public static AtomicInteger getOrganismNumber() {
-        return organismNumber;
-    }
-
-    protected static AtomicInteger organismNumber = new AtomicInteger();
+    protected static AtomicInteger organismAmount = new AtomicInteger();
     protected Organism(){
-        organismNumber.incrementAndGet();
+        Organism.organismAmount.incrementAndGet();
     }
 
     public String getName() {
@@ -53,7 +47,9 @@ public abstract class Organism implements Reproducible, ChangeOrganismCount {
     public boolean isNotReadyToGiveBirth() {
         return notReadyToGiveBirth;
     }
-
+    public static AtomicInteger getOrganismNumber() {
+        return organismAmount;
+    }
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

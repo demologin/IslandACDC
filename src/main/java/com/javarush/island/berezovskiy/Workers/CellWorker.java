@@ -1,14 +1,16 @@
-package com.javarush.island.berezovskiy.Entities.Cell;
+package com.javarush.island.berezovskiy.Workers;
 
+import com.javarush.island.berezovskiy.Configs.Configs;
+import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
 import com.javarush.island.berezovskiy.Entities.Organism.Organism;
-import com.javarush.island.berezovskiy.Entities.Organism.TaskAnimal;
 import com.javarush.island.berezovskiy.Utils.IslandModify;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-public class CellWorker implements Runnable{
+public class CellWorker extends ConcurrentHashMap<String,Flock> implements Runnable{
 
     public Cell getCell() {
         return cell;
@@ -16,29 +18,46 @@ public class CellWorker implements Runnable{
 
     private final Cell cell;
     private TaskAnimal taskAnimal;
-    private HashMap<String, Flock> flocksInCell;
+    private ConcurrentMap<String, Flock> flocksInCell;
 
     public CellWorker(Cell cell) {
         this.cell = cell;
-        this.flocksInCell = cell.getOrganismHashMap();
     }
 
     @Override
     public void run() {
         while(Organism.getOrganismNumber().get() > 0){
             work();
+            try {
+                Thread.sleep(Configs.TIME_FOR_WAITING*1000L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
-
     }
 
-    public void work(){
-            taskAnimal = new TaskAnimal(cell);
+    public void work() {
+        this.flocksInCell = cell.getOrganismHashMap();
+            setTaskAnimal();
+        System.out.println(Thread.currentThread() + " I am running");
             taskAnimal.liveOrganismInCell();
-            flocksInCell = taskAnimal.getOrganismHashMap();
+            this.flocksInCell = taskAnimal.getOrganismHashMap();
             for (Map.Entry<String, Flock> stringFlockEntry : flocksInCell.entrySet()) {
                 moveAnimalToAnotherCell(stringFlockEntry.getValue());
             }
+
+    }
+
+    public void setTaskAnimal(){
+        cell.getCellLock().lock();
+        try{
+            taskAnimal = new TaskAnimal(this);
         }
+        finally {
+            cell.getCellLock().unlock();
+        }
+    }
+
     public void moveAnimalToAnotherCell(Flock flock) {
         cell.getCellLock().lock();
         try {
@@ -49,10 +68,13 @@ public class CellWorker implements Runnable{
                 Cell cellToMove = IslandModify.getCurrentIsland().getIsland()[coordinateXCellToMove][coordinateYCellToMove];
                 if (!cellToMove.isCellFull()) {
                     cellToMove.putOrganism(flock.getOrganism().getName(),flock);
-                    cell
+                    cell.removeOrganism(flock.getOrganism().getName());
+                }
+                else{
+                    flock.disableAbleToMove();
                 }
             }
-        }finally {
+        } finally {
             cell.getCellLock().unlock();
         }
     }

@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Herbivorous extends Animal {
     protected Herbivorous(){
-        super();
         organismType = Constants.HERBIVORE;
     }
 }

@@ -14,6 +14,7 @@ public abstract class Animal extends Organism implements Eatable {
     public int getMaximumStep() {
         return maximumStep;
     }
+
     @Override
     public void eat(Organism organismForFood) {
         if (this.isStarved() && organismForFood.isAlive()) {

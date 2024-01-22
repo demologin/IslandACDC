@@ -8,7 +8,6 @@ import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 public abstract class Plant extends Organism implements Reproducible {
 
     protected Plant(){
-        super();
         organismType = Constants.PLANT;
     }
 

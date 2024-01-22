@@ -4,67 +4,72 @@ import com.javarush.island.berezovskiy.Configs.Configs;
 import com.javarush.island.berezovskiy.Constants.Constants;
 import com.javarush.island.berezovskiy.Entities.Cell.Cell;
 import com.javarush.island.berezovskiy.Entities.Island;
-import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.Rabbit;
-import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.Wolf;
+import com.javarush.island.berezovskiy.Entities.Organism.Animals.Herbivores.*;
+import com.javarush.island.berezovskiy.Entities.Organism.Animals.Predators.*;
 import com.javarush.island.berezovskiy.Entities.Organism.Organism;
 import com.javarush.island.berezovskiy.Entities.Organism.Flock;
+import com.javarush.island.berezovskiy.Entities.Organism.Plants.Grass;
+import com.javarush.island.berezovskiy.Entities.Statistics.StatisticPrinter;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 public final class IslandModify {
 
-private static Island island;
+    private static Island island;
 
 
-    //TODO REFACTOR
     public static void drawIsland(Island island) {
-        if(IslandModify.island == null){
+        if (IslandModify.island == null) {
             IslandModify.island = island;
         }
-        Cell[][] cellsArray = island.getIsland();
-        for (Cell[] cells : cellsArray) {
+        for (Cell[] cells : island.getIsland()) {
             for (Cell cell : cells) {
-                System.out.print("|");
+                printDelimiter("|");
                 if (!cell.getOrganismHashMap().isEmpty()) {
-                    HashMap<String, Flock> hashMap = cell.getOrganismHashMap();
-                    int hashmapSize = hashMap.size();
+                    ConcurrentMap<String, Flock> flockMap = cell.getOrganismHashMap();
+                    int flocksAmountInCell = flockMap.size();
                     int count = Configs.ANIMAL_LIMIT_IN_CELL;
-                    for (Map.Entry<String, Flock> organismEntry : hashMap.entrySet()) {
-                        Flock flock = organismEntry.getValue();
-                        String organismName = flock.getOrganism().getName();
-                        if (organismName.equals(Constants.WOLF)) {
-                            System.out.print(Constants.WOLF_IMAGE);
-                            hashmapSize--;
-                            count--;
-                        }
-                        if (organismName.equals(Constants.RABBIT)) {
-                            System.out.print(Constants.RABBIT_IMAGE);
-                            hashmapSize--;
-                            count--;
-                        }
-                        if(hashmapSize == 0){
-                            for (int i = 0; i < count; i++) {
-                                System.out.print(Constants.EMPTY);
-                            }
-                        }
+                    for (Map.Entry<String, Flock> stringFlockEntry : flockMap.entrySet()) {
+                        Flock flock = stringFlockEntry.getValue();
+                        printOrganismImage(flock);
+                        flocksAmountInCell--;
+                        count--;
+                        printEmptyImage(flocksAmountInCell, count);
                     }
                 } else {
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < Configs.ANIMAL_LIMIT_IN_CELL; i++) {
                         System.out.print(Constants.EMPTY);
                     }
                 }
-                System.out.print("| ");
+                printDelimiter("| ");
             }
             System.out.println();
             System.out.println();
         }
-        System.out.println("Organism Count = " + Organism.getOrganismNumber());
-        System.out.println(Constants.WOLF_IMAGE + " Count = " + Wolf.getWolfNumber());
-        System.out.println(Constants.RABBIT_IMAGE + " Count = " + Rabbit.getRabbitNumber());
+        ///TODO PUT IN BUILDER
+        StatisticPrinter.showStatistic(island);
     }
 
-    public static Island getCurrentIsland(){
+    private static void printDelimiter(String s) {
+        System.out.print(s);
+    }
+
+    private static void printEmptyImage(int flocksAmountInCell, int count) {
+        if (flocksAmountInCell == 0) {
+            for (int i = 0; i < count; i++) {
+                System.out.print(Constants.EMPTY);
+            }
+        }
+    }
+
+    private static void printOrganismImage(Flock flock) {
+        String organismName = flock.getOrganism().getName();
+        String organismImage = Constants.IMAGE_MAP.get(organismName);
+        System.out.print(organismImage);
+    }
+
+    public static Island getCurrentIsland() {
         return island;
     }
 }
