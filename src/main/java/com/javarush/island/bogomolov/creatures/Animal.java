@@ -18,27 +18,40 @@ public abstract class Animal extends Organism implements Eating, Movable, Reprod
 
     private final int speedPerCell;
     private final double requiredFood;
+    private double health;
 
     public Animal(String name, double weight, int speedPerCell, double requiredFood, int limit) {
         super(name, weight, limit);
 
         this.speedPerCell = speedPerCell;
         this.requiredFood = requiredFood;
-
+        this.health = requiredFood;
     }
 
     @Override
-    public boolean move(Animal animal) {
+    public void move(Animal animal) {
         int step;
-        boolean animalMove;
-        Cell[][] map=IslandMap.getislandMap().getMap();
-
         step = ThreadLocalRandom.current().nextInt(animal.getSpeedPerCell() + 1);
         Cell cell = IslandMap.getislandMap().getCell(animal.getRow(), animal.getColumn());
-        // logic
+        int row = cell.getRow();
+        int column = cell.getColumn();
+        int nextRow = cell.getRow() + step;
+        int nextColumn = cell.getColumn() + step;
+        if (!(nextRow < 0 || nextRow >= IslandMap.getislandMap().getMap()[row].length || nextColumn < 0 || nextColumn >= IslandMap.getislandMap().getMap()[column].length)) {
+            int random = ThreadLocalRandom.current().nextInt(0, 2);
+            if (random == 0) {
+                IslandMap.getislandMap().removeAnimal(animal, row, column);
+                IslandMap.getislandMap().addAnimal(animal, nextRow, column);
+            } else if (random == 1) {
+                IslandMap.getislandMap().removeAnimal(animal, row, column);
+                IslandMap.getislandMap().addAnimal(animal, row, nextColumn);
+
+            }
 
 
-        return false;
+        }
+
+
     }
 
 
@@ -57,6 +70,7 @@ public abstract class Animal extends Organism implements Eating, Movable, Reprod
         chanceToEat = getChancesToEat(foodName);
         animalEat = ThreadLocalRandom.current().nextDouble() < chanceToEat;
         if (animalEat) {
+            setHealth(Math.min(getHealth() + organism.getWeight(), getRequiredFood()));
             Cell cell = IslandMap.getislandMap().getCell(organism.getRow(), organism.getColumn());
             if (organism instanceof Animal animal) {
                 if (cell.getAnimals().contains(animal)) {
@@ -86,5 +100,13 @@ public abstract class Animal extends Organism implements Eating, Movable, Reprod
 
     public double getRequiredFood() {
         return requiredFood;
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
     }
 }

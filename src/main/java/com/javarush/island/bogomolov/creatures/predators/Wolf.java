@@ -1,6 +1,5 @@
 package com.javarush.island.bogomolov.creatures.predators;
 
-import com.javarush.island.bogomolov.Limit;
 import com.javarush.island.bogomolov.creatures.Animal;
 import com.javarush.island.bogomolov.storage.Cell;
 import com.javarush.island.bogomolov.storage.IslandMap;

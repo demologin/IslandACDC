@@ -12,7 +12,6 @@ public class IslandMap {
     private final int columns = 20;
     private static volatile IslandMap islandMap;
 
-
     private IslandMap() {
 
     }
@@ -98,5 +97,12 @@ public class IslandMap {
         return plantList;
     }
 
+    public  int getRows(){
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
 
 }
