@@ -1,4 +1,4 @@
-package com.javarush.island.khasanov.repository;
+package com.javarush.island.khasanov.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

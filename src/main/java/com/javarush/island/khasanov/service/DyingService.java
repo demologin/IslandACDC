@@ -3,7 +3,7 @@ package com.javarush.island.khasanov.service;
 import com.javarush.island.khasanov.entity.IslandObject;
 import com.javarush.island.khasanov.repository.ActionsQueue;
 import com.javarush.island.khasanov.entity.Island;
-import com.javarush.island.khasanov.repository.Position;
+import com.javarush.island.khasanov.entity.Position;
 
 import java.util.Map;
 import java.util.Set;
@@ -24,7 +24,7 @@ public class DyingService implements Runnable {
     private void fillDyingQueue() {
         for (Map.Entry<Position, Set<IslandObject>> entry : island.getIslandMap().entrySet()) {
             for (IslandObject islandObject : entry.getValue()) {
-                islandObject.strave();
+                islandObject.starve();
                 if (!islandObject.getIsAlive().get()) {
                     ActionsQueue.dying.add(islandObject);
                 }
@@ -32,6 +32,9 @@ public class DyingService implements Runnable {
         }
     }
     private void serveQueue() {
-        ActionsQueue.dying.forEach(island::dieIslandObject);
+        for (IslandObject islandObject : ActionsQueue.dying) {
+            island.dieIslandObject(islandObject);
+            island.decrementObjectOnField(islandObject);
+        }
     }
 }

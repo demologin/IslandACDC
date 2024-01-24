@@ -2,6 +2,7 @@ package com.javarush.island.khasanov.service;
 
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.IslandObject;
+import com.javarush.island.khasanov.entity.Position;
 import com.javarush.island.khasanov.repository.*;
 
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class EatingService implements Runnable {
                 IslandObject islandObject = eatingEntry.getKey();
                 List<IslandObject> foodList = eatingEntry.getValue();
                 island.eatFromFoodList(islandObject, foodList);
+                foodList.forEach(island::decrementObjectOnField);
             }
         }
     }

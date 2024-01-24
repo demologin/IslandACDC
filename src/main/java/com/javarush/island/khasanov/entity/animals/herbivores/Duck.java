@@ -1,20 +1,24 @@
-package com.javarush.island.khasanov.entity.plants;
+package com.javarush.island.khasanov.entity.animals.herbivores;
 
 import com.javarush.island.khasanov.entity.IslandObject;
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.Position;
 
-public class Grass extends Plant {
-    public Grass(Island island, Position position) {
+public class Duck extends Herbivore {
+    public Duck(Island island, Position position) {
         super(island, position);
     }
 
-    public Grass() {
+    public Duck() {
         super();
+    }
+
+    public Duck(Duck duck) {
+        super(duck.getIsland(), duck.getPosition());
     }
 
     @Override
     public IslandObject copyOf(IslandObject object) {
-        return null;
+        return new Duck((Duck) object);
     }
 }

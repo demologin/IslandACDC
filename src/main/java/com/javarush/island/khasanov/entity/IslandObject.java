@@ -1,6 +1,5 @@
 package com.javarush.island.khasanov.entity;
 
-import com.javarush.island.khasanov.repository.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,7 +56,7 @@ public abstract class IslandObject {
         setReadyForReproduce(new AtomicBoolean(true));
     }
 
-    public abstract void strave();
+    public abstract void starve();
 
     public abstract void saturate(double weight);
 

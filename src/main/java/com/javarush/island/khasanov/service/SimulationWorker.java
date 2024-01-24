@@ -17,7 +17,7 @@ public class SimulationWorker {
     public static final int POOL_SIZE = 4;
     public static final int INITIAL_DELAY = 100;
     public static final int DELAY = 1000;
-    public static final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+    public static final long TIMEOUT = 1;
 
     public SimulationWorker(Island island, View view, Statistics statistics) {
         this.island = island;
@@ -27,23 +27,20 @@ public class SimulationWorker {
 
     public void run() {
         island.fill();
-
-        view.show();
-        statistics.printCompact();
+        showSimulation();
         List<Runnable> services = new ArrayList<>() {{
             add(new EatingService(island));
             add(new MovingService(island));
             add(new ReproducingService(island));
             add(new DyingService(island));
+            add(new GrowingService(island));
         }};
-
-
         ScheduledExecutorService mainPool = Executors.newScheduledThreadPool(POOL_SIZE);
         mainPool.scheduleWithFixedDelay(
                 () -> startServices(services),
                 INITIAL_DELAY,
                 DELAY,
-                TIME_UNIT
+                TimeUnit.MILLISECONDS
         );
     }
 
@@ -52,14 +49,17 @@ public class SimulationWorker {
         servicesList.forEach(executorService::submit);
         executorService.shutdown();
         try {
-            if (executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS))
+            if (executorService.awaitTermination(TIMEOUT, TimeUnit.DAYS))
             {
-                view.show();
-                statistics.printCompact();
-                statistics.printDetailed();
+                showSimulation();
             }
         } catch (InterruptedException e) {
             new SimulationException(e).printStackTrace();
         }
     }
+
+    private void showSimulation() {
+        statistics.printCompact();
+    }
+
 }

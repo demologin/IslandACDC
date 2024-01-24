@@ -1,10 +1,7 @@
 package com.javarush.island.khasanov.entity;
 
-import com.javarush.island.khasanov.entity.animals.herbivores.*;
-import com.javarush.island.khasanov.entity.animals.predators.*;
-import com.javarush.island.khasanov.entity.plants.*;
-import com.javarush.island.khasanov.repository.Position;
-import com.javarush.island.khasanov.repository.Prototypes;
+import com.javarush.island.khasanov.repository.IslandObjectCreator;
+import com.javarush.island.khasanov.repository.Prototype;
 import com.javarush.island.khasanov.util.*;
 import lombok.Getter;
 
@@ -16,7 +13,7 @@ public class Island {
     private final int WIDTH;
     private final int HEIGHT;
     private final Map<Position, Set<IslandObject>> islandMap;
-    private final Map<Position, Map<Prototypes, Integer>> countObjectOnField;
+    private final Map<Position, Map<Prototype, Integer>> countObjectOnField;
     private final Position[][] positions;
 
     public Island(int width, int height) {
@@ -30,16 +27,15 @@ public class Island {
     public void fill() {
         if (islandMap.isEmpty()) {
             createEmptyFields();
-            for (int i = 0; i < 3; i++) {
-                Set<IslandObject> islandObjects = new HashSet<>();
-                Position position = Rndm.nextPosition();
-                islandObjects.add(new Rabbit(this, position));
-                islandObjects.add(new Rabbit(this, position));
-                islandObjects.add(new Grass(this, position));
-                islandObjects.add(new Grass(this, position));
-                islandObjects.add(new Wolf(this, position));
-                islandObjects.forEach(this::incrementObjectOnField);
-                islandMap.put(position, islandObjects);
+            for (Prototype prototype : Prototype.values()) {
+                int count = Rndm.nextCount(prototype);
+                for (int i = 0; i < count; i++) {
+                    Position position = Rndm.nextPosition();
+                    IslandObject islandObject = IslandObjectCreator.nextIslandObject(prototype, this, position);
+                    Set<IslandObject> islandObjectsOnField = islandMap.get(position);
+                    islandObjectsOnField.add(islandObject);
+                    incrementObjectOnField(islandObject);
+                }
             }
         }
     }
@@ -61,18 +57,14 @@ public class Island {
             Set<IslandObject> islandObjectsOnField = islandMap.get(position);
             islandObjectsOnField.remove(food);
 
-            decrementObjectOnField(food);
             islandObject.saturate(food.getWeight());
             islandObject.resetReadyForReproduce();
-
-            System.out.println(islandObject + " съел " + food);
         }
     }
 
     public synchronized void moveIslandObject(Position newPosition, IslandObject islandObject) {
         if (isEnoughSpace(newPosition, islandObject)) {
             Position oldPosition = islandObject.getPosition();
-            decrementObjectOnField(islandObject);
             Set<IslandObject> islandObjectsOnOldField = islandMap.get(oldPosition);
             islandObjectsOnOldField.remove(islandObject);
 
@@ -86,29 +78,26 @@ public class Island {
                 islandObjectsOnNewField.add(islandObject);
             }
 
-            incrementObjectOnField(islandObject);
+            islandObject.setIsHere(new AtomicBoolean(true));
         }
-        islandObject.setIsHere(new AtomicBoolean(true));
     }
 
     public synchronized void reproduceIslandObject(IslandObject born) {
         Position position = born.getPosition();
         Set<IslandObject> islandObjectsOnField = islandMap.get(position);
         islandObjectsOnField.add(born);
-        incrementObjectOnField(born);
     }
 
     public synchronized void dieIslandObject(IslandObject islandObject) {
         Position position = islandObject.getPosition();
         Set<IslandObject> islandObjectsOnField = islandMap.get(position);
         islandObjectsOnField.remove(islandObject);
-        decrementObjectOnField(islandObject);
     }
 
     public void incrementObjectOnField(IslandObject islandObject) {
-        Prototypes islandObjectType = Prototypes.valueOf(islandObject.getClassName().toUpperCase());
+        Prototype islandObjectType = Prototype.valueOf(islandObject.getClassName().toUpperCase());
         Position position = islandObject.getPosition();
-        Map<Prototypes, Integer> countOnFieldMap = countObjectOnField.get(position);
+        Map<Prototype, Integer> countOnFieldMap = countObjectOnField.get(position);
 
         Integer countOnField = countOnFieldMap.get(islandObjectType);
         int newCountOnField = countOnField == null ? 1 : countOnField + 1;
@@ -116,18 +105,18 @@ public class Island {
     }
 
     public void decrementObjectOnField(IslandObject islandObject) {
-        Prototypes islandObjectType = Prototypes.valueOf(islandObject.getClassName().toUpperCase());
+        Prototype islandObjectType = Prototype.valueOf(islandObject.getClassName().toUpperCase());
         Position position = islandObject.getPosition();
-        Map<Prototypes, Integer> countOnFieldMap = countObjectOnField.get(position);
+        Map<Prototype, Integer> countOnFieldMap = countObjectOnField.get(position);
 
         Integer countOnField = countOnFieldMap.get(islandObjectType);
         int newCountOnField = countOnField == null ? 0 : countOnField - 1;
         countOnFieldMap.put(islandObjectType, newCountOnField);
     }
 
-    private boolean isEnoughSpace(Position position, IslandObject islandObject) {
-        Map<Prototypes, Integer> countMap = countObjectOnField.get(position);
-        Prototypes objects = Prototypes.valueOf(islandObject.getClassName().toUpperCase());
+    public boolean isEnoughSpace(Position position, IslandObject islandObject) {
+        Map<Prototype, Integer> countMap = countObjectOnField.get(position);
+        Prototype objects = Prototype.valueOf(islandObject.getClassName().toUpperCase());
         Integer count = countMap.get(objects);
         return count == null || count < islandObject.getMaxCountOnField();
     }

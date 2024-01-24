@@ -1,24 +1,24 @@
-package com.javarush.island.khasanov.entity.animals.predators;
+package com.javarush.island.khasanov.entity.animals.herbivores;
 
 import com.javarush.island.khasanov.entity.IslandObject;
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.Position;
 
-public class Wolf extends Predator {
-    public Wolf(Island island, Position position) {
+public class Sheep extends Herbivore {
+    public Sheep(Island island, Position position) {
         super(island, position);
     }
 
-    public Wolf() {
+    public Sheep() {
         super();
     }
 
-    public Wolf(Wolf wolf) {
-        super(wolf.getIsland(), wolf.getPosition());
+    public Sheep(Sheep sheep) {
+        super(sheep.getIsland(), sheep.getPosition());
     }
 
     @Override
     public IslandObject copyOf(IslandObject object) {
-        return new Wolf((Wolf) object);
+        return new Sheep((Sheep) object);
     }
 }

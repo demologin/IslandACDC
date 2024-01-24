@@ -3,6 +3,7 @@ package com.javarush.island.khasanov.entity.animals;
 import com.javarush.island.khasanov.config.Setting;
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.IslandObject;
+import com.javarush.island.khasanov.entity.Position;
 import com.javarush.island.khasanov.repository.*;
 import com.javarush.island.khasanov.util.Rndm;
 
@@ -41,8 +42,8 @@ public class Animal extends IslandObject {
 
     public List<IslandObject> eat() {
         List<IslandObject> foodList = new ArrayList<>();
-        Set<IslandObject> nearbyObjects = island.getIslandMap().get(position);
 
+        Set<IslandObject> nearbyObjects = island.getIslandMap().get(position);
         for (IslandObject nearbyObject : nearbyObjects) {
             String foodName = nearbyObject.getClassName();
             Integer probability = foodMap.get(foodName);
@@ -75,11 +76,7 @@ public class Animal extends IslandObject {
             x = Rndm.choose(forwardX, backX);
             y = Rndm.choose(forwardY, backY);
 
-            Position newPosition = island.getPositions()[x][y];
-            if (!position.equals(newPosition)) {
-                setIsHere(new AtomicBoolean(false));
-            }
-            return newPosition;
+            return island.getPositions()[x][y];
         }
         return position;
     }
@@ -90,14 +87,17 @@ public class Animal extends IslandObject {
     }
 
     public IslandObject reproduce() {
-        if (getReadyForReproduce().get() && isHereAndIsAlive()) {
+        boolean readyForReproduce = getReadyForReproduce().get();
+        boolean hereAndIsAlive = isHereAndIsAlive();
+
+        if (readyForReproduce && hereAndIsAlive) {
             Set<IslandObject> nearbyAnimals = new HashSet<>(island.getIslandMap().get(position));
             nearbyAnimals.remove(this);
             nearbyAnimals.removeIf(islandObject -> !islandObject.isHereAndIsAlive());
 
             for (IslandObject animal : nearbyAnimals) {
                 if (Objects.equals(animal.getClassName(), this.getClassName())) {
-                    IslandObject prepared = Prototypes.get(getClassName());
+                    IslandObject prepared = Prototype.get(getClassName());
 
                     animal.setReadyForReproduce(new AtomicBoolean(false));
                     setReadyForReproduce(new AtomicBoolean(false));
@@ -110,7 +110,7 @@ public class Animal extends IslandObject {
         return this;
     }
 
-    public void strave() {
+    public void starve() {
         AtomicInteger newHp = calculateHpChanging(-starvePerTurn);
         setHp(newHp);
         if (getHp().get() == 0) {

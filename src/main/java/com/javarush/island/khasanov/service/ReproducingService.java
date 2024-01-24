@@ -3,7 +3,7 @@ package com.javarush.island.khasanov.service;
 import com.javarush.island.khasanov.entity.IslandObject;
 import com.javarush.island.khasanov.repository.ActionsQueue;
 import com.javarush.island.khasanov.entity.Island;
-import com.javarush.island.khasanov.repository.Position;
+import com.javarush.island.khasanov.entity.Position;
 
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +36,9 @@ public class ReproducingService implements Runnable {
     }
 
     private void serveQueue() {
-        ActionsQueue.reproduction.forEach(island::reproduceIslandObject);
+        for (IslandObject born : ActionsQueue.reproduction) {
+            island.reproduceIslandObject(born);
+            island.incrementObjectOnField(born);
+        }
     }
 }

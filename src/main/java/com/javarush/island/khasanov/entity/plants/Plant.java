@@ -3,7 +3,7 @@ package com.javarush.island.khasanov.entity.plants;
 import com.javarush.island.khasanov.config.Setting;
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.IslandObject;
-import com.javarush.island.khasanov.repository.*;
+import com.javarush.island.khasanov.entity.Position;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,7 +38,7 @@ public abstract class Plant extends IslandObject {
     }
 
     @Override
-    public void strave() {
+    public void starve() {
 
     }
 

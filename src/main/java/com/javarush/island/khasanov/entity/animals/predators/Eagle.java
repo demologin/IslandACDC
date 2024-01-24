@@ -4,21 +4,21 @@ import com.javarush.island.khasanov.entity.IslandObject;
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.Position;
 
-public class Wolf extends Predator {
-    public Wolf(Island island, Position position) {
+public class Eagle extends Predator {
+    public Eagle(Island island, Position position) {
         super(island, position);
     }
 
-    public Wolf() {
+    public Eagle() {
         super();
     }
 
-    public Wolf(Wolf wolf) {
-        super(wolf.getIsland(), wolf.getPosition());
+    public Eagle(Eagle eagle) {
+        super(eagle.getIsland(), eagle.getPosition());
     }
 
     @Override
     public IslandObject copyOf(IslandObject object) {
-        return new Wolf((Wolf) object);
+        return new Eagle((Eagle) object);
     }
 }

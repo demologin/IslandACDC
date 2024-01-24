@@ -1,6 +1,7 @@
 package com.javarush.island.khasanov.repository;
 
 import com.javarush.island.khasanov.entity.IslandObject;
+import com.javarush.island.khasanov.entity.Position;
 
 import java.util.List;
 import java.util.Map;

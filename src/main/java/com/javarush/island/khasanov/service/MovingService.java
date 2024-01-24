@@ -2,6 +2,7 @@ package com.javarush.island.khasanov.service;
 
 import com.javarush.island.khasanov.entity.Island;
 import com.javarush.island.khasanov.entity.IslandObject;
+import com.javarush.island.khasanov.entity.Position;
 import com.javarush.island.khasanov.repository.*;
 
 import java.util.HashMap;
@@ -43,7 +44,9 @@ public class MovingService implements Runnable {
                 IslandObject object = entryMove.getKey();
                 Position newPosition = entryMove.getValue();
 
+                island.decrementObjectOnField(object);
                 island.moveIslandObject(newPosition, object);
+                island.incrementObjectOnField(object);
             }
         }
     }
