@@ -12,8 +12,6 @@ import com.javarush.island.berezovskiy.utils.Rnd;
 import java.util.Optional;
 
 public abstract class Animal extends Organism implements Eatable {
-    protected int maximumStep;
-
     public int getMaximumStep() {
         return maximumStep;
     }
@@ -24,6 +22,7 @@ public abstract class Animal extends Organism implements Eatable {
             this.setStarved(false);
             this.setNotReadyToGiveBirth(false);
             organismForFood.setAlive(false);
+            organismForFood.decrementOrganismCount();
         }
     }
 

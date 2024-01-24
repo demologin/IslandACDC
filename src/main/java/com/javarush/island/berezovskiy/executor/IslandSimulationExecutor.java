@@ -23,7 +23,7 @@ public class IslandSimulationExecutor {
 
     private void startIslandExecutor() {
         ScheduledExecutorService islandExecutor = Executors.newScheduledThreadPool(1);
-        islandExecutor.scheduleAtFixedRate(island::run, 1, 5, TimeUnit.SECONDS);
+        islandExecutor.scheduleAtFixedRate(island, 0, Configs.TIME_FOR_WAITING, TimeUnit.SECONDS);
         try {
             if (!islandExecutor.awaitTermination(Configs.TIME_FOR_WAITING, TimeUnit.SECONDS)) {
                 islandExecutor.shutdown();

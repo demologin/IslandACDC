@@ -42,15 +42,14 @@ public final class OrganismModify {
     }
 
     private static void putFlocksInCell(Flock[] flocks, Cell[][] island) {
-        for (int i = 0; i < flocks.length; i++) {
+        for (Flock flock : flocks) {
             int[] coordinates = getRandomCell(island);
             int coordinateX = coordinates[0];
             int coordinateY = coordinates[1];
             if (!island[coordinateX][coordinateY].isCellFull()) {
-                String organismName = flocks[i].getOrganism().getName();
-                island[coordinateX][coordinateY].putOrganism(organismName, flocks[i]);
-            } else {
-                i--;
+                flock.addNewOrganismsFromStart();
+                String organismName = flock.getOrganism().getName();
+                island[coordinateX][coordinateY].putOrganism(organismName, flock);
             }
         }
     }

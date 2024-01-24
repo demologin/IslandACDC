@@ -10,6 +10,7 @@ import com.javarush.island.berezovskiy.interfaces.Movable;
 import com.javarush.island.berezovskiy.utils.Rnd;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -48,8 +49,6 @@ public class Flock implements Movable {
     public Flock(OrganismsEnum organism) {
         this.organismEnum = organism;
         this.organismType = organism.toString();
-        addNewOrganismsFromStart();
-        setOrganism();
     }
 
     public String getOrganismType() {
@@ -57,28 +56,57 @@ public class Flock implements Movable {
     }
 
     public void addNewOrganismsFromStart() {
-        Organism finalOrganism;
-        setStartOrganismsCountInSet(organismFactory);
-        for (int i = 0; i < organismCount; i++) {
-            finalOrganism = organismFactory.createOrganism(organismEnum);
-            organisms.add(finalOrganism);
+        flockLock.lock();
+        try {
+            Organism finalOrganism;
+            setStartOrganismsCountInSet(organismFactory);
+            for (int i = 0; i < organismCount; i++) {
+                finalOrganism = organismFactory.createOrganism(organismEnum);
+                organisms.add(finalOrganism);
+            }
+            setOrganism();
+        }finally {
+            flockLock.unlock();
         }
     }
 
 
     public void setStartOrganismsCountInSet(OrganismFactory organismFactory) {
-        this.maximumOrganismsInFlock = organismFactory.getMaximinCountOrganism(organismEnum);
-        organismCount = Rnd.getRandom(Configs.MIN_ANIMAL_IN_FLOCK, maximumOrganismsInFlock);
+        flockLock.lock();
+        try {
+            this.maximumOrganismsInFlock = organismFactory.getMaximinCountOrganism(organismEnum);
+            organismCount = Rnd.getRandom(Configs.MIN_ANIMAL_IN_FLOCK, maximumOrganismsInFlock);
+        }finally {
+            flockLock.unlock();
+        }
     }
 
     public void addNewOrganismChild(Organism organism) {
-        if (!organism.isNotReadyToGiveBirth()) {
-            String name = organism.giveNameOfNewOrganism();
-            if (!name.equals(Constants.UNNAMED)) {
-                Organism organismChild = organismFactory.createOrganism(OrganismsEnum.valueOf(name));
-                organisms.add(organismChild);
-                this.organismCount++;
+        flockLock.lock();
+        try {
+            if (!organism.isNotReadyToGiveBirth()) {
+                String name = organism.giveNameOfNewOrganism();
+                if (!name.equals(Constants.UNNAMED)) {
+                    Organism organismChild = organismFactory.createOrganism(OrganismsEnum.valueOf(name));
+                    organisms.add(organismChild);
+                    this.organismCount++;
+                }
             }
+        }finally {
+            flockLock.unlock();
+        }
+    }
+
+    public void removeAllOrganisms(){
+        flockLock.lock();
+        try {
+            for (Iterator<Organism> iterator = organisms.iterator(); iterator.hasNext(); ) {
+                Organism organism1 = iterator.next();
+                organism1.decrementOrganismCount();
+                iterator.remove();
+            }
+        }finally {
+            flockLock.unlock();
         }
     }
 
@@ -155,11 +183,16 @@ public class Flock implements Movable {
     }
 
     private boolean checkRandomSide(Direction direction, int randomStep, int coordinateX, int coordinateY) {
-        return switch (direction) {
-            case LEFT -> (coordinateX - randomStep > 0);
-            case RIGHT -> (coordinateX + randomStep < Configs.ISLAND_WIDTH);
-            case UP -> (coordinateY - randomStep > 0);
-            case DOWN -> (coordinateY + randomStep < Configs.ISLAND_WIDTH);
-        };
+        flockLock.lock();
+        try {
+            return switch (direction) {
+                case LEFT -> (coordinateX - randomStep > 0);
+                case RIGHT -> (coordinateX + randomStep < Configs.ISLAND_WIDTH);
+                case UP -> (coordinateY - randomStep > 0);
+                case DOWN -> (coordinateY + randomStep < Configs.ISLAND_WIDTH);
+            };
+        } finally {
+            flockLock.unlock();
+        }
     }
 }

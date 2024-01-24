@@ -5,17 +5,18 @@ import com.javarush.island.berezovskiy.entities.organism.animals.Animal;
 import com.javarush.island.berezovskiy.entities.organism.Flock;
 import com.javarush.island.berezovskiy.entities.organism.Organism;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
+public class TaskAnimal extends ConcurrentHashMap<String, Flock>{
     private ConcurrentMap<String, Flock> taskOrganismHashMap;
     private int flocksAmountInCell;
-    private CellWorker cellWorker;
-    private Lock taskAnimalLock = new ReentrantLock();
+    private final CellWorker cellWorker;
+    private final Lock taskAnimalLock = new ReentrantLock();
     HashMap<String, Integer> flocksAmountInMap = new HashMap<>();
 
     public TaskAnimal(CellWorker cellworker) {
@@ -43,10 +44,15 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
     }
 
     private void eat() {
-        if (flocksAmountInCell > 1) {
-            tryToEat();
-            deleteDeadOrganisms();
-            deleteEmptyFlocks();
+        taskAnimalLock.lock();
+        try {
+            if (flocksAmountInCell > 1) {
+                tryToEat();
+                deleteDeadOrganisms();
+                deleteEmptyFlocks();
+            }
+        }finally {
+            taskAnimalLock.unlock();
         }
     }
 
@@ -100,13 +106,7 @@ public class TaskAnimal extends ConcurrentHashMap<String, Flock> {
         try {
             for (Flock flock : taskOrganismHashMap.values()) {
                 Set<Organism> organismsInFlock = flock.getOrganisms();
-                for (Iterator<Organism> iterator = organismsInFlock.iterator(); iterator.hasNext(); ) {
-                    Organism organism = iterator.next();
-                    if (!organism.isAlive()) {
-                        organism.decrementOrganismCount();
-                        iterator.remove();
-                    }
-                }
+                organismsInFlock.removeIf(organism -> !organism.isAlive());
             }
         } finally {
             taskAnimalLock.unlock();
