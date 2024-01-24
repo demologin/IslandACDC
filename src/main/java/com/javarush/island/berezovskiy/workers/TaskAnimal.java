@@ -5,7 +5,6 @@ import com.javarush.island.berezovskiy.entities.organism.animals.Animal;
 import com.javarush.island.berezovskiy.entities.organism.Flock;
 import com.javarush.island.berezovskiy.entities.organism.Organism;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
