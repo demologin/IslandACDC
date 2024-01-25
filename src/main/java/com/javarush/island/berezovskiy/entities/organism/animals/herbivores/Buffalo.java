@@ -11,7 +11,7 @@ public class Buffalo extends Herbivorous {
 
     public Buffalo() {
         super();
-        maximumCount = OrganismConfigs.MAX_BUFFALO_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_BUFFALO_COUNT_IN_CELL;
         this.name = Constants.BUFFALO;
         maximumStep = OrganismConfigs.MAX_BUFFALO_STEP;
         Buffalo.buffaloNumber.incrementAndGet();

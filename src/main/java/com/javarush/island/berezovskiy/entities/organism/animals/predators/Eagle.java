@@ -10,7 +10,7 @@ public class Eagle extends Predator {
     private static final AtomicInteger eagleNumber = new AtomicInteger(0);
     public Eagle() {
         super();
-        maximumCount = OrganismConfigs.MAX_EAGLE_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_EAGLE_COUNT_IN_CELL;
         this.name = Constants.EAGLE;
         maximumStep = OrganismConfigs.MAX_EAGLE_STEP;
         Eagle.eagleNumber.incrementAndGet();

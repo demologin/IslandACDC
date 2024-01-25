@@ -10,7 +10,7 @@ public class Bear extends Predator {
     private static final AtomicInteger bearNumber = new AtomicInteger(0);
     public Bear() {
         super();
-        maximumCount = OrganismConfigs.MAX_BEAR_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_BEAR_COUNT_IN_CELL;
         this.name = Constants.BEAR;
         maximumStep = OrganismConfigs.MAX_BEAR_STEP;
         Bear.bearNumber.incrementAndGet();

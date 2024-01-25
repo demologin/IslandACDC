@@ -10,7 +10,7 @@ public class Boa extends Predator {
     private static final AtomicInteger boaNumber = new AtomicInteger(0);
     public Boa() {
         super();
-        maximumCount = OrganismConfigs.MAX_BOA_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_BOA_COUNT_IN_CELL;
         this.name = Constants.BOA;
         maximumStep = OrganismConfigs.MAX_BOA_STEP;
         Boa.boaNumber.incrementAndGet();

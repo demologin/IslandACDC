@@ -10,7 +10,7 @@ public class Wolf extends Predator {
     private static final AtomicInteger wolfNumber = new AtomicInteger(0);
     public Wolf() {
         super();
-        maximumCount = OrganismConfigs.MAX_WOLF_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_WOLF_COUNT_IN_CELL;
         this.name = Constants.WOLF;
         maximumStep = OrganismConfigs.MAX_WOLF_STEP;
         Wolf.wolfNumber.incrementAndGet();

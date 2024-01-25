@@ -11,7 +11,7 @@ public class Horse extends Herbivorous {
 
     public Horse() {
         super();
-        maximumCount = OrganismConfigs.MAX_HORSE_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_HORSE_COUNT_IN_CELL;
         this.name = Constants.HORSE;
         maximumStep = OrganismConfigs.MAX_HORSE_STEP;
         Horse.horseNumber.incrementAndGet();

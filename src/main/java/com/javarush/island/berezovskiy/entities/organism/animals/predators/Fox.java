@@ -10,7 +10,7 @@ public class Fox extends Predator {
     private static final AtomicInteger foxNumber = new AtomicInteger(0);
     public Fox() {
         super();
-        maximumCount = OrganismConfigs.MAX_FOX_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_FOX_COUNT_IN_CELL;
         this.name = Constants.FOX;
         maximumStep = OrganismConfigs.MAX_FOX_STEP;
         Fox.foxNumber.incrementAndGet();

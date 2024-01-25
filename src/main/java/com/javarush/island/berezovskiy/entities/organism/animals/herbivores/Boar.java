@@ -11,7 +11,7 @@ public class Boar extends Herbivorous {
 
     public Boar() {
         super();
-        maximumCount = OrganismConfigs.MAX_BOAR_COUNT_IN_CELL;
+        this.maximumCount = OrganismConfigs.MAX_BOAR_COUNT_IN_CELL;
         this.name = Constants.BOAR;
         maximumStep = OrganismConfigs.MAX_BOAR_STEP;
         Boar.boarNumber.incrementAndGet();

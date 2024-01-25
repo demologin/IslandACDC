@@ -11,6 +11,7 @@ public class Caterpillar extends Herbivorous {
 
     public Caterpillar() {
         super();
+        this.maximumCount = OrganismConfigs.MAX_CATERPILLAR_COUNT_IN_CELL;
         this.name = Constants.CATERPILLAR;
         maximumStep = OrganismConfigs.MAX_CATERPILLAR_STEP;
         Caterpillar.caterpillarNumber.incrementAndGet();
