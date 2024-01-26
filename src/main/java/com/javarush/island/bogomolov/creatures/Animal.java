@@ -1,17 +1,13 @@
 package com.javarush.island.bogomolov.creatures;
 
 import com.javarush.island.bogomolov.creatures.plants.Grass;
-import com.javarush.island.bogomolov.creatures.plants.Plant;
-import com.javarush.island.bogomolov.creatures.predators.Bear;
 import com.javarush.island.bogomolov.entity.Eating;
 import com.javarush.island.bogomolov.entity.Movable;
 import com.javarush.island.bogomolov.entity.Reproducible;
 import com.javarush.island.bogomolov.storage.Cell;
 import com.javarush.island.bogomolov.storage.IslandMap;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal extends Organism implements Eating, Movable, Reproducible {
@@ -46,12 +42,9 @@ public abstract class Animal extends Organism implements Eating, Movable, Reprod
                 IslandMap.getislandMap().removeAnimal(animal, row, column);
                 IslandMap.getislandMap().addAnimal(animal, row, nextColumn);
 
+
             }
-
-
         }
-
-
     }
 
 

@@ -1,6 +1,7 @@
 package com.javarush.island.bogomolov.storage;
 
 import com.javarush.island.bogomolov.creatures.Animal;
+import com.javarush.island.bogomolov.creatures.Organism;
 import com.javarush.island.bogomolov.creatures.plants.Plant;
 
 import java.util.ArrayList;
@@ -58,5 +59,12 @@ public class Cell {
 
     public List<Plant> getPlants() {
         return plants;
+    }
+
+    public List<Organism> getOrganisms() {
+        List<Organism> organisms = new ArrayList<>();
+        organisms.addAll(animals);
+        organisms.addAll(plants);
+        return organisms;
     }
 }

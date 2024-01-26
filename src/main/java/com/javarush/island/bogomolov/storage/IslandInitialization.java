@@ -4,6 +4,9 @@ import com.javarush.island.bogomolov.creatures.herbivores.*;
 import com.javarush.island.bogomolov.creatures.plants.Grass;
 import com.javarush.island.bogomolov.creatures.plants.Plant;
 import com.javarush.island.bogomolov.creatures.predators.*;
+import com.javarush.island.bogomolov.threads.IslandStatisticThread;
+import com.javarush.island.bogomolov.threads.animalthreads.AnimalThreads;
+import com.javarush.island.bogomolov.threads.plantthreads.PlantSpawnThread;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -12,11 +15,12 @@ import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public class IslandInitialization {
-    private final int numberOfHerbivores = 40;
-    private final int numberOfPredators = 20;
-    private final int numberOfPlants = 50;
+    private final int numberOfHerbivores = 400;
+    private final int numberOfPredators = 200;
+    private final int numberOfPlants = 500;
     private static volatile IslandInitialization islandInitialization;
     private volatile ScheduledExecutorService executorService;
     private final long startTime;
@@ -39,21 +43,29 @@ public class IslandInitialization {
         return islandInitialization;
     }
 
-    public void createIslandMap(int numberOfHerbivores, int numberOfPredators, int numberOfPlants) {
+    public void createIsland(int numberOfHerbivores, int numberOfPredators, int numberOfPlants) {
         placeHerbivores(numberOfHerbivores);
         placePredators(numberOfPredators);
         placePlants(numberOfPlants);
+        startIslandMap();
 
     }
 
-    public void createIslandMap() {
+    public void createIsland() {
         placeHerbivores(numberOfHerbivores);
         placePredators(numberOfPredators);
         placePlants(numberOfPlants);
+        startIslandMap();
     }
 
     public void startIslandMap() {
         executorService = Executors.newScheduledThreadPool(3);
+        AnimalThreads animalThreads = new AnimalThreads();
+        PlantSpawnThread plantSpawnThread = new PlantSpawnThread();
+        IslandStatisticThread islandStatisticThread = new IslandStatisticThread(animalThreads.getAnimalsSpawnThread(), animalThreads.getAnimalEatThread(), animalThreads.getAnimalDieOfHungerThread());
+        executorService.scheduleAtFixedRate(animalThreads, 1, 8, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(plantSpawnThread, 40, 30, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(islandStatisticThread, 0, 8, TimeUnit.SECONDS);
 
     }
 
