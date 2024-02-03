@@ -25,6 +25,7 @@ public class IslandSimulation {
     private static volatile IslandSimulation instance;
     @Getter
     private volatile ScheduledExecutorService executorService;
+
     private IslandSimulation() {
         startTime = System.currentTimeMillis();
     }
@@ -39,6 +40,7 @@ public class IslandSimulation {
         }
         return instance;
     }
+
     public void createIslandModel() {
         placeHerbivores(countHerbivores);
         placePredators(countPredators);
@@ -46,7 +48,8 @@ public class IslandSimulation {
 
         runIslandModel();
     }
-   private void runIslandModel() {
+
+    private void runIslandModel() {
         executorService = Executors.newScheduledThreadPool(3);
         AnimalLifecycle animalLifecycle = new AnimalLifecycle();
         PlantGrowth plantGrowth = new PlantGrowth();
@@ -59,6 +62,7 @@ public class IslandSimulation {
         executorService.scheduleAtFixedRate(plantGrowth, 40, 30, TimeUnit.SECONDS);
         executorService.scheduleAtFixedRate(statisticsTask, 0, 8, TimeUnit.SECONDS);
     }
+
     private List<Herbivore> createHerbivores(int countHerbivores) {
         List<Herbivore> herbivores = new ArrayList<>();
         Random random = new Random();
@@ -89,6 +93,7 @@ public class IslandSimulation {
         }
         return herbivores;
     }
+
     private List<Predator> createPredators(int countPredators) {
         List<Predator> predators = new ArrayList<>();
         Random random = new Random();
@@ -114,6 +119,7 @@ public class IslandSimulation {
         }
         return predators;
     }
+
     private List<Plant> createPlants(int countPlants) {
         List<Plant> plants = new ArrayList<>();
         for (int i = 0; i < countPlants; i++) {
@@ -121,6 +127,7 @@ public class IslandSimulation {
         }
         return plants;
     }
+
     public void placeHerbivores(int countHerbivores) {
         List<Herbivore> herbivores = createHerbivores(countHerbivores);
         Random random = ThreadLocalRandom.current();
@@ -137,6 +144,7 @@ public class IslandSimulation {
             }
         }
     }
+
     public void placePredators(int countPredators) {
         List<Predator> predators = createPredators(countPredators);
         Random random = ThreadLocalRandom.current();
@@ -153,6 +161,7 @@ public class IslandSimulation {
             }
         }
     }
+
     public void placePlants(int countPlants) {
         List<Plant> plants = createPlants(countPlants);
 
