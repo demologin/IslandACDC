@@ -6,7 +6,6 @@ import com.javarush.island.kgurov.lifeform.LifeForm;
 import com.javarush.island.kgurov.lifeform.animal.Animal;
 import com.javarush.island.kgurov.lifeform.animal.herbivore.Caterpillar;
 import com.javarush.island.kgurov.lifeform.plant.Plant;
-import com.javarush.island.kgurov.main.StatisticsTask;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -57,10 +56,10 @@ public class AnimalEat implements Runnable {
                 }
             }
         } else if (GameMap.getInstance().getAllAnimals().isEmpty()) {
-            System.out.printf("You lose on day %d%n", StatisticsTask.getCurrentDay());
+            System.out.printf("You lose on day %d%n", Statistics.getCurrentDay());
             shutdownAndExit();
         } else {
-            System.out.printf("You win on day %d%n", StatisticsTask.getCurrentDay());
+            System.out.printf("You win on day %d%n", Statistics.getCurrentDay());
             shutdownAndExit();
         }
         latch.countDown();

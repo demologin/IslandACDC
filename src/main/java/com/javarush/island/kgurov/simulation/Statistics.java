@@ -1,15 +1,11 @@
-package com.javarush.island.kgurov.main;
+package com.javarush.island.kgurov.simulation;
 
 import com.javarush.island.kgurov.field.GameMap;
 import com.javarush.island.kgurov.lifeform.animal.Animal;
 import com.javarush.island.kgurov.lifeform.animal.herbivore.*;
 import com.javarush.island.kgurov.lifeform.animal.predator.*;
-import com.javarush.island.kgurov.simulation.AnimalEat;
-import com.javarush.island.kgurov.simulation.AnimalHpDecrease;
-import com.javarush.island.kgurov.simulation.AnimalMultiply;
-import com.javarush.island.kgurov.simulation.IslandSimulation;
 import lombok.Getter;
-public class StatisticsTask implements Runnable {
+public class Statistics implements Runnable {
     private boolean isTimeOver;
     private int cubs;
     private int animalsEaten;
@@ -38,7 +34,7 @@ public class StatisticsTask implements Runnable {
     private int foxCount;
     private int snakeCount;
     private int wolfCount;
-    public StatisticsTask(AnimalEat animalEat, AnimalHpDecrease animalHpDecrease, AnimalMultiply animalMultiply) {
+    public Statistics(AnimalEat animalEat, AnimalHpDecrease animalHpDecrease, AnimalMultiply animalMultiply) {
         this.animalEat = animalEat;
         this.animalHpDecrease = animalHpDecrease;
         this.animalMultiply = animalMultiply;

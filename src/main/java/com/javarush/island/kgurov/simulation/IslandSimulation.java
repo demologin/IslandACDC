@@ -5,7 +5,6 @@ import com.javarush.island.kgurov.field.GameMap;
 import com.javarush.island.kgurov.lifeform.animal.herbivore.*;
 import com.javarush.island.kgurov.lifeform.animal.predator.*;
 import com.javarush.island.kgurov.lifeform.plant.Plant;
-import com.javarush.island.kgurov.main.StatisticsTask;
 import lombok.Getter;
 
 import java.lang.reflect.Constructor;
@@ -51,7 +50,7 @@ public class IslandSimulation {
         executorService = Executors.newScheduledThreadPool(3);
         AnimalLifecycle animalLifecycle = new AnimalLifecycle();
         PlantGrowth plantGrowth = new PlantGrowth();
-        StatisticsTask statisticsTask = new StatisticsTask(
+        Statistics statisticsTask = new Statistics(
                 animalLifecycle.getAnimalEat(),
                 animalLifecycle.getAnimalHpDecrease(),
                 animalLifecycle.getObjectMultiplyTask()
