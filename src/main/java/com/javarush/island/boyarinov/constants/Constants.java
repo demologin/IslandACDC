@@ -3,9 +3,9 @@ package com.javarush.island.boyarinov.constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
 import com.javarush.island.boyarinov.entities.organism.animals.herbivores.*;
-import com.javarush.island.boyarinov.entities.organism.animals.insects.*;
+import com.javarush.island.boyarinov.entities.organism.animals.insects.Caterpillar;
 import com.javarush.island.boyarinov.entities.organism.animals.predators.*;
-import com.javarush.island.boyarinov.entities.organism.plants.*;
+import com.javarush.island.boyarinov.entities.organism.plants.Grass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +16,8 @@ public final class Constants {
     }
 
     public static final int PERCENT_LOSE_WEIGHT = 10;
+    public static final int PERCENT_NORMAL_WEIGHT = 80;
+    public static final int HUNDRED_PERCENT = 100;
 
     public static final String[] ANIMAL_NAME = new String[]{
             "Wolf", "Snake", "Fox", "Bear", "Eagle", "Horse", "Deer", "Rabbit", "Mouse",
@@ -31,13 +33,14 @@ public final class Constants {
         }
     }
 
+
     public static final Class<? extends Organisms>[] ANIMAL_CLASS_NAME = new Class[]{
             Wolf.class, Snake.class, Fox.class, Bear.class, Eagle.class, Horse.class, Deer.class,
             Rabbit.class, Mouse.class, Goat.class, Sheep.class, Boar.class, Buffalo.class,
             Duck.class, Caterpillar.class, Grass.class
     };
 
-    public static final int[][] PROBABILITY_OF_BEING_EATEN = new int[][]{
+    private static final int[][] PROBABILITY_OF_BEING_EATEN = new int[][]{
             {0, 0, 0, 0, 0, 10, 15, 60, 80, 60, 70, 15, 10, 40, 0, 0},
             {0, 0, 15, 0, 0, 0, 0, 20, 40, 0, 0, 0, 0, 10, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 70, 90, 0, 0, 0, 0, 60, 40, 0},
@@ -55,6 +58,26 @@ public final class Constants {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100}
 
     };
+
+    @JsonIgnore
+    private static final Map<String, Map<String, Integer>> PROBABILITY_BEING_EATEN = new HashMap<>();
+
+    static {
+        int[][] probabilityTable = Constants.PROBABILITY_OF_BEING_EATEN;
+        for (int i = 0; i < probabilityTable.length; i++) {
+            String animalName = ANIMAL_NAME[i];
+            Map<String, Integer> foodMap = new HashMap<>();
+            PROBABILITY_BEING_EATEN.put(animalName, foodMap);
+            for (int j = 0; j < probabilityTable[i].length; j++) {
+                int percent = probabilityTable[i][j];
+                if (percent == 0) {
+                    continue;
+                }
+                String foodName = ANIMAL_NAME[j];
+                foodMap.put(foodName, percent);
+            }
+        }
+    }
 
     public static final double[] MAX_WEIGHT = new double[]{
             50, 15, 8, 500, 6, 400, 300, 2, 0.05, 60, 70, 400, 700, 1, 0.01, 1
@@ -74,6 +97,10 @@ public final class Constants {
 
     public static Map<String, Integer> getAnimalIndexInTable() {
         return new HashMap<>(ANIMAL_INDEX_IN_TABLE);
+    }
+
+    public static Map<String, Map<String, Integer>> getProbabilityBeingEaten() {
+        return new HashMap<>(PROBABILITY_BEING_EATEN);
     }
 }
 

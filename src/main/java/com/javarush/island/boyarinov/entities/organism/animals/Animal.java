@@ -1,18 +1,97 @@
 package com.javarush.island.boyarinov.entities.organism.animals;
 
 import com.javarush.island.boyarinov.constants.Constants;
+import com.javarush.island.boyarinov.constants.Limit;
 import com.javarush.island.boyarinov.entities.map.Cell;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
 import com.javarush.island.boyarinov.interfaces.Eating;
 import com.javarush.island.boyarinov.interfaces.Movable;
 import com.javarush.island.boyarinov.interfaces.Multiplying;
-import com.javarush.island.boyarinov.constants.Limit;
 import com.javarush.island.boyarinov.util.RandomNum;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class Animal extends Organisms implements Movable, Eating, Multiplying {
 
+    @Override
+    public boolean eat(Cell cell) {
+        while (isHungry()) {
+
+            Organisms organism = findFood(cell);
+            if (organism == null || !caughtPrey(organism)) {
+                return false;
+            }
+
+            String nameOfThisAnimal = getName();
+            double maxWeight = Limit.getMaxWeight().get(nameOfThisAnimal);
+            killAndEat(cell, organism, maxWeight);
+        }
+        return true;
+    }
+
+    private boolean isHungry() {
+        String animalName = this.getClass().getSimpleName();
+        double maxWeight = Limit.getMaxWeight().get(animalName);
+        double normWeight = (Constants.PERCENT_NORMAL_WEIGHT * maxWeight) / 100;
+        double currentWeight = getWeight();
+        return currentWeight < normWeight;
+    }
+
+    private boolean caughtPrey(Organisms organisms) {
+        Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
+        String animalName = getName();
+        String preyName = organisms.getName();
+        Map<String, Integer> favoriteFood = foodMap.get(animalName);
+        int percentProbability = favoriteFood.get(preyName);
+        return RandomNum.get(percentProbability);
+    }
+
+    private Organisms findFood(Cell cell) {
+        Set<Organisms> organismsSet = cell.getOrganismsSet();
+        String animalName = getName();
+
+        Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
+        Map<String, Integer> favoriteDishes = foodMap.get(animalName);
+
+        return findWeak(organismsSet, favoriteDishes);
+    }
+
+    private Organisms findWeak(Set<Organisms> organismsSet, Map<String, Integer> favoriteFood) {
+        Map<Organisms, Integer> tempMap = new HashMap<>();
+        for (Organisms organism : organismsSet) {
+            String organismName = organism.getName();
+            if (favoriteFood.containsKey(organismName)) {
+                int percent = favoriteFood.get(organismName);
+                tempMap.put(organism, percent);
+            }
+        }
+        Map.Entry<Organisms, Integer> organismEntry = tempMap.entrySet().stream()
+                .max(Comparator.comparingInt(Map.Entry::getValue))
+                .orElse(null);
+        return organismEntry == null ? null : organismEntry.getKey();
+    }
+
+    private void killAndEat(Cell cell, Organisms organism, double maxWeight) {
+        double weightPrey = organism.getWeight();
+        String nameThisAnimal = getName();
+        double currentWeightThisAnimal = getWeight();
+        double needFoodForFullSaturation = Limit.getNumberKgForFullSaturation().get(nameThisAnimal);
+        if (weightPrey > needFoodForFullSaturation) {
+            setWeight(maxWeight);
+        } else {
+            int hundredPercent = Constants.HUNDRED_PERCENT;
+            double weightPercent = weightPrey * hundredPercent / needFoodForFullSaturation;
+            double weight = weightPercent * maxWeight / hundredPercent;
+            setWeight(currentWeightThisAnimal + weight);
+        }
+
+        Set<Organisms> organismsSet = cell.getOrganismsSet();
+        organismsSet.remove(organism);
+    }
 
     @Override
     public boolean move(Cell cell) {
@@ -41,7 +120,6 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
         return true;
     }
 
-
     private boolean isAlive(Cell cell) {
         if (getWeight() > 0) {
             return true;
@@ -55,6 +133,7 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
         int listSize = currentCell.getAvailableCells().size();
         int indexNextCell = RandomNum.getRndNumber(0, listSize);
         Cell nextCell = currentCell.getAvailableCells().get(indexNextCell);
+
         int numberAnimal = countNumberAnimal(nextCell.getOrganismsSet());
         int maxOfAnimalsToCell = Limit.getMaxOfAnimalsToCell().get(animalName);
         if (numberAnimal < maxOfAnimalsToCell) {
@@ -64,13 +143,9 @@ public abstract class Animal extends Organisms implements Movable, Eating, Multi
     }
 
     private int countNumberAnimal(Set<Organisms> organismsSet) {
-        int count = 0;
-        for (Organisms organisms : organismsSet) {
-            Class<? extends Organisms> animalClass = organisms.getClass();
-            if (animalClass.equals(this.getClass())) {
-                count++;
-            }
-        }
-        return count;
+        Set<Organisms> thisOrganismSet = organismsSet.stream()
+                .filter(o -> o.getClass().equals(this.getClass()))
+                .collect(Collectors.toSet());
+        return thisOrganismSet.size();
     }
 }

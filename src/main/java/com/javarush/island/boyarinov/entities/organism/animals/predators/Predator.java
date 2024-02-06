@@ -5,10 +5,7 @@ import com.javarush.island.boyarinov.entities.organism.animals.Animal;
 
 public class Predator extends Animal{
 
-    @Override
-    public void eat() {
 
-    }
 
     @Override
     public Animal multiply() {

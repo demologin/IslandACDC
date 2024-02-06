@@ -1,6 +1,8 @@
 package com.javarush.island.boyarinov.interfaces;
 
+import com.javarush.island.boyarinov.entities.map.Cell;
+
 public interface Eating {
 
-    void eat();
+    boolean eat(Cell cell);
 }
