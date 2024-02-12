@@ -1,8 +1,9 @@
 package com.javarush.island.boyarinov.interfaces;
 
-import com.javarush.island.boyarinov.entities.organism.animals.Animal;
+import com.javarush.island.boyarinov.entities.map.Cell;
+import com.javarush.island.boyarinov.entities.organism.Organisms;
 
 public interface Multiplying {
 
-    Animal multiply();
+    Organisms multiply(Cell cell);
 }

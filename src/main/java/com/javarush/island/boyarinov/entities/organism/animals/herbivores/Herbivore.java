@@ -5,8 +5,7 @@ import com.javarush.island.boyarinov.entities.organism.animals.Animal;
 public class Herbivore extends Animal {
 
 
-    @Override
-    public Animal multiply() {
-        return null;
+    public Herbivore(String name) {
+        super(name);
     }
 }
