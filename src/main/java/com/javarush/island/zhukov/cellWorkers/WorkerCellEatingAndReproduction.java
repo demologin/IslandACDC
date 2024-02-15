@@ -2,7 +2,6 @@ package com.javarush.island.zhukov.cellWorkers;
 
 import com.javarush.island.zhukov.cellTasking.AnimalsEating;
 import com.javarush.island.zhukov.cellTasking.ReproductionOrganism;
-import com.javarush.island.zhukov.constans.Constants;
 
 public class WorkerCellEatingAndReproduction extends Thread {
     private final int x;
