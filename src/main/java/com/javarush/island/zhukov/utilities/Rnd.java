@@ -11,7 +11,7 @@ public class Rnd {
         return randomNumber==0;
     }
     public static boolean probabilityCalc(int probability){
-        int randomNumber = ThreadLocalRandom.current().nextInt(1, 101);
+        int randomNumber = randomNumber(1,101);
         return probability <= randomNumber;
     }
 
