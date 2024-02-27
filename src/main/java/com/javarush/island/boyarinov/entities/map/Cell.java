@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Cell {
 
     private final Set<Organisms> organismsSet = new HashSet<>();
     private final List<Cell> availableCells = new ArrayList<>();
+    private final Lock lock = new ReentrantLock();
 
     public Cell() {
     }
@@ -29,6 +32,10 @@ public class Cell {
         if (column < island.getColumn() - 1) {
             availableCells.add(map[row][column + 1]);
         }
+    }
+
+    public Lock getLock() {
+        return lock;
     }
 
     public Set<Organisms> getOrganismsSet() {

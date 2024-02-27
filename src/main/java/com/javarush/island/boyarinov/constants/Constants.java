@@ -15,10 +15,13 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final int PERCENT_LOSE_WEIGHT = 10;
+    public static final int ROW = 10;
+    public static final int COLUMN = 20;
+    public static final int PERCENT_LOSE_WEIGHT = 3;
     public static final int PERCENT_NORMAL_WEIGHT = 80;
     public static final int HUNDRED_PERCENT = 100;
     public static final int CHANCE_FILLING = 10;
+    public static final int NUMBER_ANIMAL_FOR_REPRODUCTION = 2;
 
     public static final String[] ANIMAL_NAME = new String[]{
             "Wolf", "Snake", "Fox", "Bear", "Eagle", "Horse", "Deer", "Rabbit", "Mouse",

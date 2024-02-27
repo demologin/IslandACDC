@@ -13,7 +13,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class Animal extends Organisms implements Movable, Eating {
 
@@ -23,132 +22,181 @@ public abstract class Animal extends Organisms implements Movable, Eating {
 
     @Override
     public boolean eat(Cell cell) {
-        while (isHungry()) {
-
-            Organisms organism = findFood(cell);
-            if (organism == null || !caughtPrey(organism)) {
+        cell.getLock().lock();
+        try {
+            if (!isHungry() || !isHere(cell)) {
                 return false;
             }
+            while (isHungry() && isHere(cell)) {
 
-            double maxWeight = Limit.getMaxWeight().get(getName());
-            killAndEat(cell, organism, maxWeight);
+                Organisms prey = findFood(cell);
+                if (prey == null || !caughtPrey(prey)) {
+                    return false;
+                }
+
+
+                killAndEat(cell, prey);
+            }
+            return true;
+
+        } finally {
+            cell.getLock().unlock();
         }
-        return true;
     }
 
     private boolean isHungry() {
         double maxWeight = Limit.getMaxWeight().get(getName());
-        double normWeight = (Constants.PERCENT_NORMAL_WEIGHT * maxWeight) / 100;
+        int hundredPercent = Constants.HUNDRED_PERCENT;
+        double normWeight = (Constants.PERCENT_NORMAL_WEIGHT * maxWeight) / hundredPercent;
         double currentWeight = getWeight();
         return currentWeight < normWeight;
     }
 
-    private boolean caughtPrey(Organisms organisms) {
+    private boolean caughtPrey(Organisms prey) {
         Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
         String animalName = getName();
-        String preyName = organisms.getName();
+        String preyName = prey.getName();
         Map<String, Integer> favoriteFood = foodMap.get(animalName);
         int percentProbability = favoriteFood.get(preyName);
         return RandomNum.get(percentProbability);
     }
 
     private Organisms findFood(Cell cell) {
-        Set<Organisms> organismsSet = cell.getOrganismsSet();
+        cell.getLock().lock();
+        try {
 
-        Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
-        Map<String, Integer> favoriteDishes = foodMap.get(getName());
 
-        return findWeak(organismsSet, favoriteDishes);
+            Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
+            Map<String, Integer> favoriteDishes = foodMap.get(getName());
+
+            return findWeak(cell, favoriteDishes);
+
+        } finally {
+            cell.getLock().unlock();
+        }
     }
 
-    private Organisms findWeak(Set<Organisms> organismsSet, Map<String, Integer> favoriteFood) {
-        Map<Organisms, Integer> tempMap = new HashMap<>();
-        for (Organisms organism : organismsSet) {
-            String organismName = organism.getName();
-            if (favoriteFood.containsKey(organismName)) {
-                int percent = favoriteFood.get(organismName);
-                tempMap.put(organism, percent);
+    private Organisms findWeak(Cell cell, Map<String, Integer> favoriteFood) {
+        cell.getLock().lock();
+        try {
+            Set<Organisms> organismsSet = cell.getOrganismsSet();
+            Map<Organisms, Integer> tempMap = new HashMap<>();
+            for (Organisms organism : organismsSet) {
+                String organismName = organism.getName();
+                if (favoriteFood.containsKey(organismName)) {
+                    int percent = favoriteFood.get(organismName);
+                    tempMap.put(organism, percent);
+                }
             }
+            Map.Entry<Organisms, Integer> organismEntry = tempMap.entrySet().stream()
+                    .max(Comparator.comparingInt(Map.Entry::getValue))
+                    .orElse(null);
+            return organismEntry == null ? null : organismEntry.getKey();
+        } finally {
+            cell.getLock().unlock();
         }
-        Map.Entry<Organisms, Integer> organismEntry = tempMap.entrySet().stream()
-                .max(Comparator.comparingInt(Map.Entry::getValue))
-                .orElse(null);
-        return organismEntry == null ? null : organismEntry.getKey();
     }
 
-    private void killAndEat(Cell cell, Organisms organism, double maxWeight) {
-        double weightPrey = organism.getWeight();
-        String nameThisAnimal = getName();
-        double currentWeightThisAnimal = getWeight();
-        double needFoodForFullSaturation = Limit.getNumberKgForFullSaturation().get(nameThisAnimal);
-        if (weightPrey > needFoodForFullSaturation) {
-            setWeight(maxWeight);
-        } else {
-            int hundredPercent = Constants.HUNDRED_PERCENT;
-            double weightPercent = weightPrey * hundredPercent / needFoodForFullSaturation;
-            double weight = weightPercent * maxWeight / hundredPercent;
-            setWeight(currentWeightThisAnimal + weight);
+    private void killAndEat(Cell cell, Organisms organism) {
+        cell.getLock().lock();
+        try {
+            double maxWeight = Limit.getMaxWeight().get(getName());
+            double hundredPercent = Constants.HUNDRED_PERCENT;
+            double weightPrey = organism.getWeight();
+            double currentWeightThisAnimal = getWeight();
+            double needFoodForFullSaturation = Limit.getNumberKgForFullSaturation().get(getName());
+            double percentageUnderweight = hundredPercent - (currentWeightThisAnimal * hundredPercent / maxWeight);
+            double needFood = percentageUnderweight * needFoodForFullSaturation / hundredPercent;
+            if (weightPrey > needFood) {
+                setWeight(maxWeight);
+            } else {
+                double weightPreyInPercent = weightPrey * hundredPercent / needFood;
+                double underweight = maxWeight - currentWeightThisAnimal;
+                double weight = weightPreyInPercent * underweight / hundredPercent;
+                setWeight(currentWeightThisAnimal + weight);
+            }
+            if (getWeight() > maxWeight) {
+                throw new AppException("The maximum weight of the " + this + " has been exceeded");
+            }
+            Set<Organisms> organismsSet = cell.getOrganismsSet();
+            organismsSet.remove(organism);
+        } finally {
+            cell.getLock().unlock();
         }
-        if (getWeight() > maxWeight) {
-            throw new AppException("The maximum weight of the " + this + " has been exceeded");
-        }
-        Set<Organisms> organismsSet = cell.getOrganismsSet();
-        organismsSet.remove(organism);
     }
 
     @Override
     public boolean move(Cell cell) {
-        String animalName = this.getClass().getSimpleName();
-        int travelSpeed = Limit.getTravelSpeed().get(animalName);
-        int countStep = RandomNum.getRndNumber(0, travelSpeed + 1);
-        if (countStep == 0 || !isAlive(cell)) {
-            return false;
-        }
-
-        Cell currentCell = cell;
-        for (int i = 0; i < countStep; i++) {
-            Cell nextCell = findNextCell(currentCell, animalName);
-            if (nextCell == currentCell) {
-                continue;
+        cell.getLock().lock();
+        try {
+            Map<String, Integer> travelSpeedMap = Limit.getTravelSpeed();
+            int travelSpeed = travelSpeedMap.get(getName());
+            int countStep = RandomNum.getRndNumber(0, travelSpeed + 1);
+            if (!isAlive(cell) || !isHere(cell)) {
+                return false;
             }
-            nextCell.getOrganismsSet().add(this);
-            currentCell.getOrganismsSet().remove(this);
-            currentCell = nextCell;
-            double currentWeight = getWeight();
-            double calcLoseWeight = Constants.PERCENT_LOSE_WEIGHT * currentWeight / 100;
-            double newWeight = currentWeight - calcLoseWeight;
-            setWeight(newWeight);
-        }
 
-        return true;
+            Cell nextCell = findNextCell(cell, countStep);
+            nextCell.getLock().lock();
+            try {
+                goTo(nextCell, cell);
+            } finally {
+                nextCell.getLock().unlock();
+            }
+
+            return true;
+
+        } finally {
+
+            cell.getLock().unlock();
+        }
     }
 
     private boolean isAlive(Cell cell) {
-        if (getWeight() > 0) {
-            return true;
+        cell.getLock().lock();
+        try {
+            if (getWeight() > 0) {
+                return true;
+            }
+            Set<Organisms> organismsSet = cell.getOrganismsSet();
+            organismsSet.remove(this);
+            return false;
+        } finally {
+            cell.getLock().unlock();
         }
-        Set<Organisms> organismsSet = cell.getOrganismsSet();
-        organismsSet.remove(this);
-        return false;
     }
 
-    private Cell findNextCell(Cell currentCell, String animalName) {
-        int listAvailableCellsSize = currentCell.getAvailableCells().size();
-        int indexNextCell = RandomNum.getRndNumber(0, listAvailableCellsSize);
-        Cell nextCell = currentCell.getAvailableCells().get(indexNextCell);
-
-        int numberAnimal = countNumberAnimal(nextCell.getOrganismsSet());
-        int maxOfAnimalsToCell = Limit.getMaxOfAnimalsToCell().get(animalName);
-        if (numberAnimal < maxOfAnimalsToCell) {
+    private Cell findNextCell(Cell currentCell, int countStep) {
+        currentCell.getLock().lock();
+        try {
+            Cell nextCell = currentCell;
+            for (int i = 0; i < countStep; i++) {
+                int listAvailableCellsSize = nextCell.getAvailableCells().size();
+                int indexNextCell = RandomNum.getRndNumber(0, listAvailableCellsSize);
+                nextCell = nextCell.getAvailableCells().get(indexNextCell);
+            }
+            if (isMaxCountOrganismsTo(nextCell)) {
+                return currentCell;
+            }
             return nextCell;
+
+        } finally {
+            currentCell.getLock().unlock();
         }
-        return currentCell;
     }
 
-    private int countNumberAnimal(Set<Organisms> organismsSet) {
-        Set<Organisms> thisOrganismSet = organismsSet.stream()
-                .filter(o -> o.getClass().equals(this.getClass()))
-                .collect(Collectors.toSet());
-        return thisOrganismSet.size();
+    private void goTo(Cell nextCell, Cell currentCell) {
+        nextCell.getLock().lock();
+        try {
+            nextCell.getOrganismsSet().add(this);
+            currentCell.getOrganismsSet().remove(this);
+            double currentWeight = getWeight();
+            double hundredPercent = Constants.HUNDRED_PERCENT;
+            double calcLoseWeight = Constants.PERCENT_LOSE_WEIGHT * currentWeight / hundredPercent;
+            double newWeight = currentWeight - calcLoseWeight;
+            setWeight(newWeight);
+        } finally {
+            nextCell.getLock().unlock();
+        }
     }
 }

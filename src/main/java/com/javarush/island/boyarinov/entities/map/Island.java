@@ -4,6 +4,7 @@ package com.javarush.island.boyarinov.entities.map;
 import com.javarush.island.boyarinov.constants.Constants;
 import com.javarush.island.boyarinov.constants.Limit;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
+import com.javarush.island.boyarinov.entities.prototype.Prototypes;
 import com.javarush.island.boyarinov.util.RandomNum;
 
 import java.util.Map;
@@ -36,18 +37,24 @@ public class Island {
         }
     }
 
-    public void fillIsland(Map<Class<? extends Organisms>, Organisms> prototype) {
-        for (Cell[] cells : map) {
-            for (Cell cell : cells) {
-                if (!RandomNum.get(Constants.CHANCE_FILLING)) {
-                    continue;
-                }
-                Set<Organisms> organismsSet = cell.getOrganismsSet();
-                Organisms organism = getRndOrganisms(prototype);
-                int numberAnimalToCell = getNumberAnimalToCell(organismsSet, organism);
-                for (int i = 0; i < numberAnimalToCell; i++) {
-                    Organisms clone = organism.clone();
-                    organismsSet.add(clone);
+    public void fillIsland() {
+        Map<Class<? extends Organisms>, Organisms> prototype = Prototypes.getPrototype();
+        for (Cell[] row : map) {
+            for (Cell cell : row) {
+                cell.getLock().lock();
+                try {
+                    if (!RandomNum.get(Constants.CHANCE_FILLING)) {
+                        continue;
+                    }
+                    Set<Organisms> organismsSet = cell.getOrganismsSet();
+                    Organisms organism = getRndOrganisms(prototype);
+                    int numberAnimalToCell = getNumberAnimalToCell(organismsSet, organism);
+                    for (int i = 0; i < numberAnimalToCell; i++) {
+                        Organisms clone = organism.clone();
+                        organismsSet.add(clone);
+                    }
+                } finally {
+                    cell.getLock().unlock();
                 }
             }
         }
@@ -62,10 +69,10 @@ public class Island {
     }
 
     private int countNumberAnimal(Set<Organisms> organismsSet, Organisms organism) {
-        Set<Organisms> thisOrganismSet = organismsSet.stream()
+        return organismsSet.stream()
                 .filter(o -> o.getClass().equals(organism.getClass()))
-                .collect(Collectors.toSet());
-        return thisOrganismSet.size();
+                .collect(Collectors.toSet())
+                .size();
     }
 
     private Organisms getRndOrganisms(Map<Class<? extends Organisms>, Organisms> prototype) {
