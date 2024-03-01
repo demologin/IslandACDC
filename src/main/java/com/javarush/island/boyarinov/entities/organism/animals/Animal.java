@@ -138,7 +138,7 @@ public abstract class Animal extends Organisms implements Movable, Eating {
     private boolean isAlive(Cell cell) {
         cell.getLock().lock();
         try {
-            if (getWeight() > 0.000) {
+            if (getWeight() > 0.0) {
                 return true;
             }
             Set<Organisms> organismsSet = cell.getOrganismsSet();

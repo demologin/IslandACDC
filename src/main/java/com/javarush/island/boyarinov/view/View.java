@@ -19,14 +19,10 @@ public class View {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, Integer> entry : statisticMap.entrySet()) {
             String organismName = entry.getKey();
-            int beginIndex = 0;
-            int endIndex = 2;
             String icon = getOrganismIcon(organismName);
-            String namePrefix = organismName.substring(beginIndex, endIndex);
             int numberOrganisms = entry.getValue();
             stringBuilder
                     .append(icon)
-                    .append(namePrefix)
                     .append(": ")
                     .append(numberOrganisms)
                     .append("; ");

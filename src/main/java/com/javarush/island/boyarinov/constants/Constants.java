@@ -1,6 +1,5 @@
 package com.javarush.island.boyarinov.constants;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.javarush.island.boyarinov.entities.organism.Organisms;
 import com.javarush.island.boyarinov.entities.organism.animals.herbivores.*;
 import com.javarush.island.boyarinov.entities.organism.animals.insects.Caterpillar;
@@ -15,12 +14,12 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final int ROW = 10;
-    public static final int COLUMN = 20;
+    public static final int ROW = 100;
+    public static final int COLUMN = 50;
     public static final int CORE_POOL_SIZE = 4;
     public static final int PERIOD = 200;
     public static final double PERCENT_LOSE_WEIGHT = 0.5;
-    public static final double PERCENT_NORMAL_WEIGHT = 80;
+    public static final double PERCENT_NORMAL_WEIGHT = 90;
     public static final double HUNDRED_PERCENT = 100;
     public static final int CHANCE_FILLING = 10;
     public static final int NUMBER_ANIMAL_FOR_REPRODUCTION = 2;
@@ -34,7 +33,6 @@ public final class Constants {
             "🐺", "🐍", "🦊", "🐻", "🦅", "🐎", "🦌", "🐇", "🐁", "🐐", "🐑", "🐗", "🐃", "🦆", "🐛", "🌿"
     };
 
-    @JsonIgnore
     private static final Map<String, Integer> ANIMAL_INDEX_IN_TABLE = new HashMap<>();
 
     static {
@@ -44,6 +42,7 @@ public final class Constants {
     }
 
 
+    @SuppressWarnings("unchecked")
     public static final Class<? extends Organisms>[] ANIMAL_CLASS_NAME = new Class[]{
             Wolf.class, Snake.class, Fox.class, Bear.class, Eagle.class, Horse.class, Deer.class,
             Rabbit.class, Mouse.class, Goat.class, Sheep.class, Boar.class, Buffalo.class,
@@ -69,7 +68,6 @@ public final class Constants {
 
     };
 
-    @JsonIgnore
     private static final Map<String, Map<String, Integer>> PROBABILITY_BEING_EATEN = new HashMap<>();
 
     static {
