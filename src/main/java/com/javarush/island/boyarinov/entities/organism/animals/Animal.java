@@ -9,7 +9,6 @@ import com.javarush.island.boyarinov.interfaces.Eating;
 import com.javarush.island.boyarinov.interfaces.Movable;
 import com.javarush.island.boyarinov.util.RandomNum;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +17,23 @@ public abstract class Animal extends Organisms implements Movable, Eating {
 
     public Animal(String name) {
         super(name);
+    }
+
+    @Override
+    public boolean multiply(Cell cell) {
+        if (!isHere(cell) || isMaxCountOrganismsTo(cell)) {
+            return false;
+        }
+        int numberAnimalOfThisType = countNumberOrganisms(cell, this.getClass());
+        int numberAnimalForReproduction = Constants.NUMBER_ANIMAL_FOR_REPRODUCTION;
+        if (numberAnimalOfThisType < numberAnimalForReproduction || !isReadyReproduce()) {
+            return false;
+        }
+        Organisms clone = this.clone();
+        double halfParentWeight = getWeight() / 2;
+        clone.setWeight(halfParentWeight);
+        setWeight(halfParentWeight);
+        return safeAddTo(cell, clone);
     }
 
     @Override
@@ -82,7 +98,8 @@ public abstract class Animal extends Organisms implements Movable, Eating {
                 }
             }
             Map.Entry<Organisms, Integer> organismEntry = tempMap.entrySet().stream()
-                    .max(Comparator.comparingInt(Map.Entry::getValue))
+                    .findAny()
+//                    .max(Comparator.comparingInt(Map.Entry::getValue)) //if enable .max, then animal fast died
                     .orElse(null);
             return organismEntry == null ? null : organismEntry.getKey();
 

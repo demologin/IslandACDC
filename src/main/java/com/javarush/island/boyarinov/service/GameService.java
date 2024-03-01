@@ -28,7 +28,7 @@ public class GameService extends Thread {
 
     private void doOneStep() {
         try (ExecutorService executorService = Executors.newFixedThreadPool(CORE_PULL_SIZE)) {
-            services.forEach(executorService::submit);
+            services.forEach(executorService::execute);
             executorService.shutdown();
         }
     }

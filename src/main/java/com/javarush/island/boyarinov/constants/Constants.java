@@ -15,7 +15,7 @@ public final class Constants {
     }
 
     public static final int ROW = 100;
-    public static final int COLUMN = 50;
+    public static final int COLUMN = 30;
     public static final int CORE_POOL_SIZE = 4;
     public static final int PERIOD = 200;
     public static final double PERCENT_LOSE_WEIGHT = 0.5;

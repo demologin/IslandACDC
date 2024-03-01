@@ -1,9 +1,7 @@
 package com.javarush.island.boyarinov.entities.organism;
 
-import com.javarush.island.boyarinov.constants.Constants;
 import com.javarush.island.boyarinov.constants.Limit;
 import com.javarush.island.boyarinov.entities.map.Cell;
-import com.javarush.island.boyarinov.entities.organism.plants.Plant;
 import com.javarush.island.boyarinov.interfaces.Eating;
 import com.javarush.island.boyarinov.interfaces.Movable;
 import com.javarush.island.boyarinov.interfaces.Multiplying;
@@ -27,29 +25,17 @@ public abstract class Organisms implements Multiplying, Movable, Eating, Cloneab
         if (!isHere(cell) || isMaxCountOrganismsTo(cell)) {
             return false;
         }
-        if (this instanceof Plant) {
-            List<Cell> availableCells = cell.getAvailableCells();
-            int randomIndex = RandomNum.getRndNumber(0, availableCells.size());
-            Cell nextCell = availableCells.get(randomIndex);
-            if (isMaxCountOrganismsTo(nextCell)) {
-                return false;
-            }
-            Organisms clone = this.clone();
-            return safeAddTo(nextCell, clone);
-        }
-        int numberAnimalOfThisType = countNumberOrganisms(cell, this.getClass());
-        int numberAnimalForReproduction = Constants.NUMBER_ANIMAL_FOR_REPRODUCTION;
-        if (numberAnimalOfThisType < numberAnimalForReproduction || !isReadyReproduce()) {
+        List<Cell> availableCells = cell.getAvailableCells();
+        int randomIndex = RandomNum.getRndNumber(0, availableCells.size());
+        Cell nextCell = availableCells.get(randomIndex);
+        if (isMaxCountOrganismsTo(nextCell)) {
             return false;
         }
         Organisms clone = this.clone();
-        double halfParentWeight = getWeight() / 2;
-        clone.setWeight(halfParentWeight);
-        setWeight(halfParentWeight);
-        return safeAddTo(cell, clone);
+        return safeAddTo(nextCell, clone);
     }
 
-    private boolean safeAddTo(Cell cell, Organisms organism) {
+    protected boolean safeAddTo(Cell cell, Organisms organism) {
         cell.getLock().lock();
         try {
             Set<Organisms> organismsSet = cell.getOrganismsSet();
@@ -89,12 +75,12 @@ public abstract class Organisms implements Multiplying, Movable, Eating, Cloneab
         return numberAnimal >= maxOfAnimalsToCell;
     }
 
-    private boolean isReadyReproduce() {
+    protected boolean isReadyReproduce() {
         double maxWeight = Limit.getMaxWeight().get(getName());
         return getWeight() > maxWeight / 2;
     }
 
-    private int countNumberOrganisms(Cell currentCell, Class<? extends Organisms> typeAnimal) {
+    protected int countNumberOrganisms(Cell currentCell, Class<? extends Organisms> typeAnimal) {
         currentCell.getLock().lock();
         try {
             Set<Organisms> organismsSet = currentCell.getOrganismsSet();

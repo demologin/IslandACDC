@@ -47,7 +47,7 @@ public class Island {
                 cell.getLock().lock();
                 try {
                     Set<Organisms> organismsSet = cell.getOrganismsSet();
-                    Organisms organism = getRndOrganisms(prototype);
+                    Organisms organism = getRandomOrganism(prototype);
                     int numberAnimalToCell = getNumberAnimalToCell(organismsSet, organism);
                     for (int i = 0; i < numberAnimalToCell; i++) {
                         Organisms clone = organism.clone();
@@ -75,7 +75,7 @@ public class Island {
                 .size();
     }
 
-    private Organisms getRndOrganisms(Map<Class<? extends Organisms>, Organisms> prototype) {
+    private Organisms getRandomOrganism(Map<Class<? extends Organisms>, Organisms> prototype) {
         int numberOrganisms = Constants.ANIMAL_CLASS_NAME.length;
         int rndIndex = RandomNum.getRndNumber(0, numberOrganisms);
         Class<? extends Organisms> animalClassName = Constants.ANIMAL_CLASS_NAME[rndIndex];
