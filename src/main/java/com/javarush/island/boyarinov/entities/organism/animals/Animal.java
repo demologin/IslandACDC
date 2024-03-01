@@ -22,34 +22,35 @@ public abstract class Animal extends Organisms implements Movable, Eating {
 
     @Override
     public boolean eat(Cell cell) {
-        cell.getLock().lock();
-        try {
-            if (!isHungry() || !isHere(cell)) {
+        if (!isHungry(cell) || !isHere(cell)) {
+            return false;
+        }
+        while (isHungry(cell) && isHere(cell)) {
+
+            Organisms prey = findFood(cell);
+            if (prey == null || !caughtPrey(prey)) {
                 return false;
             }
-            while (isHungry() && isHere(cell)) {
-
-                Organisms prey = findFood(cell);
-                if (prey == null || !caughtPrey(prey)) {
-                    return false;
-                }
 
 
-                killAndEat(cell, prey);
-            }
-            return true;
+            killAndEat(cell, prey);
+        }
+        return true;
+
+    }
+
+    private boolean isHungry(Cell cell) {
+        cell.getLock().lock();
+        try {
+            double maxWeight = Limit.getMaxWeight().get(getName());
+            double hundredPercent = Constants.HUNDRED_PERCENT;
+            double normWeight = (Constants.PERCENT_NORMAL_WEIGHT * maxWeight) / hundredPercent;
+            double currentWeight = getWeight();
+            return currentWeight < normWeight;
 
         } finally {
             cell.getLock().unlock();
         }
-    }
-
-    private boolean isHungry() {
-        double maxWeight = Limit.getMaxWeight().get(getName());
-        int hundredPercent = Constants.HUNDRED_PERCENT;
-        double normWeight = (Constants.PERCENT_NORMAL_WEIGHT * maxWeight) / hundredPercent;
-        double currentWeight = getWeight();
-        return currentWeight < normWeight;
     }
 
     private boolean caughtPrey(Organisms prey) {
@@ -62,18 +63,10 @@ public abstract class Animal extends Organisms implements Movable, Eating {
     }
 
     private Organisms findFood(Cell cell) {
-        cell.getLock().lock();
-        try {
+        Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
+        Map<String, Integer> favoriteDishes = foodMap.get(getName());
 
-
-            Map<String, Map<String, Integer>> foodMap = Constants.getProbabilityBeingEaten();
-            Map<String, Integer> favoriteDishes = foodMap.get(getName());
-
-            return findWeak(cell, favoriteDishes);
-
-        } finally {
-            cell.getLock().unlock();
-        }
+        return findWeak(cell, favoriteDishes);
     }
 
     private Organisms findWeak(Cell cell, Map<String, Integer> favoriteFood) {
@@ -92,17 +85,18 @@ public abstract class Animal extends Organisms implements Movable, Eating {
                     .max(Comparator.comparingInt(Map.Entry::getValue))
                     .orElse(null);
             return organismEntry == null ? null : organismEntry.getKey();
+
         } finally {
             cell.getLock().unlock();
         }
     }
 
-    private void killAndEat(Cell cell, Organisms organism) {
+    private void killAndEat(Cell cell, Organisms prey) {
         cell.getLock().lock();
         try {
             double maxWeight = Limit.getMaxWeight().get(getName());
             double hundredPercent = Constants.HUNDRED_PERCENT;
-            double weightPrey = organism.getWeight();
+            double weightPrey = prey.getWeight();
             double currentWeightThisAnimal = getWeight();
             double needFoodForFullSaturation = Limit.getNumberKgForFullSaturation().get(getName());
             double percentageUnderweight = hundredPercent - (currentWeightThisAnimal * hundredPercent / maxWeight);
@@ -119,7 +113,8 @@ public abstract class Animal extends Organisms implements Movable, Eating {
                 throw new AppException("The maximum weight of the " + this + " has been exceeded");
             }
             Set<Organisms> organismsSet = cell.getOrganismsSet();
-            organismsSet.remove(organism);
+            organismsSet.remove(prey);
+
         } finally {
             cell.getLock().unlock();
         }
@@ -127,74 +122,64 @@ public abstract class Animal extends Organisms implements Movable, Eating {
 
     @Override
     public boolean move(Cell cell) {
-        cell.getLock().lock();
-        try {
-            Map<String, Integer> travelSpeedMap = Limit.getTravelSpeed();
-            int travelSpeed = travelSpeedMap.get(getName());
-            int countStep = RandomNum.getRndNumber(0, travelSpeed + 1);
-            if (!isAlive(cell) || !isHere(cell)) {
-                return false;
-            }
-
-            Cell nextCell = findNextCell(cell, countStep);
-            nextCell.getLock().lock();
-            try {
-                goTo(nextCell, cell);
-            } finally {
-                nextCell.getLock().unlock();
-            }
-
-            return true;
-
-        } finally {
-
-            cell.getLock().unlock();
+        if (!isAlive(cell) || !isHere(cell)) {
+            return false;
         }
+        Map<String, Integer> travelSpeedMap = Limit.getTravelSpeed();
+        int travelSpeed = travelSpeedMap.get(getName());
+        int countStep = RandomNum.getRndNumber(0, travelSpeed + 1);
+
+        Cell nextCell = findNextCell(cell, countStep);
+        goTo(nextCell, cell);
+
+        return true;
     }
 
     private boolean isAlive(Cell cell) {
         cell.getLock().lock();
         try {
-            if (getWeight() > 0) {
+            if (getWeight() > 0.000) {
                 return true;
             }
             Set<Organisms> organismsSet = cell.getOrganismsSet();
             organismsSet.remove(this);
             return false;
+
         } finally {
             cell.getLock().unlock();
         }
     }
 
     private Cell findNextCell(Cell currentCell, int countStep) {
-        currentCell.getLock().lock();
-        try {
-            Cell nextCell = currentCell;
-            for (int i = 0; i < countStep; i++) {
-                int listAvailableCellsSize = nextCell.getAvailableCells().size();
-                int indexNextCell = RandomNum.getRndNumber(0, listAvailableCellsSize);
-                nextCell = nextCell.getAvailableCells().get(indexNextCell);
-            }
-            if (isMaxCountOrganismsTo(nextCell)) {
-                return currentCell;
-            }
-            return nextCell;
-
-        } finally {
-            currentCell.getLock().unlock();
+        Cell nextCell = currentCell;
+        for (int i = 0; i < countStep; i++) {
+            int listAvailableCellsSize = nextCell.getAvailableCells().size();
+            int indexNextCell = RandomNum.getRndNumber(0, listAvailableCellsSize);
+            nextCell = nextCell.getAvailableCells().get(indexNextCell);
         }
+        if (isMaxCountOrganismsTo(nextCell)) {
+            return currentCell;
+        }
+        return nextCell;
+
     }
 
     private void goTo(Cell nextCell, Cell currentCell) {
         nextCell.getLock().lock();
         try {
             nextCell.getOrganismsSet().add(this);
-            currentCell.getOrganismsSet().remove(this);
+            currentCell.getLock().lock();
+            try {
+                currentCell.getOrganismsSet().remove(this);
+            } finally {
+                currentCell.getLock().unlock();
+            }
             double currentWeight = getWeight();
             double hundredPercent = Constants.HUNDRED_PERCENT;
             double calcLoseWeight = Constants.PERCENT_LOSE_WEIGHT * currentWeight / hundredPercent;
             double newWeight = currentWeight - calcLoseWeight;
             setWeight(newWeight);
+
         } finally {
             nextCell.getLock().unlock();
         }

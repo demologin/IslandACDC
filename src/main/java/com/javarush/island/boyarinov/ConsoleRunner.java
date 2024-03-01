@@ -7,7 +7,7 @@ import com.javarush.island.boyarinov.view.View;
 
 import java.util.List;
 
-public class Main {
+public class ConsoleRunner {
 
     public static void main(String[] args) {
         int row = Constants.ROW;

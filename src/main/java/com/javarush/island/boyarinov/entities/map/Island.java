@@ -41,11 +41,11 @@ public class Island {
         Map<Class<? extends Organisms>, Organisms> prototype = Prototypes.getPrototype();
         for (Cell[] row : map) {
             for (Cell cell : row) {
+                if (!RandomNum.get(Constants.CHANCE_FILLING)) {
+                    continue;
+                }
                 cell.getLock().lock();
                 try {
-                    if (!RandomNum.get(Constants.CHANCE_FILLING)) {
-                        continue;
-                    }
                     Set<Organisms> organismsSet = cell.getOrganismsSet();
                     Organisms organism = getRndOrganisms(prototype);
                     int numberAnimalToCell = getNumberAnimalToCell(organismsSet, organism);

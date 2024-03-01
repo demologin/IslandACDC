@@ -24,40 +24,36 @@ public abstract class Organisms implements Multiplying, Movable, Eating, Cloneab
 
     @Override
     public boolean multiply(Cell cell) {
-        cell.getLock().lock();
-        try {
-            if (!isHere(cell) || isMaxCountOrganismsTo(cell)) {
-                return false;
-            }
-            Set<Organisms> organismsSet = cell.getOrganismsSet();
-            if (this instanceof Plant) {
-                List<Cell> availableCells = cell.getAvailableCells();
-                int randomIndex = RandomNum.getRndNumber(0, availableCells.size());
-                Cell nextCell = availableCells.get(randomIndex);
-                nextCell.getLock().lock();
-                try {
-                    if (isMaxCountOrganismsTo(nextCell)) {
-                        return false;
-                    }
-                    Organisms clone = this.clone();
-                    nextCell.getOrganismsSet().add(clone);
-                    return true;
-                } finally {
-                    nextCell.getLock().unlock();
-                }
-            }
-            int numberAnimalOfThisType = countNumberOrganisms(cell, this.getClass());
-            int numberAnimalForReproduction = Constants.NUMBER_ANIMAL_FOR_REPRODUCTION;
-            if (numberAnimalOfThisType < numberAnimalForReproduction || !isReadyReproduce()) {
+        if (!isHere(cell) || isMaxCountOrganismsTo(cell)) {
+            return false;
+        }
+        if (this instanceof Plant) {
+            List<Cell> availableCells = cell.getAvailableCells();
+            int randomIndex = RandomNum.getRndNumber(0, availableCells.size());
+            Cell nextCell = availableCells.get(randomIndex);
+            if (isMaxCountOrganismsTo(nextCell)) {
                 return false;
             }
             Organisms clone = this.clone();
-            double halfParentWeight = getWeight() / 2;
-            clone.setWeight(halfParentWeight);
-            setWeight(halfParentWeight);
-            organismsSet.add(clone);
-            return true;
+            return safeAddTo(nextCell, clone);
+        }
+        int numberAnimalOfThisType = countNumberOrganisms(cell, this.getClass());
+        int numberAnimalForReproduction = Constants.NUMBER_ANIMAL_FOR_REPRODUCTION;
+        if (numberAnimalOfThisType < numberAnimalForReproduction || !isReadyReproduce()) {
+            return false;
+        }
+        Organisms clone = this.clone();
+        double halfParentWeight = getWeight() / 2;
+        clone.setWeight(halfParentWeight);
+        setWeight(halfParentWeight);
+        return safeAddTo(cell, clone);
+    }
 
+    private boolean safeAddTo(Cell cell, Organisms organism) {
+        cell.getLock().lock();
+        try {
+            Set<Organisms> organismsSet = cell.getOrganismsSet();
+            return organismsSet.add(organism);
         } finally {
             cell.getLock().unlock();
         }
@@ -81,21 +77,16 @@ public abstract class Organisms implements Multiplying, Movable, Eating, Cloneab
         try {
             Set<Organisms> organismsSet = currentCell.getOrganismsSet();
             return organismsSet.contains(this);
+
         } finally {
             currentCell.getLock().unlock();
         }
     }
 
     protected boolean isMaxCountOrganismsTo(Cell currentCell) {
-        currentCell.getLock().lock();
-        try {
-            int numberAnimal = countNumberOrganisms(currentCell, this.getClass());
-            int maxOfAnimalsToCell = Limit.getMaxOfAnimalsToCell().get(getName());
-            return numberAnimal >= maxOfAnimalsToCell;
-
-        } finally {
-            currentCell.getLock().unlock();
-        }
+        int numberAnimal = countNumberOrganisms(currentCell, this.getClass());
+        int maxOfAnimalsToCell = Limit.getMaxOfAnimalsToCell().get(getName());
+        return numberAnimal >= maxOfAnimalsToCell;
     }
 
     private boolean isReadyReproduce() {

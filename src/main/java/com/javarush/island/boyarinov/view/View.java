@@ -1,5 +1,6 @@
 package com.javarush.island.boyarinov.view;
 
+import com.javarush.island.boyarinov.constants.Constants;
 import com.javarush.island.boyarinov.service.StatisticService;
 
 import java.util.Map;
@@ -20,16 +21,25 @@ public class View {
             String organismName = entry.getKey();
             int beginIndex = 0;
             int endIndex = 2;
+            String icon = getOrganismIcon(organismName);
             String namePrefix = organismName.substring(beginIndex, endIndex);
             int numberOrganisms = entry.getValue();
             stringBuilder
+                    .append(icon)
                     .append(namePrefix)
                     .append(": ")
                     .append(numberOrganisms)
                     .append("; ");
         }
         stringBuilder.append("\n")
-                .append("-".repeat(150));
+                .append("-".repeat(170));
         System.out.println(stringBuilder);
+    }
+
+    private String getOrganismIcon(String organismName) {
+        Map<String, Integer> animalIndexInTable = Constants.getAnimalIndexInTable();
+        String[] animalIcon = Constants.ANIMAL_ICON;
+        int organismIndex = animalIndexInTable.get(organismName);
+        return animalIcon[organismIndex];
     }
 }
